@@ -18,14 +18,9 @@
         <activity
             android:name=".ActivityPage.GettingStarted"
             android:exported="false" />
-        <activity
-            android:name=".ActivityPage.GetStarted"
-            android:exported="false" />
+
         <activity
             android:name=".ActivityPage.Home"
-            android:exported="false" />
-        <activity
-            android:name=".Home"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

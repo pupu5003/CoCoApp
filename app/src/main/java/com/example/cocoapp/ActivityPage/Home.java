@@ -24,7 +24,7 @@ public class Home extends AppCompatActivity {
             Intent intent = new Intent(Home.this, GettingStarted.class);
             startActivity(intent);
         });
-        TextView login = findViewById(R.id.loginQuestion);
+        TextView login = findViewById(R.id.loginText);
         login.setOnClickListener(v -> {
             Intent intent = new Intent(Home.this, LoginScreen.class);
             startActivity(intent);

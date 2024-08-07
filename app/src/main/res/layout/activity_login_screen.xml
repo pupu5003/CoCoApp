@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="16dp"
+    android:id="@+id/constraintLayout"
     tools:context=".ActivityPage.LoginScreen">
 
     <ImageView
@@ -47,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:text="Login"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textColor="#419C82"
             android:textStyle="bold" />
 
@@ -56,9 +57,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Register"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textColor="@android:color/darker_gray" />
     </LinearLayout>
+
+    <View
+        android:id="@+id/underlineView"
+        android:layout_width="35dp"
+        android:layout_height="4dp"
+        android:background="@android:color/holo_green_light"
+        app:layout_constraintStart_toStartOf="@+id/linearLayoutLoginRegister"
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutLoginRegister" />
 
     <EditText
         android:id="@+id/editTextEmail"
@@ -66,10 +75,11 @@
         android:layout_height="wrap_content"
         android:hint="Email Address"
         android:drawableStart="@android:drawable/sym_action_email"
-        app:layout_constraintTop_toBottomOf="@id/linearLayoutLoginRegister"
+        app:layout_constraintTop_toBottomOf="@id/underlineView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp" />
+
 
     <EditText
         android:id="@+id/editTextPassword"
