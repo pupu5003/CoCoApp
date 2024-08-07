@@ -3,68 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragment.GetStarted2">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <LinearLayout
-            android:id="@+id/summary_section"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:background="@drawable/round_corner"
-            android:backgroundTint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+        <TextView
+            android:id="@+id/Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/fredokaone_regular"
+            android:text="Now!"
+            android:gravity="center"
+            android:textSize="24sp"
+            />
 
+        <TextView
+            android:id="@+id/Description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/fredoka_light"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:textColor="@color/Grey"
+            android:text="One tap for foods, accessories, health care products &amp; digital gadgets\n Grooming &amp; boarding\nEasy &amp; best consultation bookings"
+            android:gravity="center"
+            android:padding="5dp"
+            />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/fredokaone_regular"
-                    android:text="Now!"
-                    android:gravity="center"
-                    android:textSize="24sp"
-                    />
-
-                <TextView
-                    android:id="@+id/Description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    android:fontFamily="@font/fredoka_light"
-                    android:textStyle="bold"
-                    android:textSize="16dp"
-                    android:textColor="@color/Grey"
-                    android:text="One tap for foods, accessories, health care products &amp; digital gadgets\n Grooming &amp; boarding\nEasy &amp; best consultation bookings"
-                    android:gravity="center"
-                    android:padding="15dp"
-                    />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/nextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/Primary_color"
-                    android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
-                    android:fontFamily="@font/fredokaone_regular"
-                    android:text="Next"
-                    app:cornerRadius="5dp" />
-            </LinearLayout>
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </FrameLayout>

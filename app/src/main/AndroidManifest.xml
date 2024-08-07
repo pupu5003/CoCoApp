@@ -18,7 +18,6 @@
         <activity
             android:name=".ActivityPage.GettingStarted"
             android:exported="false" />
-
         <activity
             android:name=".ActivityPage.Home"
             android:exported="false" />
