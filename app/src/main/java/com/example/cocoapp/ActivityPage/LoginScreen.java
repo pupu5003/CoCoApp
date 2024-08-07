@@ -3,6 +3,7 @@ package com.example.cocoapp.ActivityPage;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -58,8 +59,10 @@ public class LoginScreen extends AppCompatActivity {
         if (isLogin) {
             loginTextView.setTextColor(Color.parseColor("#419C82"));
             loginTextView.setTextSize(18);
+            loginTextView.setTypeface(null, Typeface.BOLD);
             registerTextView.setTextColor(Color.parseColor("#5F5F63"));
             registerTextView.setTextSize(16);
+            registerTextView.setTypeface(null, Typeface.NORMAL);
             titleTextView.setText("Login");
             loginBtn.setText("Login");
             moveUnderline(loginTextView);
@@ -67,8 +70,10 @@ public class LoginScreen extends AppCompatActivity {
         } else {
             registerTextView.setTextColor(Color.parseColor("#419C82"));
             registerTextView.setTextSize(18);
+            registerTextView.setTypeface(null, Typeface.BOLD);
             loginTextView.setTextColor(Color.parseColor("#5F5F63"));
             loginTextView.setTextSize(16);
+            loginTextView.setTypeface(null, Typeface.NORMAL);
             titleTextView.setText("Register");
             loginBtn.setText("Register");
             moveUnderline(registerTextView);
@@ -79,14 +84,14 @@ public class LoginScreen extends AppCompatActivity {
         final int[] startLocation = new int[2];
         underlineView.getLocationOnScreen(startLocation);
         final float startX = startLocation[0];
-        final int startWidth = underlineView.getWidth();
+        final int startWidth = underlineView.getMeasuredWidth();
 
 
         // Measure the target position and width relative to the parent
         final int[] targetLocation = new int[2];
         targetView.getLocationOnScreen(targetLocation);
         final float endX = targetLocation[0];
-        final int endWidth = targetView.getWidth();
+        final int endWidth = targetView.getMeasuredWidth();
 
 
         // Animate the position
@@ -99,7 +104,7 @@ public class LoginScreen extends AppCompatActivity {
             }
         });
 
-        // Animate the width
+        //Animate the width
         ValueAnimator widthAnimator = ValueAnimator.ofInt(startWidth, endWidth);
         widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
