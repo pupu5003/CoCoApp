@@ -37,4 +37,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("com.etebarian:meow-bottom-navigation:1.2.0")
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61")
 }

@@ -13,6 +13,9 @@
         android:theme="@style/Theme.CoCoApp"
         tools:targetApi="31">
         <activity
+            android:name=".ActivityPage.Bottom_Navigation"
+            android:exported="false" />
+        <activity
             android:name=".ActivityPage.LoginScreen"
             android:exported="false" />
         <activity
