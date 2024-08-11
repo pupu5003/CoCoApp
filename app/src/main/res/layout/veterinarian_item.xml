@@ -1,0 +1,158 @@
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp"
+    android:backgroundTint="@android:color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp"
+        android:background="@android:color/transparent"
+        >
+
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="81dp"
+            android:layout_height="77dp"
+            android:layout_marginStart="4dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ava_veterinarian"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.362" />
+
+        <TextView
+            android:id="@+id/doctor_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:fontFamily="@font/fredokaone_regular"
+            android:text="Dr. Nambuvan"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/profile_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/doctor_qualification"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Bachelor of veterinary science"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/doctor_name"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/doctor_name"
+            app:layout_constraintTop_toBottomOf="@id/doctor_name" />
+
+        <LinearLayout
+            android:id="@+id/rating_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="@id/doctor_name"
+            app:layout_constraintTop_toBottomOf="@id/doctor_qualification">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/star" />
+
+            <!-- Repeat ImageView for each star, or use a RatingBar -->
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/experience"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="10 years of experience"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/doctor_name"
+            app:layout_constraintTop_toBottomOf="@id/rating_layout" />
+
+        <ImageView
+            android:id="@+id/distance_icon"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/place"
+            app:layout_constraintStart_toEndOf="@id/experience"
+            app:layout_constraintTop_toTopOf="@id/experience"
+            app:layout_constraintBottom_toBottomOf="@id/experience"/>
+
+        <!-- Distance -->
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2.5 km"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/distance_icon"
+            app:layout_constraintTop_toTopOf="@id/experience"
+            app:layout_constraintBottom_toBottomOf="@id/experience"/>
+
+        <!-- Price Icon -->
+        <ImageView
+            android:id="@+id/price_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/coin"
+            app:layout_constraintStart_toEndOf="@id/distance"
+            app:layout_constraintTop_toTopOf="@id/experience"
+            app:layout_constraintBottom_toBottomOf="@id/experience"/>
+
+        <!-- Price -->
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100$"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/price_icon"
+            app:layout_constraintTop_toTopOf="@id/experience"
+            app:layout_constraintBottom_toBottomOf="@id/experience"/>
+
+        <!-- Availability -->
+        <TextView
+            android:id="@+id/availability"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Monday – Friday at 8.00 am - 5.00pm"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/doctor_name"
+            app:layout_constraintTop_toBottomOf="@id/experience" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="5.0 {100 reviews}"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/rating_layout"
+            tools:layout_editor_absoluteY="49dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
