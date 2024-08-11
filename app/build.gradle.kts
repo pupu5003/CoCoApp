@@ -39,4 +39,5 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("com.etebarian:meow-bottom-navigation:1.2.0")
     implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61")
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
 }
