@@ -5,8 +5,10 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
+import com.example.cocoapp.Fragment.VetVeterinarian;
 import com.example.cocoapp.R;
 
 public class Bottom_Navigation extends AppCompatActivity {
@@ -38,12 +40,14 @@ public class Bottom_Navigation extends AppCompatActivity {
 
         bottomNavigation.setOnShowListener(model -> {
             String name = "";
+            Fragment selectedFragment = null;
             switch (model.getId()) {
                 case home:
                     name = "Home";
                     break;
                 case discover:
                     name = "Discover";
+                    selectedFragment = new VetVeterinarian();
                     break;
                 case explore:
                     name = "Explore";
@@ -55,7 +59,12 @@ public class Bottom_Navigation extends AppCompatActivity {
                     name = "Profile";
                     break;
             }
-            Toast.makeText(Bottom_Navigation.this, "Showing: " + name, Toast.LENGTH_SHORT).show();
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, selectedFragment) // R.id.fragment_container is the ID of your FrameLayout or FragmentContainerView
+                        .commit();
+            }
+
 
             // bottomNavigation.setCount(home, "9");
 
