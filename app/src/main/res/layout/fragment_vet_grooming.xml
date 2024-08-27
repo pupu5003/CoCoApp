@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.VetVeterinarian">
+    tools:context=".Fragment.VetGrooming">
 
     <!-- Top Header with Back Button -->
     <RelativeLayout
@@ -171,7 +171,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/fredokaone_regular"
-                    android:text="Nearby Veterinarian"
+                    android:text="Nearby Grooming room "
                     android:textSize="18sp" />
 
                 <!-- See All Button -->
@@ -194,7 +194,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/nearby_vet"
                 app:layout_constraintTop_toBottomOf="@+id/nearby_vet"
-                tools:listitem="@layout/veterinarian_item" />
+                tools:listitem="@layout/grooming_item" />
             <LinearLayout
                 android:id="@+id/recommended_vet"
                 android:layout_width="0dp"
@@ -207,12 +207,12 @@
 
                 <!-- Recommended Veterinarian TextView -->
                 <TextView
-                    android:id="@+id/Recommended_Veterinarian"
+                    android:id="@+id/Recommended_Grooming"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/fredokaone_regular"
-                    android:text="Recommended Veterinarian"
+                    android:text="Recommended  Grooming room"
                     android:textSize="18sp" />
 
                 <!-- See All Button -->
@@ -235,7 +235,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/recommended_vet"
                 app:layout_constraintTop_toBottomOf="@+id/recommended_vet"
-                tools:listitem="@layout/veterinarian_item" />
+                tools:listitem="@layout/grooming_item" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
