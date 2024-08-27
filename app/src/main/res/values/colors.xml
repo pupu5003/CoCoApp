@@ -8,5 +8,6 @@
     <color name="Purple">#7A86AE</color>
     <color name="Red">#E54D4D</color>
     <color name="Grey">#5F5F63</color>
+    <color name="Grey2">#777777</color>
     // bottom nav color: #5AB198
 </resources>

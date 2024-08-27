@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:paddingBottom="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <!-- Vaccinations Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardVaccinations"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
+        app:strokeColor="@color/material_dynamic_neutral0"
+        app:strokeWidth="5dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/vaccination_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vaccinations"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/fredoka_semibold"
+                android:textSize="25sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="See all"
+                android:textColor="#3B738F"
+                android:textSize="16sp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/fredoka_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/vaccination_title"
+                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+                android:drawableTint="@color/black"
+                android:drawablePadding="10dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginHorizontal="25dp"
+                app:layout_constraintTop_toBottomOf="@id/vaccination_title"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:listitem="@layout/item_vaccination"
+                tools:itemCount="1">
+            </androidx.recyclerview.widget.RecyclerView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Allergies Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardAllergies"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
+        app:strokeColor="@color/material_dynamic_neutral0"
+        app:strokeWidth="5dp"
+        app:layout_constraintTop_toBottomOf="@id/cardVaccinations"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/allergies_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Diseases"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/fredoka_semibold"
+                android:textSize="25sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="See all"
+                android:textColor="#3B738F"
+                android:textSize="16sp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/fredoka_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/allergies_title"
+                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+                android:drawableTint="@color/black"
+                android:drawablePadding="10dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginHorizontal="25dp"
+                app:layout_constraintTop_toBottomOf="@id/allergies_title"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:listitem="@layout/item_allergy_wellness"
+                tools:itemCount="1">
+            </androidx.recyclerview.widget.RecyclerView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Appointments Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardAppointments"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
+        app:strokeColor="@color/material_dynamic_neutral0"
+        app:strokeWidth="5dp"
+        app:layout_constraintTop_toBottomOf="@id/cardAllergies"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/appointment_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Appointments"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/fredoka_semibold"
+                android:textSize="25sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="See all"
+                android:textColor="#3B738F"
+                android:textSize="16sp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/fredoka_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/appointment_title"
+                android:visibility="gone"/>
+
+
+            <TextView
+                android:id="@+id/textNothing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="When you schedule an appointment, you’ll see it here. Let’s set your firstappointment."
+                android:textColor="#3B738F"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/fredoka_medium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/appointment_title"
+                app:layout_constraintBottom_toTopOf="@id/buttonStart"
+                android:visibility="gone"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/appointment_recycle_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="25dp"
+                app:layout_constraintTop_toBottomOf="@id/appointment_title"
+                app:layout_constraintBottom_toTopOf="@id/buttonStart"
+                tools:listitem="@layout/item_appointment"
+                tools:itemCount="1"
+                android:visibility="visible">
+            </androidx.recyclerview.widget.RecyclerView>
+            
+            <Button
+                android:id="@+id/buttonStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/Primary_color"
+                android:text="Start"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="5dp"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

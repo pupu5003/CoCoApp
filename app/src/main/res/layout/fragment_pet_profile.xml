@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageDog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/dog_ava"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="-10dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_profile"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageDog"
+        app:layout_constraintVertical_bias="0.28">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="20dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_dog_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp"
+                android:backgroundTint="@color/white"
+                app:cardCornerRadius="27dp"
+                app:cardElevation="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/material_dynamic_neutral0"
+                app:strokeWidth="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="20dp">
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:fontFamily="@font/fredokaone_regular"
+                        android:text="Bella"
+                        android:textColor="@color/black"
+                        android:textSize="27sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="15dp"
+                        android:fontFamily="@font/fredokaone_regular"
+                        android:text="Border Collie"
+                        android:textColor="#064357"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/name" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:src="@drawable/gender"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <ImageView
+                android:id="@+id/icon_pet_foot"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/pet_ic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_dog_name" />
+
+            <TextView
+                android:id="@+id/aboutText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:fontFamily="@font/fredokaone_regular"
+                android:text="About"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@id/icon_pet_foot"
+                app:layout_constraintStart_toEndOf="@id/icon_pet_foot"
+                app:layout_constraintTop_toTopOf="@id/icon_pet_foot" />
+
+            <TextView
+                android:id="@+id/name2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="6dp"
+                android:fontFamily="@font/fredokaone_regular"
+                android:text="Bella"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@id/icon_pet_foot"
+                app:layout_constraintStart_toEndOf="@id/aboutText"
+                app:layout_constraintTop_toTopOf="@id/icon_pet_foot" />
+
+            <LinearLayout
+                android:id="@+id/linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/icon_pet_foot">
+
+                <RelativeLayout
+                    android:id="@+id/age_box"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/pet_characteristics_box" />
+
+                    <TextView
+                        android:id="@+id/age_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/fredoka_light"
+                        android:text="Age"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/age"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/age_title"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/fredokaone_regular"
+                        android:text="1y 4m 11d"
+                        android:textColor="#064357"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/weight_box"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/pet_characteristics_box" />
+
+                    <TextView
+                        android:id="@+id/weight_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/fredoka_light"
+                        android:text="Weight"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/weight_title"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/fredokaone_regular"
+                        android:text="7,5 kg"
+                        android:textColor="#064357"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/height_box"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/pet_characteristics_box" />
+
+                    <TextView
+                        android:id="@+id/height_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/fredoka_light"
+                        android:text="Height"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/height"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/height_title"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/fredokaone_regular"
+                        android:text="54 cm"
+                        android:textColor="#064357"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/color_box"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/pet_characteristics_box" />
+
+                    <TextView
+                        android:id="@+id/color_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/fredoka_light"
+                        android:text="Color"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/color"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/color_title"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/fredokaone_regular"
+                        android:text="Black"
+                        android:textColor="#064357"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/icon_smiley"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/smiley_ic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linearlayout" />
+
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:fontFamily="@font/fredokaone_regular"
+                android:text="Status of"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@id/icon_smiley"
+                app:layout_constraintStart_toEndOf="@id/icon_smiley"
+                app:layout_constraintTop_toTopOf="@id/icon_smiley" />
+
+            <TextView
+                android:id="@+id/name3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="6dp"
+                android:fontFamily="@font/fredokaone_regular"
+                android:text="Bella"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@id/icon_smiley"
+                app:layout_constraintStart_toEndOf="@id/statusText"
+                app:layout_constraintTop_toTopOf="@id/icon_smiley" />
+
+            <ImageView
+                android:id="@+id/health_ic"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/health_ic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/icon_smiley" />
+
+            <TextView
+                android:id="@+id/health_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/fredoka_medium"
+                android:text="Health"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toTopOf="@id/health_status"
+                app:layout_constraintStart_toEndOf="@id/health_ic"
+                app:layout_constraintTop_toTopOf="@id/health_ic" />
+
+            <TextView
+                android:id="@+id/health_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/fredoka_regular"
+                android:text="Abnormal"
+                android:textColor="@color/Grey2"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toTopOf="@id/health_vaccine"
+                app:layout_constraintStart_toEndOf="@id/health_ic"
+                app:layout_constraintTop_toBottomOf="@id/health_title" />
+
+            <TextView
+                android:id="@+id/health_vaccine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/fredoka_semibold"
+                android:text="Last Vaccinated (2mon Ago)"
+                android:textColor="@color/Primary_color"
+                android:textSize="8sp"
+                app:layout_constraintBottom_toBottomOf="@id/health_ic"
+                app:layout_constraintStart_toEndOf="@id/health_ic"
+                app:layout_constraintTop_toBottomOf="@id/health_status" />
+
+            <Button
+                android:layout_width="106dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/round_rectangle_5"
+                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+                android:paddingStart="10dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="5dp"
+                android:paddingBottom="2dp"
+                android:text="Contact Vet"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                app:backgroundTint="@color/Red"
+                app:layout_constraintBottom_toBottomOf="@id/health_ic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/health_ic" />
+
+            <ImageView
+                android:id="@+id/food_ic"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/food_ic_2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/health_ic" />
+
+            <TextView
+                android:id="@+id/food_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/fredoka_medium"
+                android:text="Food"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toTopOf="@id/food_status"
+                app:layout_constraintStart_toEndOf="@id/food_ic"
+                app:layout_constraintTop_toTopOf="@id/food_ic" />
+
+            <TextView
+                android:id="@+id/food_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/fredoka_regular"
+                android:text="Hungry"
+                android:textColor="@color/Grey2"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toTopOf="@id/food_feed"
+                app:layout_constraintStart_toEndOf="@id/food_ic"
+                app:layout_constraintTop_toBottomOf="@id/food_title" />
+
+            <TextView
+                android:id="@+id/food_feed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/fredoka_semibold"
+                android:text="Last Fed (1hr Ago)"
+                android:textColor="@color/Primary_color"
+                android:textSize="8sp"
+                app:layout_constraintBottom_toBottomOf="@id/food_ic"
+                app:layout_constraintStart_toEndOf="@id/food_ic"
+                app:layout_constraintTop_toBottomOf="@id/food_status" />
+
+
+            <Button
+                android:layout_width="106dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/round_rectangle_5"
+                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+                android:paddingStart="10dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="5dp"
+                android:paddingBottom="2dp"
+                android:text="Check Food"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                app:backgroundTint="@color/Primary_color"
+                app:layout_constraintBottom_toBottomOf="@id/food_ic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/food_ic" />
+
+            <ImageView
+                android:id="@+id/mood_ic"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/mood_ic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/food_ic" />
+
+            <TextView
+                android:id="@+id/mood_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/fredoka_medium"
+                android:text="Mood"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toTopOf="@id/mood_status"
+                app:layout_constraintStart_toEndOf="@id/mood_ic"
+                app:layout_constraintTop_toTopOf="@id/mood_ic" />
+
+            <TextView
+                android:id="@+id/mood_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/fredoka_regular"
+                android:text="Abnormal"
+                android:textColor="@color/Grey2"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@id/mood_ic"
+                app:layout_constraintStart_toEndOf="@id/mood_ic"
+                app:layout_constraintTop_toBottomOf="@id/mood_title" />
+
+            <Button
+                android:layout_width="106dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/round_rectangle_5"
+                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+                android:paddingStart="20dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="5dp"
+                android:paddingBottom="2dp"
+                android:text="Whistle"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                app:backgroundTint="@color/Red"
+                app:layout_constraintBottom_toBottomOf="@id/mood_ic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/mood_ic" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </FrameLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
