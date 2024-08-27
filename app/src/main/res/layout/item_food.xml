@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="5dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/food_image"
+            android:layout_width="67dp"
+            android:layout_height="67dp"
+            android:src="@drawable/dog1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/company_name"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginVertical="10dp"
+            android:layout_marginHorizontal="10dp">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/company_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/fredoka_light"
+            android:text="Josera"
+            android:textSize="10sp"
+            android:textColor="@color/Primary_color"
+            app:layout_constraintStart_toEndOf="@id/food_image"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/food_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/fredokaone_regular"
+            android:text="Josi Dog Master Mix"
+            android:textSize="10sp"
+            app:layout_constraintStart_toEndOf="@id/food_image"
+            app:layout_constraintTop_toBottomOf="@id/company_name"
+            app:layout_constraintBottom_toTopOf="@id/food_weight">
+
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/food_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/fredoka_light"
+            android:text="900g"
+            android:textSize="10sp"
+            app:layout_constraintStart_toEndOf="@id/food_image"
+            app:layout_constraintTop_toBottomOf="@id/food_name"
+            app:layout_constraintBottom_toTopOf="@id/tag_dog">
+        </TextView>
+
+        <TextView
+            android:id="@+id/tag_dog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/fredoka_light"
+            android:text="Bella"
+            android:textSize="10sp"
+            android:textColor="@color/Red"
+            app:layout_constraintStart_toEndOf="@id/food_image"
+            app:layout_constraintTop_toBottomOf="@id/food_weight"
+            app:layout_constraintBottom_toBottomOf="@id/food_image">
+        </TextView>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/shopping_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/food_name"
+            android:layout_marginStart="80dp">
+
+        </ImageView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</com.google.android.material.card.MaterialCardView>
