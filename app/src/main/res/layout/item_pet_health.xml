@@ -47,14 +47,17 @@
         android:id="@+id/health_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
-        android:layout_height="8dp"
+        android:layout_height="4dp"
         android:progress="88"
+        android:progressBackgroundTint="@color/Grey"
+        android:progressTint="@color/Primary_color"
         app:layout_constraintStart_toEndOf="@id/health_label"
         app:layout_constraintEnd_toStartOf="@id/health_percentage"
         app:layout_constraintTop_toTopOf="@+id/health_label"
         app:layout_constraintBottom_toBottomOf="@id/health_label"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"/>
+        android:layout_marginEnd="8dp"
+        />
 
     <!-- Health Percentage -->
     <TextView
@@ -86,6 +89,8 @@
         android:layout_width="wrap_content"
         android:layout_height="8dp"
         android:progress="48"
+        android:progressBackgroundTint="@color/Grey"
+        android:progressTint="@color/Red"
         app:layout_constraintStart_toStartOf="@id/health_progress"
         app:layout_constraintEnd_toEndOf="@id/health_progress"
         app:layout_constraintTop_toTopOf="@+id/food_label"
@@ -121,6 +126,7 @@
         android:layout_width="0dp"
         android:layout_height="8dp"
         android:progress="51"
+        android:progressTint="@color/Red"
         app:layout_constraintStart_toStartOf="@id/food_progress"
         app:layout_constraintEnd_toEndOf="@id/food_progress"
         app:layout_constraintTop_toTopOf="@+id/mood_label"
