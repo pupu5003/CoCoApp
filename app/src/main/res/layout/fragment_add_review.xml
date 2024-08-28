@@ -7,44 +7,38 @@
 	tools:context=".Fragment.AddReview">
 
 	<androidx.constraintlayout.widget.ConstraintLayout
-		android:id="@+id/top_header"
-		android:layout_width="0dp"
-		android:layout_height="62dp"
-		android:background="@color/Primary_color"
-		android:backgroundTint="@color/Primary_color"
-		android:backgroundTintMode="src_atop"
+		android:id="@+id/header"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent">
+		app:layout_constraintEnd_toEndOf="parent"
+		android:background="@color/Primary_color">
 
-		<!-- Back Button -->
-		<ImageView
-			android:id="@+id/btn_back"
+		<ImageButton
+			android:id="@+id/back_button"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:contentDescription="Back"
-			android:src="@drawable/baseline_chevron_left_24"
+			android:layout_height="match_parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
-			android:layout_marginStart="16dp"
-			android:layout_marginBottom="19dp"/>
+			android:src="@drawable/back_arrow_health"
+			android:backgroundTint="@android:color/transparent"
+			/>
 
-		<!-- Header Name -->
 		<TextView
-			android:id="@+id/header_name"
+			android:id="@+id/tvHeader"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="90dp"
-			android:layout_marginEnd="16dp"
-			android:fontFamily="@font/fredokaone_regular"
+			android:padding="10dp"
 			android:text="Add Reviews"
-			android:textColor="@color/white"
-			android:textSize="14sp"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintHorizontal_bias="0.183"
-			app:layout_constraintStart_toEndOf="@id/btn_back"
-			app:layout_constraintTop_toTopOf="parent" />
+			android:textColor="@android:color/white"
+			android:textSize="25sp"
+			android:textStyle="bold"
+			android:fontFamily="@font/fredoka_semibold"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent" />
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 

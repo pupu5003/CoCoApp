@@ -17,21 +17,30 @@
         android:background="@color/Primary_color"
         android:paddingBottom="10dp">
 
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="@id/tvHeader"
+            app:layout_constraintBottom_toBottomOf="@id/tvHeader"
+            app:layout_constraintStart_toStartOf="parent"
+            android:src="@drawable/back_arrow_health"
+            android:backgroundTint="@android:color/transparent"
+            />
+
         <TextView
             android:id="@+id/tvHeader"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="10dp"
             android:text="Pet Health"
             android:textColor="@android:color/white"
-            android:textSize="24sp"
+            android:textSize="25sp"
             android:textStyle="bold"
-            android:gravity="left"
+            android:fontFamily="@font/fredoka_semibold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:drawableStart="@drawable/back_arrow_health"
-            android:drawablePadding="20dp" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/tabWellness"
