@@ -94,10 +94,10 @@
 
         <ImageView
             android:id="@+id/distance_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_marginStart="92dp"
-            android:src="@drawable/place"
+            android:src="@drawable/place_ic"
             app:layout_constraintBottom_toBottomOf="@id/open_close"
             app:layout_constraintStart_toEndOf="@id/open_close"
             app:layout_constraintTop_toTopOf="@id/open_close"
@@ -118,10 +118,10 @@
 
         <ImageView
             android:id="@+id/price_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_marginStart="48dp"
-            android:src="@drawable/coin"
+            android:src="@drawable/coin_ic"
             app:layout_constraintBottom_toBottomOf="@id/open_close"
             app:layout_constraintStart_toEndOf="@id/distance"
             app:layout_constraintTop_toTopOf="@id/open_close"

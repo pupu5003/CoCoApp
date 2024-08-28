@@ -83,9 +83,9 @@
 
                         <ImageButton
                             android:id="@+id/btn_veterinary"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/vet"
+                            android:layout_width="53dp"
+                            android:layout_height="53dp"
+                            android:src="@drawable/vet_ic"
                             android:contentDescription="Veterinary"
                             android:padding="10dp"
                             android:background="@drawable/rounded_background"
