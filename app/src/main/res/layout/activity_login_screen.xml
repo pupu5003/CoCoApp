@@ -23,10 +23,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:fontFamily="@font/fredokaone_regular"
+        android:fontFamily="@font/fredoka_medium"
         android:text="Login"
         android:textSize="30sp"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageView" />
@@ -106,6 +105,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Forget password"
+        android:textColor="#419C82"
+        android:fontFamily="@font/fredoka_regular"
         app:layout_constraintEnd_toEndOf="@+id/editTextPassword"
         app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 
@@ -116,7 +117,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:backgroundTint="#5AB198"
-        android:fontFamily="@font/fredokaone_regular"
+        android:fontFamily="@font/fredoka_medium"
         android:text="Login"
         android:textSize="20dp"
         app:cornerRadius="5dp"
@@ -131,6 +132,7 @@
         android:layout_height="wrap_content"
         android:text="or connect with"
         android:textColor="#747070"
+        android:fontFamily="@font/fredoka_regular"
         app:layout_constraintTop_toBottomOf="@id/buttonLogin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

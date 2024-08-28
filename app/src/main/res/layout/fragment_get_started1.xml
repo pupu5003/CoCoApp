@@ -29,14 +29,13 @@
                 android:fontFamily="@font/fredokaone_regular"
                 android:text="Hey! Welcome"
                 android:textSize="24sp"
-                android:textStyle="bold" />
+                 />
 
             <TextView
                 android:id="@+id/Description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/fredoka_light"
-                android:textStyle="bold"
+                android:fontFamily="@font/fredoka_medium"
                 android:textColor="@color/Grey"
                 android:text="While You Sit And Stay \nWe'll Go Out And Play"
                 android:gravity="center"
