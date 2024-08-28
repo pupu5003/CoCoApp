@@ -93,7 +93,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/card_petStatus"
                 app:layout_constraintBottom_toBottomOf="@id/card_petStatus"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="15dp"
                 app:cardCornerRadius="15dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="5dp"
@@ -159,7 +159,7 @@
                 app:layout_constraintTop_toBottomOf="@id/card_myPet"
                 app:layout_constraintStart_toEndOf="@id/card_petLocation"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="15dp"
                 app:cardCornerRadius="15dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="10dp"
@@ -221,14 +221,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/card_petLocation"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="45dp"
+                android:layout_marginTop="20dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="4dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp">
+                    android:layout_marginHorizontal="10dp">
 
                     <ImageView
                         android:id="@+id/food_logo"
@@ -237,7 +237,8 @@
                         android:src="@drawable/food_ic"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginStart="10dp">
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp">
                     </ImageView>
 
                     <TextView
@@ -257,12 +258,69 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:layout_marginHorizontal="20dp"
                         app:layout_constraintTop_toBottomOf="@id/food_logo"
                         app:layout_constraintBottom_toBottomOf="parent"
                         tools:listitem="@layout/item_food"
+                        tools:itemCount="1">
+                    </androidx.recyclerview.widget.RecyclerView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_Vet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_Food"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="15dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="4dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp">
+
+                    <ImageView
+                        android:id="@+id/vet_ic"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:src="@drawable/vet_ic"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp">
+                    </ImageView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="@id/vet_ic"
+                        app:layout_constraintBottom_toBottomOf="@id/vet_ic"
+                        app:layout_constraintStart_toEndOf="@id/vet_ic"
+                        android:layout_marginStart="10dp"
+                        android:text="Vets"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/fredokaone_regular">
+                    </TextView>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginHorizontal="20dp"
+                        app:layout_constraintTop_toBottomOf="@id/vet_ic"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        tools:listitem="@layout/item_vet_dashboard"
                         tools:itemCount="1">
                     </androidx.recyclerview.widget.RecyclerView>
 

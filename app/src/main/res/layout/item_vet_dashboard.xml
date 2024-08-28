@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:padding="8dp"
+	android:clipToPadding="false"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<com.google.android.material.card.MaterialCardView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:cardElevation="5dp"
+		android:backgroundTint="@color/white">
+
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:padding="16dp">
+
+			<ImageView
+				android:id="@+id/profile_image"
+				android:layout_width="81dp"
+				android:layout_height="77dp"
+				android:layout_marginStart="4dp"
+				android:scaleType="centerCrop"
+				android:src="@drawable/ava_veterinarian"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintVertical_bias="0.0" />
+
+			<TextView
+				android:id="@+id/doctor_name"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="15dp"
+				android:fontFamily="@font/fredoka_medium"
+				android:text="Dr. Nambuvan"
+				android:textColor="@android:color/black"
+				android:textSize="20sp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintHorizontal_bias="0.0"
+				app:layout_constraintStart_toEndOf="@+id/profile_image"
+				app:layout_constraintTop_toTopOf="parent" />
+
+			<TextView
+				android:id="@+id/doctor_qualification"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="2dp"
+				android:text="Bachelor of veterinary science"
+				android:textColor="@android:color/darker_gray"
+				android:textSize="12sp"
+				android:fontFamily="@font/fredoka_medium"
+				app:layout_constraintStart_toStartOf="@id/doctor_name"
+				app:layout_constraintTop_toBottomOf="@id/doctor_name"/>
+
+
+			<RatingBar
+				android:id="@+id/rating_layout"
+				style="@style/Widget.AppCompat.RatingBar.Small"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:isIndicator="true"
+				android:numStars="5"
+				android:rating="4.5"
+				android:theme="@style/RatingBar"
+				android:layout_marginTop="2dp"
+				app:layout_constraintStart_toStartOf="@+id/doctor_qualification"
+				app:layout_constraintTop_toBottomOf="@+id/doctor_qualification"
+				app:layout_constraintVertical_bias="0.422" />
+
+			<TextView
+				android:id="@+id/textView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="5.0 {100 reviews}"
+				android:textColor="@android:color/black"
+				android:textSize="12.5sp"
+				android:fontFamily="@font/fredoka_medium"
+				app:layout_constraintBottom_toBottomOf="@+id/rating_layout"
+				app:layout_constraintStart_toEndOf="@+id/rating_layout"
+				app:layout_constraintTop_toTopOf="@+id/rating_layout"
+				android:layout_marginStart="5dp"/>
+
+
+			<ImageView
+				android:id="@+id/distance_icon"
+				android:layout_width="10dp"
+				android:layout_height="10dp"
+				android:src="@drawable/place_ic"
+				app:layout_constraintTop_toTopOf="@id/distance"
+				app:layout_constraintBottom_toBottomOf="@id/distance"
+				app:layout_constraintEnd_toStartOf="@id/distance"
+				android:layout_marginEnd="3dp"/>
+
+			<TextView
+				android:id="@+id/distance"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="2.5 km"
+				android:textSize="11sp"
+				android:fontFamily="@font/fredoka_regular"
+				android:textColor="@color/Grey2"
+				app:layout_constraintEnd_toStartOf="@id/price_icon"
+				app:layout_constraintTop_toTopOf="@id/price"
+				android:layout_marginEnd="20dp"/>
+
+			<ImageView
+				android:id="@+id/price_icon"
+				android:layout_width="10dp"
+				android:layout_height="10dp"
+				android:src="@drawable/coin_ic"
+				app:layout_constraintEnd_toStartOf="@id/price"
+				app:layout_constraintTop_toTopOf="@id/price"
+				app:layout_constraintBottom_toBottomOf="@id/price"
+				android:layout_marginEnd="3dp"/>
+
+			<TextView
+				android:id="@+id/price"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="100$"
+				android:textColor="@color/Grey2"
+				android:textSize="11sp"
+				android:fontFamily="@font/fredoka_regular"
+				app:layout_constraintEnd_toEndOf="@id/textView"
+				app:layout_constraintTop_toBottomOf="@id/textView"
+				android:layout_marginTop="3dp"
+				/>
+
+			<TextView
+				android:id="@+id/lastVisit"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="15dp"
+				android:text="Last Visit: "
+				android:textColor="@android:color/black"
+				android:textSize="12sp"
+				android:fontFamily="@font/fredoka_regular"
+				app:layout_constraintStart_toStartOf="@+id/profile_image"
+				app:layout_constraintTop_toBottomOf="@id/profile_image" />
+
+			<TextView
+				android:id="@+id/lastVisit_date"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="25/11/2022"
+				android:textColor="@android:color/black"
+				android:textSize="12sp"
+				android:fontFamily="@font/fredoka_regular"
+				app:layout_constraintStart_toEndOf="@id/lastVisit"
+				app:layout_constraintTop_toTopOf="@id/lastVisit"
+				android:layout_marginStart="5dp"/>
+
+			<TextView
+				android:id="@+id/bookAppointment"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Book Appointment"
+				android:textColor="@android:color/black"
+				android:textSize="12sp"
+				android:fontFamily="@font/fredoka_regular"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toTopOf="@id/lastVisit_date"
+				android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+				android:drawableTint="@color/black"
+				android:drawablePadding="2dp"/>
+
+		</androidx.constraintlayout.widget.ConstraintLayout>
+
+	</com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
