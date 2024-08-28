@@ -40,15 +40,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Haylie Aminoff"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/fredoka_semibold"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Just now"
+                    android:fontFamily="@font/poppins_regular"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -65,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4.5"
-                android:textStyle="bold"
+                android:fontFamily="@font/poppins_regular"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
 
@@ -91,6 +92,7 @@
             android:text="The thing I like best about COCO is the amount of time it has saved while trying to manage my three pets."
             android:textColor="@android:color/darker_gray"
             android:textSize="14sp"
+            android:fontFamily="@font/poppins_regular"
             android:layout_marginTop="8dp"
             android:lineSpacingExtra="4dp" />
 

@@ -7,7 +7,7 @@
 	tools:context=".Fragment.AddReview">
 
 	<androidx.constraintlayout.widget.ConstraintLayout
-		android:id="@+id/header"
+		android:id="@+id/top_header"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		app:layout_constraintTop_toTopOf="parent"
@@ -22,7 +22,7 @@
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			android:src="@drawable/back_arrow_health"
+			android:src="@drawable/baseline_chevron_left_24"
 			android:backgroundTint="@android:color/transparent"
 			/>
 
@@ -71,6 +71,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="Haylie Aminoff"
+				android:fontFamily="@font/fredoka_semibold"
 				android:textColor="@android:color/black"
 				android:textSize="16sp"
 				android:textStyle="bold" />
@@ -79,6 +80,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="Posting Publicly*"
+				android:fontFamily="@font/poppins_regular"
 				android:textColor="@android:color/darker_gray"
 				android:textSize="12sp" />
 		</LinearLayout>
@@ -99,11 +101,12 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="16dp"
+		android:fontFamily="@font/poppins_regular"
 		android:text="Share more about your experience"
-		android:fontFamily="@font/fredokaone_regular"
+		android:textStyle="bold"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintHorizontal_bias="0.045"
-		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintStart_toStartOf="@+id/linearLayout"
 		app:layout_constraintTop_toBottomOf="@+id/ratingBar2" />
 
 	<EditText
