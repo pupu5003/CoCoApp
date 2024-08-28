@@ -1,0 +1,97 @@
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="0dp"
+    android:backgroundTint="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ava_veterinarian"
+                android:scaleType="centerCrop"
+                android:background="@drawable/circle_background" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Haylie Aminoff"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Just now"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/tv_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.5"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <RatingBar
+                android:id="@+id/rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:numStars="5"
+                android:rating="4.5"
+                android:stepSize="0.5"
+                android:isIndicator="true"
+                android:layout_gravity="center_vertical"
+                style="?android:attr/ratingBarStyleSmall"
+                android:progressTint="@android:color/holo_orange_light" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="The thing I like best about COCO is the amount of time it has saved while trying to manage my three pets."
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:lineSpacingExtra="4dp" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
