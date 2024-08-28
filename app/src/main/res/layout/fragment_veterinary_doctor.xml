@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:backgroundTint="@color/white">
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/header"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		android:background="@color/Primary_color">
+
+		<ImageButton
+			android:id="@+id/back_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			android:src="@drawable/baseline_chevron_left_24"
+			android:backgroundTint="@android:color/transparent"
+			/>
+
+		<TextView
+			android:id="@+id/tvHeader"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="10dp"
+			android:text="Dr.Nambuvan"
+			android:textColor="@android:color/white"
+			android:textSize="25sp"
+			android:textStyle="bold"
+			android:fontFamily="@font/fredoka_semibold"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent" />
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+	<ImageView
+		android:id="@+id/imageDoctor"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:scaleType="fitCenter"
+		android:src="@drawable/doctor_ava"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/header"
+		tools:ignore="MissingConstraints" />
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/background_profile"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintHorizontal_bias="0.0"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/imageDoctor"
+		app:layout_constraintVertical_bias="0.55">
+
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginVertical="20dp">
+
+			<com.google.android.material.card.MaterialCardView
+				android:id="@+id/card"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="20dp"
+				android:layout_marginTop="10dp"
+				android:backgroundTint="@color/white"
+				android:clipToPadding="false"
+				app:cardElevation="5dp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent">
+
+				<androidx.constraintlayout.widget.ConstraintLayout
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginStart="10dp"
+					android:layout_marginTop="10dp"
+					android:layout_marginEnd="40dp"
+					android:padding="10dp">
+
+					<TextView
+						android:id="@+id/doctor_name"
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:fontFamily="@font/fredoka_semibold"
+						android:text="Dr. Nambuvan"
+						android:textColor="@android:color/black"
+						android:textSize="20sp"
+						android:textStyle="bold"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toStartOf="parent"
+						app:layout_constraintTop_toTopOf="parent" />
+
+					<TextView
+						android:id="@+id/doctor_qualification"
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="2dp"
+						android:fontFamily="@font/fredoka_medium"
+						android:text="Bachelor of veterinary science"
+						android:textColor="@android:color/darker_gray"
+						android:textSize="17.5sp"
+						app:layout_constraintStart_toStartOf="@id/doctor_name"
+						app:layout_constraintTop_toBottomOf="@id/doctor_name" />
+
+
+					<RatingBar
+						android:id="@+id/rating_layout"
+						style="@style/Widget.AppCompat.RatingBar.Small"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="2dp"
+						android:isIndicator="true"
+						android:numStars="5"
+						android:rating="5.0"
+						android:theme="@style/RatingBar"
+						app:layout_constraintStart_toStartOf="@+id/doctor_qualification"
+						app:layout_constraintTop_toBottomOf="@+id/doctor_qualification"
+						app:layout_constraintVertical_bias="0.422" />
+
+					<TextView
+						android:id="@+id/textView"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="5dp"
+						android:fontFamily="@font/fredoka_medium"
+						android:text="5.0 (100 reviews)"
+						android:textColor="@android:color/black"
+						android:textSize="12.5sp"
+						app:layout_constraintBottom_toBottomOf="@+id/rating_layout"
+						app:layout_constraintStart_toEndOf="@+id/rating_layout"
+						app:layout_constraintTop_toTopOf="@+id/rating_layout" />
+
+					<ImageView
+						android:id="@+id/time_icon"
+						android:layout_width="10dp"
+						android:layout_height="10dp"
+						android:layout_marginTop="5dp"
+						android:layout_marginEnd="3dp"
+						android:src="@drawable/time_ic"
+						app:layout_constraintStart_toStartOf="@id/rating_layout"
+						app:layout_constraintTop_toBottomOf="@id/rating_layout" />
+
+					<TextView
+						android:id="@+id/time"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="5dp"
+						android:layout_marginEnd="20dp"
+						android:fontFamily="@font/fredoka_regular"
+						android:text="Monday - Friday at 8.00 am - 5.00pm"
+						android:textColor="@color/Grey2"
+						android:textSize="10sp"
+						app:layout_constraintBottom_toBottomOf="@id/time_icon"
+						app:layout_constraintStart_toEndOf="@id/time_icon"
+						app:layout_constraintTop_toTopOf="@id/time_icon" />
+
+
+					<ImageView
+						android:id="@+id/distance_icon"
+						android:layout_width="10dp"
+						android:layout_height="10dp"
+						android:layout_marginStart="30dp"
+						android:layout_marginEnd="3dp"
+						android:src="@drawable/place_ic"
+						app:layout_constraintBottom_toBottomOf="@id/time_icon"
+						app:layout_constraintStart_toEndOf="@id/time"
+						app:layout_constraintTop_toTopOf="@id/time_icon" />
+
+					<TextView
+						android:id="@+id/distance"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="5dp"
+						android:layout_marginEnd="20dp"
+						android:fontFamily="@font/fredoka_regular"
+						android:text="2.5 km"
+						android:textColor="@color/Grey2"
+						android:textSize="11sp"
+						app:layout_constraintBottom_toBottomOf="@id/distance_icon"
+						app:layout_constraintStart_toEndOf="@id/distance_icon"
+						app:layout_constraintTop_toTopOf="@id/distance_icon" />
+
+					<TextView
+						android:id="@+id/price"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="10dp"
+						android:fontFamily="@font/fredoka_medium"
+						android:text="300 000 VND"
+						android:textColor="@color/Primary_color"
+						android:textSize="15sp"
+						app:layout_constraintStart_toStartOf="parent"
+						app:layout_constraintTop_toBottomOf="@id/time_icon" />
+
+					<TextView
+						android:id="@+id/foranAppointment"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="5dp"
+						android:layout_marginTop="10dp"
+						android:fontFamily="@font/fredoka_medium"
+						android:text="for an Appointment"
+						android:textColor="@color/Primary_color"
+						android:textSize="15sp"
+						app:layout_constraintStart_toEndOf="@id/price"
+						app:layout_constraintTop_toBottomOf="@id/time_icon" />
+
+
+				</androidx.constraintlayout.widget.ConstraintLayout>
+
+			</com.google.android.material.card.MaterialCardView>
+
+			<TextView
+				android:id="@+id/description"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="10dp"
+				android:fontFamily="@font/fredoka_regular"
+				android:gravity="fill_horizontal"
+				android:paddingHorizontal="25dp"
+				android:text="@string/description"
+				android:textAlignment="gravity"
+				android:textSize="12sp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/card" />
+
+			<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="20dp"
+				android:layout_marginTop="40dp"
+				android:background="@drawable/round_rectangle_5"
+				android:drawableEnd="@drawable/deadline_ic"
+				android:fontFamily="@font/fredoka_medium"
+				android:text="Book an Appointment"
+				android:textSize="15sp"
+				app:backgroundTint="@color/Primary_color"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/description" />
+
+		</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+	</FrameLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
