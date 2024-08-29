@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.example.cocoapp.Adapter.GroomingAdapter;
 import com.example.cocoapp.R;
@@ -74,6 +75,13 @@ public class VetGrooming extends Fragment {
         btnGrooming.setSelected(true);
         ImageButton btnVet = view.findViewById(R.id.btn_veterinary);
         ImageButton btnBoarding = view.findViewById(R.id.btn_boarding);
+        // Create an ImageView programmatically
+        ImageView pic1 = new ImageView(getContext());
+        pic1.setImageResource(R.drawable.product_img);
+        ImageView pic2 = new ImageView(getContext());
+        pic2.setImageResource(R.drawable.product_img2);
+
+
         btnVet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,8 +107,8 @@ public class VetGrooming extends Fragment {
 
         // Initialize data
         List<Grooming> groomingList = new ArrayList<>();
-        groomingList.add(new Grooming("Paws & Claws", 4.5f, 120, true, "1.2 km", "$50", "Mon-Sat 9 AM - 6 PM"));
-        groomingList.add(new Grooming("Pet Pamper", 4.3f, 80, false, "2.5 km", "$60", "Mon-Fri 10 AM - 5 PM"));
+        groomingList.add(new Grooming("Paws & Claws", 4.5f, 120, true, "1.2 km", "$50", "Mon-Sat 9 AM - 6 PM",pic1));
+        groomingList.add(new Grooming("Pet Pamper", 4.3f, 80, false, "2.5 km", "$60", "Mon-Fri 10 AM - 5 PM",pic2));
 
         // Set adapter
         GroomingAdapter NearByAdapter = new GroomingAdapter(groomingList);

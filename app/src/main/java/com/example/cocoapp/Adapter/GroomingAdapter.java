@@ -50,6 +50,7 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
         private TextView distanceText;
         private TextView priceText;
         private TextView availabilityText;
+        private ImageView profileImage;
 
         public GroomingViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,6 +61,7 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
             distanceText = itemView.findViewById(R.id.distance);
             priceText = itemView.findViewById(R.id.price);
             availabilityText = itemView.findViewById(R.id.availability);
+            profileImage = itemView.findViewById(R.id.profile_image);
         }
         public void bind(Grooming grooming) {
             Grooming_name.setText(grooming.getName());
@@ -70,6 +72,7 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
             distanceText.setText(grooming.getDistance());
             priceText.setText(grooming.getPrice());
             availabilityText.setText(grooming.getAvailability());
+            profileImage.setImageDrawable(grooming.getPic().getDrawable());
         }
     }
 }

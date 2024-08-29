@@ -8,6 +8,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cocoapp.R;
@@ -69,7 +70,7 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
             priceIcon = itemView.findViewById(R.id.price_icon);
             priceText = itemView.findViewById(R.id.price);
             availabilityText = itemView.findViewById(R.id.availability);
-            //profileImage = itemView.findViewById(R.id.profile_image);
+            profileImage = itemView.findViewById(R.id.profile_image);
         }
 
         public void bind(veterinarian veterinarian) {
@@ -81,7 +82,7 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
             distanceText.setText(veterinarian.getDistance());
             priceText.setText(veterinarian.getPrice());
             availabilityText.setText(veterinarian.getAvailability());
-            //profileImage.getContext().getResources().getIdentifier(veterinarian.getProfileImage().toString(), "drawable", profileImage.getContext().getPackageName());
+            profileImage.setImageDrawable(veterinarian.getProfileImage().getDrawable());
         }
     }
 }

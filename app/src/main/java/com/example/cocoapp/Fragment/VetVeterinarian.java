@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.example.cocoapp.Adapter.VeterinarianAdapter;
 import com.example.cocoapp.R;
@@ -74,6 +75,11 @@ public class VetVeterinarian extends Fragment {
         btnVeterinary.setSelected(true);
         ImageButton btnGrooming = view.findViewById(R.id.btn_grooming);
         ImageButton btnBoarding = view.findViewById(R.id.btn_boarding);
+        ImageView pic1 = new ImageView(getContext());
+        pic1.setImageResource(R.drawable.product_img);
+        ImageView pic2 = new ImageView(getContext());
+        pic2.setImageResource(R.drawable.product_img2);
+
         btnGrooming.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,14 +106,17 @@ public class VetVeterinarian extends Fragment {
         nearbyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recommendedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
+
         // Initialize the data
+
+
         List<veterinarian> nearbyVets = new ArrayList<>();
-        nearbyVets.add(new veterinarian("Dr. Smith", "Bachelor of Veterinary Science", 4.5f, 100, 10, "2.5 km", "$100", "Mon-Fri 8 AM - 5 PM"));
-        nearbyVets.add(new veterinarian("Dr. Jones", "Doctor of Veterinary Medicine", 4.2f, 80, 8, "3.0 km", "$120", "Mon-Fri 9 AM - 6 PM"));
+        nearbyVets.add(new veterinarian("Dr. Smith", "Bachelor of Veterinary Science", 4.5f, 100, 10, "2.5 km", "$100", "Mon-Fri 8 AM - 5 PM",pic1));
+        nearbyVets.add(new veterinarian("Dr. Jones", "Doctor of Veterinary Medicine", 4.2f, 80, 8, "3.0 km", "$120", "Mon-Fri 9 AM - 6 PM",pic2));
 
         List<veterinarian> recommendedVets = new ArrayList<>();
-        recommendedVets.add(new veterinarian("Dr. Brown", "Bachelor of Veterinary Science", 4.8f, 120, 12, "1.8 km", "$110", "Mon-Sat 8 AM - 4 PM"));
-        recommendedVets.add(new veterinarian("Dr. Johnson", "Doctor of Veterinary Medicine", 4.6f, 90, 9, "2.0 km", "$115", "Mon-Fri 10 AM - 6 PM"));
+        recommendedVets.add(new veterinarian("Dr. Brown", "Bachelor of Veterinary Science", 4.8f, 120, 12, "1.8 km", "$110", "Mon-Sat 8 AM - 4 PM",pic1));
+        recommendedVets.add(new veterinarian("Dr. Johnson", "Doctor of Veterinary Medicine", 4.6f, 90, 9, "2.0 km", "$115", "Mon-Fri 10 AM - 6 PM",pic2));
 
         // Create the adapter and set it to the RecyclerView
         VeterinarianAdapter nearbyAdapter = new VeterinarianAdapter(nearbyVets);
