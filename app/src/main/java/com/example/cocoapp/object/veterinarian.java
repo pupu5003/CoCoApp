@@ -15,7 +15,7 @@ public class veterinarian {
     private ImageView pic;
 
     public veterinarian(String name, String qualification, float rating, int reviews,
-                        int experience, String distance, String price, String availability) {
+                        int experience, String distance, String price, String availability,ImageView pic) {
         this.name = name;
         this.qualification = qualification;
         this.rating = rating;
@@ -24,7 +24,9 @@ public class veterinarian {
         this.distance = distance;
         this.price = price;
         this.availability = availability;
+        this.pic=pic;
     }
+
     public String getName() {
         return name;
     }

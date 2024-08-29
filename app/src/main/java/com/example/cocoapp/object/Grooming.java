@@ -15,7 +15,7 @@ public class Grooming {
     private ImageView pic;
 
     // Constructor
-    public Grooming(String name, float rating, int reviews, boolean isOpen, String distance, String price, String availability) {
+    public Grooming(String name, float rating, int reviews, boolean isOpen, String distance, String price, String availability,ImageView pic) {
         this.name = name;
         this.rating = rating;
         this.reviews = reviews;
@@ -23,8 +23,10 @@ public class Grooming {
         this.distance = distance;
         this.price = price;
         this.availability = availability;
+        this.pic = pic;
     }
 
+    public ImageView getPic(){return pic;}
     // Getters and Setters
     public String getName() {
         return name;
