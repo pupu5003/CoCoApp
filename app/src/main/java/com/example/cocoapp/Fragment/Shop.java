@@ -3,12 +3,19 @@ package com.example.cocoapp.Fragment;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.cocoapp.Adapter.ProductAdapter;
 import com.example.cocoapp.R;
+import com.example.cocoapp.object.Product;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,7 +67,19 @@ public class Shop extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_shop, container, false);
+
+		View view = inflater.inflate(R.layout.fragment_shop, container, false);
+		RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+		List<Product> productList = new ArrayList<>();
+
+
+		ProductAdapter adapter = new ProductAdapter( productList);
+		recyclerView.setAdapter(adapter);
+
+	// Set GridLayoutManager to have 2 columns
+		GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
+		recyclerView.setLayoutManager(gridLayoutManager);
+		return view;
+
 	}
 }
