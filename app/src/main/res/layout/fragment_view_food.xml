@@ -10,10 +10,10 @@
 		android:id="@+id/top_header"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:background="@color/Primary_color"
-		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent">
+		app:layout_constraintEnd_toEndOf="parent"
+		android:background="@color/Primary_color">
 
 		<ImageButton
 			android:id="@+id/back_button"
@@ -36,18 +36,18 @@
 			app:layout_constraintTop_toTopOf="parent" />
 
 		<TextView
-			android:id="@+id/product_name"
+			android:id="@+id/tvHeader"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="8dp"
-			android:fontFamily="@font/fredokaone_regular"
+			android:padding="10dp"
 			android:text="Josi Dog Master Mix"
 			android:textColor="@android:color/white"
-			android:textSize="16sp"
-			app:layout_constraintBottom_margin="8dp"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent" />
+			android:textSize="25sp"
+			android:textStyle="bold"
+			android:fontFamily="@font/fredoka_semibold"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent" />
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -85,8 +85,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginHorizontal="30dp"
-				android:layout_marginTop="10dp"
-				android:layout_marginBottom="30dp"
+				android:layout_marginTop="2dp"
 				android:backgroundTint="@color/white"
 				app:cardCornerRadius="27dp"
 				app:cardElevation="10dp"
@@ -99,18 +98,18 @@
 				<androidx.constraintlayout.widget.ConstraintLayout
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
-					android:layout_marginStart="-5dp">
+					android:padding="8dp">
 
 					<TextView
 						android:id="@+id/dogfoodname"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_marginStart="8dp"
 						android:layout_marginTop="4dp"
 						android:fontFamily="@font/fredokaone_regular"
 						android:text="Josi Dog Master Mix - 900g"
 						android:textColor="@color/black"
-						android:textSize="26sp"
+						android:textSize="24dp"
+						app:layout_constraintEnd_toEndOf="parent"
 						app:layout_constraintStart_toStartOf="parent"
 						app:layout_constraintTop_toTopOf="parent" />
 
@@ -118,7 +117,7 @@
 						android:id="@+id/brand"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_marginStart="28dp"
+						android:layout_marginStart="12dp"
 						android:layout_marginTop="10dp"
 						android:layout_marginBottom="15dp"
 						android:fontFamily="@font/fredoka_medium"
@@ -134,7 +133,7 @@
 						android:id="@+id/brandname"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_marginStart="64dp"
+						android:layout_marginStart="8dp"
 						android:layout_marginTop="10dp"
 						android:layout_marginBottom="15dp"
 						android:fontFamily="@font/fredoka_medium"
@@ -142,7 +141,7 @@
 						android:textColor="#064357"
 						android:textSize="18sp"
 						app:layout_constraintBottom_toBottomOf="@+id/brand"
-						app:layout_constraintStart_toStartOf="@+id/brand"
+						app:layout_constraintStart_toEndOf="@+id/brand"
 						app:layout_constraintTop_toTopOf="@+id/brand"
 						app:layout_constraintVertical_bias="0.4" />
 
@@ -158,6 +157,7 @@
 						android:textColor="#5CB15A"
 						android:textSize="14sp"
 						app:layout_constraintBottom_toBottomOf="@+id/brand"
+						app:layout_constraintEnd_toEndOf="@+id/dogfoodname"
 						app:layout_constraintStart_toStartOf="@+id/brand"
 						app:layout_constraintTop_toTopOf="@+id/brand"
 						app:layout_constraintVertical_bias="0.44" />
@@ -166,7 +166,7 @@
 						android:id="@+id/rating_text"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_marginStart="28dp"
+						android:layout_marginStart="12dp"
 						android:layout_marginTop="10dp"
 						android:fontFamily="@font/fredoka_medium"
 						android:text="5.0"
@@ -175,7 +175,7 @@
 						app:layout_constraintBottom_toBottomOf="parent"
 						app:layout_constraintStart_toStartOf="parent"
 						app:layout_constraintTop_toBottomOf="@+id/brand"
-						app:layout_constraintVertical_bias="1.0" />
+						app:layout_constraintVertical_bias="0.0" />
 
 					<RatingBar
 						android:id="@+id/rating_layout"
@@ -197,7 +197,7 @@
 						android:id="@+id/nunmber_reviews_text"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_marginStart="88dp"
+						android:layout_marginStart="92dp"
 						android:layout_marginTop="10dp"
 						android:fontFamily="@font/fredoka_medium"
 						android:text="(89 reviews)"
@@ -218,65 +218,86 @@
 				android:id="@+id/dogfooddescription"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="10dp"
+				android:layout_marginTop="20dp"
 				android:fontFamily="@font/fredoka_regular"
 				android:gravity="fill_horizontal"
 				android:paddingHorizontal="25dp"
 				android:text="Brighten up your pet's bowl with the colourful corn and beetroot kibble in JosiDog MasterMix! Crunchy and flavourful variety for adult dogs of all sizes, plus a wide range of important nutrients included. No added soya, sugar or milk products. Free from artificial colourings, flavourings and preservatives. Contains animal protein, vitamins &amp; minerals."
 				android:textAlignment="gravity"
 				android:textSize="12sp"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="@+id/card_dog_food_info"
+				app:layout_constraintStart_toStartOf="@+id/card_dog_food_info"
 				app:layout_constraintTop_toBottomOf="@id/card_dog_food_info" />
 
-			<TextView
-				android:id="@+id/recommended_for_label"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="16dp"
-				android:fontFamily="@font/fredoka_regular"
-				android:text="Recommended For:"
-				android:textColor="@color/black"
-				android:textSize="14sp"
-				android:textStyle="bold"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintHorizontal_bias="0.104"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/dogfooddescription" />
 
-			<TextView
-				android:id="@+id/recommended_for_value"
-				android:layout_width="wrap_content"
+			<LinearLayout
+				android:id="@+id/quantityLayout"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginStart="24dp"
-				android:background="@drawable/rounded_background"
-				android:padding="5dp"
-				android:text="Rowdy"
-				android:textColor="@color/black"
-				android:textSize="14sp"
-				app:layout_constraintBottom_toBottomOf="@id/recommended_for_label"
-				app:layout_constraintStart_toEndOf="@id/recommended_for_label"
-				app:layout_constraintTop_toTopOf="@id/recommended_for_label" />
-
-			<TextView
-				android:id="@+id/quantity_label"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="60dp"
-				android:layout_marginTop="20dp"
-				android:fontFamily="@font/fredoka_regular"
-				android:text="Quantity"
-				android:textColor="#808080"
-				android:textSize="14sp"
-				android:textStyle="bold"
+				android:orientation="horizontal"
+				android:gravity="center_vertical"
+				android:layout_margin="8dp"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/recommended_for_label" />
+				app:layout_constraintTop_toBottomOf="@+id/dogfooddescription">
+				<TextView
+					android:id="@+id/quantity_label"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="20dp"
+					android:layout_marginEnd="150dp"
+					android:layout_marginTop="12dp"
+					android:fontFamily="@font/fredoka_regular"
+					android:text="Quantity"
+					android:textColor="#808080"
+					android:textSize="14sp"
+					android:textStyle="bold"
+					/>
+
+				<!-- Decrement Button -->
+				<Button
+					android:id="@+id/decrementButton"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:background="?android:attr/selectableItemBackground"
+					android:padding="8dp"
+					android:text="-"
+					android:fontFamily="@font/fredoka_medium"
+					android:textColor="#6CC51D"
+					android:textSize="25sp" />
+
+				<!-- Quantity Text -->
+				<TextView
+					android:id="@+id/quantityTextView"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:text="1"
+					android:fontFamily="@font/fredoka_medium"
+					android:textSize="18sp"
+					android:textColor="@android:color/black"
+					android:gravity="center" />
+
+				<!-- Increment Button -->
+				<Button
+					android:id="@+id/incrementButton"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:text="+"
+					android:fontFamily="@font/fredoka_medium"
+					android:textSize="25sp"
+					android:textColor="#6CC51D"
+					android:background="?android:attr/selectableItemBackground"
+					android:padding="8dp" />
+			</LinearLayout>
 
 			<Button
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginHorizontal="20dp"
 				android:layout_marginTop="40dp"
+				android:layout_marginBottom="10dp"
 				android:background="@drawable/round_rectangle_5"
 				android:drawableEnd="@drawable/deadline_ic"
 				android:fontFamily="@font/fredoka_medium"
@@ -285,9 +306,9 @@
 				app:backgroundTint="@color/Primary_color"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintHorizontal_bias="0.4"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/quantity_label" />
+				app:layout_constraintTop_toBottomOf="@id/quantityLayout"
+				app:layout_constraintVertical_bias="1.0" />
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 
