@@ -1,0 +1,116 @@
+<androidx.cardview.widget.CardView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:card_view="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_margin="8dp"
+	card_view:cardCornerRadius="8dp"
+	card_view:cardElevation="4dp"
+	android:background="?android:attr/selectableItemBackground">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="100dp"
+		android:gravity="center_vertical"
+		android:orientation="horizontal"
+		android:padding="16dp">
+
+		<!-- Product Image -->
+		<ImageView
+			android:id="@+id/product_image"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:layout_marginEnd="16dp"
+			android:scaleType="centerCrop"
+			android:src="@drawable/product_img" />
+
+		<!-- Product Details Layout -->
+
+		<!-- Quantity Controls Layout -->
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/product_brand"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Royal Canin"
+				android:textColor="#5CB15A"
+				android:fontFamily="@font/fredoka_medium"
+				android:textSize="12dp"
+				tools:text="Royal Canin" />
+
+			<TextView
+				android:id="@+id/product_name"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Rottweiler Puppy"
+				android:textColor="@color/black"
+				android:fontFamily="@font/fredoka_semibold"
+				android:textStyle="bold"
+				android:textSize="12dp"
+				tools:text="Rottweiler Puppy" />
+
+			<TextView
+				android:id="@+id/product_weight"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="3kg"
+				android:textColor="@color/Grey"
+				android:textSize="12sp"
+				android:fontFamily="@font/fredoka_regular"
+				tools:text="3kg" />
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:gravity="center">
+
+			<!-- Decrement Button -->
+			<Button
+				android:id="@+id/decrementButton"
+				android:layout_width="60dp"
+				android:layout_height="50dp"
+				android:text="-"
+				android:fontFamily="@font/fredoka_medium"
+				android:textSize="25sp"
+				android:textColor="#6CC51D"
+				android:background="?android:attr/selectableItemBackground"
+				android:backgroundTint="@android:color/transparent"
+				android:layout_marginEnd="8dp"
+				android:gravity="center" />
+
+			<!-- Quantity Text -->
+			<TextView
+				android:id="@+id/quantityTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="4dp"
+				android:fontFamily="@font/fredoka_medium"
+				android:gravity="center"
+				android:text="5"
+				android:textColor="@android:color/black"
+				android:textSize="16sp" />
+
+			<!-- Increment Button -->
+			<Button
+				android:id="@+id/incrementButton"
+				android:layout_width="60dp"
+				android:layout_height="50dp"
+				android:text="+"
+				android:fontFamily="@font/fredoka_medium"
+				android:textSize="25sp"
+				android:textColor="#6CC51D"
+				android:background="?android:attr/selectableItemBackground"
+				android:backgroundTint="@android:color/transparent"
+				android:gravity="center" />
+		</LinearLayout>
+	</LinearLayout>
+</androidx.cardview.widget.CardView>
