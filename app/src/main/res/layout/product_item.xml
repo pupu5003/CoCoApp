@@ -1,0 +1,139 @@
+<androidx.cardview.widget.CardView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:card_view="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_margin="8dp"
+	card_view:cardCornerRadius="8dp"
+	card_view:cardElevation="4dp">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:padding="8dp">
+
+		<!-- Badge Layout -->
+
+		<!-- Discount Layout -->
+		<TextView
+			android:id="@+id/discountTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="4dp"
+			android:text="-16%"
+			android:textColor="@android:color/holo_red_dark"
+			android:textSize="12sp" />
+
+		<!-- Product Image -->
+		<ImageView
+			android:id="@+id/productImageView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:src="@drawable/product_img" />
+
+		<!-- Product Price -->
+		<TextView
+			android:id="@+id/priceTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginTop="8dp"
+			android:text="Rs 5390.00"
+			android:textColor="@android:color/holo_green_dark"
+			android:textSize="16sp"
+			android:textStyle="bold" />
+
+		<!-- Product Name -->
+		<TextView
+			android:id="@+id/productNameTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginTop="4dp"
+			android:text="Pedigree Chicken and Vege"
+			android:textColor="@android:color/black"
+			android:textSize="14sp"
+			android:textStyle="bold" />
+
+		<!-- Product Weight -->
+		<TextView
+			android:id="@+id/productWeightTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginTop="2dp"
+			android:text="3kg"
+			android:textColor="@android:color/darker_gray"
+			android:textSize="12sp" />
+		<Button
+				android:id="@+id/addToCartButton"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="?android:attr/selectableItemBackground"
+				android:drawableLeft="@drawable/cart"
+				android:drawablePadding="0dp"
+				android:gravity="center_vertical"
+				android:text="Add to cart"
+				android:layout_margin="8dp"
+
+				android:textColor="@android:color/black"
+				card_view:layout_constraintBottom_toBottomOf="parent"
+				card_view:layout_constraintEnd_toEndOf="parent"
+				card_view:layout_constraintHorizontal_bias="0.023"
+				card_view:layout_constraintTop_toTopOf="parent"
+				card_view:layout_constraintVertical_bias="0.0" />
+
+
+		<!-- Quantity Selector Layout (Hidden Initially) -->
+		<LinearLayout
+			android:id="@+id/quantityLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:gravity="center_vertical"
+			android:layout_margin="8dp"
+			android:visibility="visible">
+
+			<!-- Decrement Button -->
+			<Button
+				android:id="@+id/decrementButton"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:background="?android:attr/selectableItemBackground"
+				android:padding="8dp"
+				android:text="-"
+				android:fontFamily="@font/fredoka_medium"
+				android:textColor="#6CC51D"
+				android:textSize="25sp" />
+
+			<!-- Quantity Text -->
+			<TextView
+				android:id="@+id/quantityTextView"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:text="1"
+				android:fontFamily="@font/fredoka_medium"
+				android:textSize="18sp"
+				android:textColor="@android:color/black"
+				android:gravity="center" />
+
+			<!-- Increment Button -->
+			<Button
+				android:id="@+id/incrementButton"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:text="+"
+				android:fontFamily="@font/fredoka_medium"
+				android:textSize="25sp"
+				android:textColor="#6CC51D"
+				android:background="?android:attr/selectableItemBackground"
+				android:padding="8dp" />
+		</LinearLayout>
+	</LinearLayout>
+</androidx.cardview.widget.CardView>
