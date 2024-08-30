@@ -107,7 +107,7 @@
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:background="?android:attr/selectableItemBackground"
-				android:padding="8dp"
+				android:padding="0dp"
 				android:text="-"
 				android:fontFamily="@font/fredoka_medium"
 				android:textColor="#6CC51D"
@@ -136,7 +136,7 @@
 				android:textSize="25sp"
 				android:textColor="#6CC51D"
 				android:background="?android:attr/selectableItemBackground"
-				android:padding="8dp" />
+				android:padding="0dp"/>
 		</LinearLayout>
 	</LinearLayout>
 </androidx.cardview.widget.CardView>
