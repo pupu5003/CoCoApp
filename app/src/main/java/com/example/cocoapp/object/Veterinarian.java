@@ -2,7 +2,9 @@ package com.example.cocoapp.object;
 
 import android.widget.ImageView;
 
-public class veterinarian {
+import java.util.Date;
+
+public class Veterinarian {
     private String name;
     private String qualification;
     private float rating;
@@ -11,11 +13,11 @@ public class veterinarian {
     private String distance;
     private String price;
     private String availability;
-
+    private Date lastVisit;
     private ImageView pic;
 
-    public veterinarian(String name, String qualification, float rating, int reviews,
-                        int experience, String distance, String price, String availability,ImageView pic) {
+    public Veterinarian(String name, String qualification, float rating, int reviews,
+                        int experience, String distance, String price, String availability, ImageView pic, Date lastVisit) {
         this.name = name;
         this.qualification = qualification;
         this.rating = rating;
@@ -25,6 +27,7 @@ public class veterinarian {
         this.price = price;
         this.availability = availability;
         this.pic=pic;
+        this.lastVisit = lastVisit;
     }
 
     public String getName() {
@@ -60,6 +63,14 @@ public class veterinarian {
     }
     public ImageView getProfileImage(){
         return pic;
+    }
+
+    public Date getLastVisit() {
+        return lastVisit;
+    }
+
+    public void setLastVisit(Date lastVisit) {
+        this.lastVisit = lastVisit;
     }
 
 }

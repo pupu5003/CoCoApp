@@ -1,5 +1,6 @@
 package com.example.cocoapp.Adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,19 +9,20 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cocoapp.R;
-import com.example.cocoapp.object.veterinarian;
+import com.example.cocoapp.object.Veterinarian;
 
 import java.util.List;
 
 public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapter.VeterinarianViewHolder> {
 
-    private List<veterinarian> veterinarianList;
+    private List<Veterinarian> veterinarianList;
+    private Context context;
 
-    public VeterinarianAdapter(List<veterinarian> veterinarianList) {
+    public VeterinarianAdapter(Context context, List<Veterinarian> veterinarianList) {
+        this.context = context;
         this.veterinarianList = veterinarianList;
     }
 
@@ -34,7 +36,7 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
 
     @Override
     public void onBindViewHolder(@NonNull VeterinarianViewHolder holder, int position) {
-        veterinarian veterinarian = veterinarianList.get(position);
+        Veterinarian veterinarian = veterinarianList.get(position);
         // Bind your data to the view here
         holder.bind(veterinarian);
     }
@@ -73,7 +75,7 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
             profileImage = itemView.findViewById(R.id.profile_image);
         }
 
-        public void bind(veterinarian veterinarian) {
+        public void bind(Veterinarian veterinarian) {
             doctorName.setText(veterinarian.getName());
             doctorQualification.setText(veterinarian.getQualification());
             ratingBar.setRating(veterinarian.getRating());

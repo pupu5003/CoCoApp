@@ -1,6 +1,5 @@
 package com.example.cocoapp.Adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cocoapp.R;
 import com.example.cocoapp.object.Grooming;
-import com.example.cocoapp.object.veterinarian;
-import com.google.android.material.card.MaterialCardView;
+
 import java.util.List;
 
 public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.GroomingViewHolder> {
