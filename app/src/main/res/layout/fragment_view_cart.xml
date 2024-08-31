@@ -16,26 +16,6 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent">
 
-		<ImageButton
-			android:id="@+id/back_button"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:backgroundTint="@android:color/transparent"
-			android:src="@drawable/back_arrow_health"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
-
-		<ImageButton
-			android:id="@+id/shopping_cart_plus_button"
-			android:layout_width="52dp"
-			android:layout_height="48dp"
-			android:backgroundTint="@android:color/transparent"
-			android:src="@drawable/ic_cart"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
-
 		<TextView
 			android:id="@+id/tvHeader"
 			android:layout_width="wrap_content"

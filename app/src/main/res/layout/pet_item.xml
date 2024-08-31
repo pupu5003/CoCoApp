@@ -30,11 +30,6 @@
 			android:scaleType="centerInside"/>
 	</com.google.android.material.card.MaterialCardView>
 
-
-	<!-- Pet Name -->
-
-	<!-- Pet Icon (Link Icon) -->
-
 	<TextView
 		android:id="@+id/tv_pet_name"
 		android:layout_width="0dp"

@@ -2,6 +2,8 @@ package com.example.cocoapp.ActivityPage;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -52,44 +54,42 @@ public class Bottom_Navigation extends AppCompatActivity {
         });
 
         bottomNavigation.setOnShowListener(model -> {
-            String name = "";
             Fragment selectedFragment = null;
             switch (model.getId()) {
                 case home:
-                    name = "Home";
                     selectedFragment = new Dashboard();
                     break;
                 case discover:
-                    name = "Discover";
                     selectedFragment = new VetVeterinarian();
                     break;
                 case explore:
-                    name = "Explore";
                     selectedFragment = new Shop();
                     break;
                 case manage:
-                    name = "Manage";
                     selectedFragment = new Notification();
                     break;
                 case profile:
-                    name = "Profile";
                     selectedFragment = new Profile();
                     break;
             }
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, selectedFragment) // R.id.fragment_container is the ID of your FrameLayout or FragmentContainerView
+                        .replace(R.id.fragment_container, selectedFragment)
                         .commit();
             }
-
-
-            // bottomNavigation.setCount(home, "9");
-
             return null;
         });
 
+        // Set default tab
         bottomNavigation.show(home, true);
     }
+
+    // Method to set the selected tab programmatically
+    public void setSelectedTab(int tabId) {
+        MeowBottomNavigation bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.show(tabId, true);  // Programmatically update the selected tab
+    }
+
 //    @Override
 //    protected void onNewIntent(Intent intent) {
 //        super.onNewIntent(intent);

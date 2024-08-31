@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cocoapp.ActivityPage.Bottom_Navigation;
 import com.example.cocoapp.Adapter.PetDashboardAdapter;
 import com.example.cocoapp.Adapter.PetStatusAdapter;
 import com.example.cocoapp.Adapter.ProductDashboardAdapter;
@@ -156,6 +157,20 @@ public class Dashboard extends Fragment implements OnMapReadyCallback{
 				requireActivity().getSupportFragmentManager().beginTransaction()
 						.replace(R.id.fragment_container, new PetHealth()).addToBackStack(null).commit();
 			}
+		});
+
+		// Find the TextView by its ID
+		TextView exploreButton = view.findViewById(R.id.see_all_petfood);
+
+		// Set the click listener for the TextView
+		exploreButton.setOnClickListener(v -> {
+			// Replace the current fragment with the Shop (Explore) fragment
+			getParentFragmentManager().beginTransaction()
+					.replace(R.id.fragment_container, new Shop()) // Replace with Explore fragment
+					.commit();
+
+			// Call setSelectedTab() on the parent activity to update the bottom navigation
+			((Bottom_Navigation) getActivity()).setSelectedTab(3);  // 'explore' corresponds to 3
 		});
 
 

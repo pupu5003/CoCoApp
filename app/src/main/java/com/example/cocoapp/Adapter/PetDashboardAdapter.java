@@ -27,15 +27,17 @@ public class PetDashboardAdapter extends RecyclerView.Adapter<PetDashboardAdapte
 	@NonNull
 	@Override
 	public PetDashboardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(context).inflate(R.layout.item_pet_dashboard, parent, false);
+		View view = LayoutInflater.from(context)
+				.inflate(R.layout.item_pet_dashboard, parent, false);
 		return new PetDashboardViewHolder(view);
 	}
 
 	@Override
 	public void onBindViewHolder(@NonNull PetDashboardViewHolder holder, int position) {
 		Pet pet = petList.get(position);
-		holder.petImageView.setImageDrawable(pet.getImage().getDrawable()); // Get drawable from ImageView
-		holder.petName.setText(pet.getName());
+		holder.bind(pet);
+		// holder.petImageView.setImageDrawable(pet.getImage().getDrawable()); // Get drawable from ImageView
+		// holder.petName.setText(pet.getName());
 	}
 
 	@Override
@@ -51,6 +53,11 @@ public class PetDashboardAdapter extends RecyclerView.Adapter<PetDashboardAdapte
 			super(itemView);
 			petImageView = itemView.findViewById(R.id.pet_image); // Assuming you have an ImageView with this ID
 			petName = itemView.findViewById(R.id.pet_name);
+		}
+
+		public void bind(Pet pet) {
+			petImageView.setImageDrawable(pet.getImage().getDrawable());
+			petName.setText(pet.getName());
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.example.cocoapp.Fragment;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -119,8 +120,22 @@ public class ViewCart extends Fragment {
 				int position = viewHolder.getAdapterPosition();
 
 				if (direction == ItemTouchHelper.LEFT) {
-					cartItemList.remove(position);
-					cartAdapter.notifyItemRemoved(position);
+
+					new AlertDialog.Builder(getContext())
+							.setTitle("Delete Item")
+							.setMessage("Do you want to delete this item?")
+							.setPositiveButton("Yes", (dialog, which) -> {
+								// Remove the item if user confirms
+								cartItemList.remove(position);
+								cartAdapter.notifyItemRemoved(position);
+							})
+							.setNegativeButton("No", (dialog, which) -> {
+								// Reset the item if user cancels
+								cartAdapter.notifyItemChanged(position);
+								dialog.dismiss();
+							})
+							.setCancelable(false)
+							.show();
 				} else if (direction == ItemTouchHelper.RIGHT) {
 					cartAdapter.notifyItemChanged(position);
 				}
