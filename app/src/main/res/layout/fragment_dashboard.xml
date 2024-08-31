@@ -86,8 +86,8 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_petLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="188dp"
+                android:layout_height="277dp"
                 app:layout_constraintTop_toBottomOf="@id/card_myPet"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/card_petStatus"
@@ -105,8 +105,8 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/map_card"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="154dp"
+                        android:layout_height="200dp"
                         app:layout_constraintTop_toBottomOf="@id/title_petLocation"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -116,8 +116,8 @@
 
                         <com.google.android.gms.maps.MapView
                             android:id="@+id/map_view"
-                            android:layout_width="154dp"
-                            android:layout_height="200dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             />
 
                     </com.google.android.material.card.MaterialCardView>
@@ -136,13 +136,12 @@
                     </TextView>
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/track_pets"
+                        android:layout_width="100dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/tracks_pet"
                         app:layout_constraintTop_toBottomOf="@id/map_card"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="5dp"
                         >
                     </ImageView>
 
@@ -152,8 +151,8 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_petStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="188dp"
+                android:layout_height="277dp"
                 app:layout_constraintTop_toBottomOf="@id/card_myPet"
                 app:layout_constraintStart_toEndOf="@id/card_petLocation"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -182,7 +181,7 @@
                     </TextView>
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycleView_petStatus"
+                        android:id="@+id/petStatus_recycle_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -195,14 +194,12 @@
                     </androidx.recyclerview.widget.RecyclerView>
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/track_pets"
-                        app:layout_constraintTop_toBottomOf="@id/recycleView_petStatus"
-                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_width="100dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/checks_pets"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="5dp"
-                        >
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/petStatus_recycle_view">
                     </ImageView>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -251,14 +248,15 @@
                     </TextView>
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/product_recycle_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_marginBottom="10dp"
-                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginHorizontal="10dp"
                         app:layout_constraintTop_toBottomOf="@id/food_logo"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        tools:listitem="@layout/item_food"
+                        tools:listitem="@layout/item_product_dashboard"
                         tools:itemCount="1">
                     </androidx.recyclerview.widget.RecyclerView>
 

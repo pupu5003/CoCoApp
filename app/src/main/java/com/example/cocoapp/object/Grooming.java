@@ -14,6 +14,7 @@ public class Grooming {
     private String availability;
     private ImageView pic;
 
+
     // Constructor
     public Grooming(String name, float rating, int reviews, boolean isOpen, String distance, String price, String availability,ImageView pic) {
         this.name = name;
