@@ -1,4 +1,4 @@
-package com.example.cocoapp.object;
+package com.example.cocoapp.Object;
 
 import android.widget.ImageView;
 
@@ -9,14 +9,16 @@ public class Product {
 	private String price;
 	private String name;
 	private String weight;
+	private String brand;
 
 	// Constructor
-	public Product(String discount, ImageView productImage, String price, String name, String weight) {
+	public Product(String discount, ImageView productImage, String price, String name, String weight, String brand) {
 		this.discount = discount;
 		this.productImage = productImage;
 		this.price = price;
 		this.name = name;
 		this.weight = weight;
+		this.brand = brand;
 	}
 
 	// Getters and Setters
@@ -58,5 +60,13 @@ public class Product {
 
 	public void setWeight(String weight) {
 		this.weight = weight;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
 }

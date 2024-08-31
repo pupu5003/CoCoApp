@@ -7,7 +7,7 @@
     app:cardCornerRadius="15dp"
     android:clipToPadding="false"
     app:cardElevation="5dp"
-    android:layout_marginHorizontal="5dp"
+    android:layout_marginHorizontal="8dp"
     android:layout_marginVertical="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +19,7 @@
             android:id="@+id/food_image"
             android:layout_width="67dp"
             android:layout_height="67dp"
-            android:src="@drawable/dog1"
+            android:src="@drawable/product_img3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/company_name"
@@ -96,7 +96,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/food_name"
-            android:layout_marginStart="80dp">
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="10dp">
 
         </ImageView>
 

@@ -1,4 +1,4 @@
-package com.example.cocoapp.object;
+package com.example.cocoapp.Object;
 
 import android.widget.ImageView;
 
@@ -13,6 +13,7 @@ public class Grooming {
     private String price;
     private String availability;
     private ImageView pic;
+
 
     // Constructor
     public Grooming(String name, float rating, int reviews, boolean isOpen, String distance, String price, String availability,ImageView pic) {

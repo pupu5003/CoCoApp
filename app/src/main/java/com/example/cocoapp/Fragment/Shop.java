@@ -1,67 +1,33 @@
 package com.example.cocoapp.Fragment;
 
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.ImageView;
 import com.example.cocoapp.Adapter.ProductAdapter;
+import com.example.cocoapp.Adapter.ProductDashboardAdapter;
 import com.example.cocoapp.R;
-import com.example.cocoapp.object.Product;
+import com.example.cocoapp.Object.Product;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Shop#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Shop extends Fragment {
 
-	// TODO: Rename parameter arguments, choose names that match
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String ARG_PARAM1 = "param1";
-	private static final String ARG_PARAM2 = "param2";
-
-	// TODO: Rename and change types of parameters
-	private String mParam1;
-	private String mParam2;
+	private RecyclerView recyclerViewRecommend;
+	private RecyclerView recyclerViewTopSelling;
+	private ProductAdapter recommendAdapter;
+	private ProductDashboardAdapter topSellingAdapter;
+	private List<Product> productList;
 
 	public Shop() {
-		// Required empty public constructor
-	}
 
-	/**
-	 * Use this factory method to create a new instance of
-	 * this fragment using the provided parameters.
-	 *
-	 * @param param1 Parameter 1.
-	 * @param param2 Parameter 2.
-	 * @return A new instance of fragment Shop.
-	 */
-	// TODO: Rename and change types and number of parameters
-	public static Shop newInstance(String param1, String param2) {
-		Shop fragment = new Shop();
-		Bundle args = new Bundle();
-		args.putString(ARG_PARAM1, param1);
-		args.putString(ARG_PARAM2, param2);
-		fragment.setArguments(args);
-		return fragment;
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
-		}
 	}
 
 	@Override
@@ -69,17 +35,46 @@ public class Shop extends Fragment {
 	                         Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_shop, container, false);
-		RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-		List<Product> productList = new ArrayList<>();
 
+		recyclerViewRecommend = view.findViewById(R.id.productRecommend_recycle_view);
+		recyclerViewTopSelling = view.findViewById(R.id.productTopSelling_recycle_view);
 
-		ProductAdapter adapter = new ProductAdapter( productList);
-		recyclerView.setAdapter(adapter);
+		recyclerViewTopSelling.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-	// Set GridLayoutManager to have 2 columns
-		GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
-		recyclerView.setLayoutManager(gridLayoutManager);
+		recyclerViewRecommend.setHasFixedSize(true);
+		GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+		recyclerViewRecommend.setLayoutManager(gridLayoutManager);
+
+		// Initialize the product list and adapter
+		productList = new ArrayList<>();
+
+		// Add sample data to the product list
+		ImageView imageView1 = new ImageView(getContext());
+		imageView1.setImageResource(R.drawable.product_img);
+
+		ImageView imageView2 = new ImageView(getContext());
+		imageView2.setImageResource(R.drawable.product_img2);
+
+		ImageView imageView3 = new ImageView(getContext());
+		imageView3.setImageResource(R.drawable.product_img3);
+
+		ImageView imageView4 = new ImageView(getContext());
+		imageView4.setImageResource(R.drawable.product_img3);
+
+		// Each product should have its own unique ImageView
+		productList.add(new Product("", imageView1, "$20", "Dog Food", "900g", "Brand A"));
+		productList.add(new Product("", imageView2, "$15", "Cat Food", "500g", "Brand B"));
+		productList.add(new Product("", imageView3, "$25", "Bird Food", "1kg", "Brand C"));
+		productList.add(new Product("", imageView4, "$18", "Fish Food", "300g", "Brand D"));
+
+		recommendAdapter = new ProductAdapter(getContext(), productList);
+		topSellingAdapter = new ProductDashboardAdapter(getContext(),productList);
+		recyclerViewRecommend.setAdapter(recommendAdapter);
+		recyclerViewTopSelling.setAdapter(topSellingAdapter);
+		// Notify the adapter of data changes
+		recommendAdapter.notifyDataSetChanged();
+		topSellingAdapter.notifyDataSetChanged();
+
 		return view;
-
 	}
 }

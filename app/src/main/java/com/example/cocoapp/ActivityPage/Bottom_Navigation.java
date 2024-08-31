@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.cocoapp.Fragment.MapsFragment;
 import com.example.cocoapp.Fragment.Payment;
+
+import com.example.cocoapp.Fragment.PetHealth;
+
 import com.example.cocoapp.Fragment.VetVeterinarian;
 import com.example.cocoapp.Fragment.ViewCart;
 import com.example.cocoapp.R;
@@ -58,7 +61,7 @@ public class Bottom_Navigation extends AppCompatActivity {
                     break;
                 case explore:
                     name = "Explore";
-                    selectedFragment = new ViewCart();
+                    selectedFragment = new PetHealth();
                     break;
                 case manage:
                     name = "Manage";
@@ -66,6 +69,7 @@ public class Bottom_Navigation extends AppCompatActivity {
                     break;
                 case profile:
                     name = "Profile";
+                    selectedFragment = new ViewCart();
                     break;
             }
             if (selectedFragment != null) {
