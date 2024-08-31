@@ -24,8 +24,8 @@
 		android:clipToPadding="false">
 
 		<ImageView
-			android:layout_width="90dp"
-			android:layout_height="90dp"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
 			android:src="@drawable/dog1"
 			android:scaleType="centerInside"/>
 	</com.google.android.material.card.MaterialCardView>

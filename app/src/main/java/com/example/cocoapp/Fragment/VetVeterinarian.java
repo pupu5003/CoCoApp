@@ -110,28 +110,14 @@ public class VetVeterinarian extends Fragment {
         recommendedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
 
-        // Initialize the data
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date lastVisit1 = null;
-        Date lastVisit2 = null;
-
-        try {
-            lastVisit1 = sdf.parse("2024-08-15"); // Explicit date
-            lastVisit2 = sdf.parse("2024-07-20"); // Explicit date
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-
         List<Veterinarian> nearbyVets = new ArrayList<>();
-        nearbyVets.add(new Veterinarian("Dr. Smith", "Bachelor of Veterinary Science", 4.5f, 100, 10, "2.5 km", "$100", "Mon-Fri 8 AM - 5 PM",pic1, lastVisit1));
-        nearbyVets.add(new Veterinarian("Dr. Jones", "Doctor of Veterinary Medicine", 4.2f, 80, 8, "3.0 km", "$120", "Mon-Fri 9 AM - 6 PM",pic2, lastVisit2));
+        nearbyVets.add(new Veterinarian("Dr. Smith", "Bachelor of Veterinary Science", 4.5f, 100, 10, "2.5 km", "$100", "Mon-Fri 8 AM - 5 PM",pic1, "2024-08-15"));
+        nearbyVets.add(new Veterinarian("Dr. Jones", "Doctor of Veterinary Medicine", 4.2f, 80, 8, "3.0 km", "$120", "Mon-Fri 9 AM - 6 PM",pic2, "2024-07-20"));
 
         List<Veterinarian> recommendedVets = new ArrayList<>();
         // Add sample data
-        recommendedVets.add(new Veterinarian("Dr. Brown", "Bachelor of Veterinary Science", 4.8f, 120, 12, "1.8 km", "$110", "Mon-Sat 8 AM - 4 PM", pic1, lastVisit1));
-        recommendedVets.add(new Veterinarian("Dr. Johnson", "Doctor of Veterinary Medicine", 4.6f, 90, 9, "2.0 km", "$115", "Mon-Fri 10 AM - 6 PM", pic2, lastVisit2));
+        recommendedVets.add(new Veterinarian("Dr. Brown", "Bachelor of Veterinary Science", 4.8f, 120, 12, "1.8 km", "$110", "Mon-Sat 8 AM - 4 PM", pic1, "2024-08-15"));
+        recommendedVets.add(new Veterinarian("Dr. Johnson", "Doctor of Veterinary Medicine", 4.6f, 90, 9, "2.0 km", "$115", "Mon-Fri 10 AM - 6 PM", pic2, "2024-07-20"));
 
         // Create the adapter and set it to the RecyclerView
         VeterinarianAdapter nearbyAdapter = new VeterinarianAdapter(getContext(), nearbyVets);

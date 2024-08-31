@@ -15,7 +15,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="-10dp" />
+        tools:layout_editor_absoluteY="-9dp" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="30dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:backgroundTint="@color/white"
                 app:cardCornerRadius="27dp"
                 app:cardElevation="10dp"
@@ -132,8 +132,8 @@
                 app:layout_constraintTop_toBottomOf="@id/card_owner"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:strokeColor="@color/material_dynamic_neutral0"
-                app:strokeWidth="0dp">
+                app:layout_constraintBottom_toBottomOf="parent"
+                >
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -156,23 +156,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="10dp"
                         android:fontFamily="@font/fredokaone_regular"
                         android:text="About me"
                         android:textColor="@color/black"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="@id/icon_aboutme"
                         app:layout_constraintStart_toEndOf="@id/icon_aboutme"
-                        app:layout_constraintTop_toTopOf="@id/icon_aboutme" />
-
-                    <ImageView
-                        android:id="@+id/icon_next_aboutme"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        android:src="@drawable/ic_next"
-                        app:layout_constraintBottom_toBottomOf="@id/icon_aboutme"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/icon_aboutme" />
 
                     <!-- My Orders Row -->
@@ -191,7 +180,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
                         android:fontFamily="@font/fredokaone_regular"
                         android:text="My Orders"
                         android:textColor="@color/black"
@@ -200,23 +188,13 @@
                         app:layout_constraintStart_toEndOf="@id/icon_myorders"
                         app:layout_constraintTop_toTopOf="@id/icon_myorders" />
 
-                    <ImageView
-                        android:id="@+id/icon_next_myorders"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        android:src="@drawable/ic_next"
-                        app:layout_constraintBottom_toBottomOf="@id/icon_myorders"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/icon_myorders" />
-
                     <!-- My Address Row -->
                     <ImageView
                         android:id="@+id/icon_myaddress"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginStart="10dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="20dp"
                         android:src="@drawable/ic_myaddress"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/icon_myorders" />
@@ -226,7 +204,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
                         android:fontFamily="@font/fredokaone_regular"
                         android:text="My Address"
                         android:textColor="@color/black"
@@ -236,33 +213,24 @@
                         app:layout_constraintTop_toTopOf="@id/icon_myaddress"
                         app:layout_constraintVertical_bias="1.0" />
 
-                    <ImageView
-                        android:id="@+id/icon_next_myaddress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        android:src="@drawable/ic_next"
-                        app:layout_constraintBottom_toBottomOf="@id/icon_myaddress"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/icon_myaddress" />
-
                     <!-- Add Pet Row -->
                     <ImageView
                         android:id="@+id/icon_addpet"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginStart="10dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="20dp"
                         android:src="@drawable/ic_addpet"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/icon_myaddress" />
+                        app:layout_constraintTop_toBottomOf="@id/icon_myaddress"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginBottom="10dp"/>
 
                     <TextView
                         android:id="@+id/add_pet_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
                         android:fontFamily="@font/fredokaone_regular"
                         android:text="Add Pet"
                         android:textColor="@color/black"
@@ -271,16 +239,6 @@
                         app:layout_constraintStart_toEndOf="@id/icon_addpet"
                         app:layout_constraintTop_toTopOf="@id/icon_addpet"
                         app:layout_constraintVertical_bias="1.0" />
-
-                    <ImageView
-                        android:id="@+id/icon_next_addpet"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        android:src="@drawable/ic_next"
-                        app:layout_constraintBottom_toBottomOf="@id/icon_addpet"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/icon_addpet" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

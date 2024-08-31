@@ -85,10 +85,7 @@ public class VeterinarianDashboardAdapter extends RecyclerView.Adapter<Veterinar
 			priceText.setText(veterinarian.getPrice());
 			// Set the image from ImageView
 			profileImage.setImageDrawable(veterinarian.getProfileImage().getDrawable());
-			// Format and display the last visit date
-			SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-			String lastVisitFormatted = veterinarian.getLastVisit() != null ? sdf.format(veterinarian.getLastVisit()) : "No visit data";
-			lastVisitDate.setText(lastVisitFormatted);
+			lastVisitDate.setText(veterinarian.getLastVisit());
 		}
 	}
 }

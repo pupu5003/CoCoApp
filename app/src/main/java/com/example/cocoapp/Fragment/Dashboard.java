@@ -4,11 +4,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +24,14 @@ import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Pet;
 import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.Object.Veterinarian;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Dashboard extends Fragment {
+public class Dashboard extends Fragment implements OnMapReadyCallback{
 
 	private RecyclerView recyclerViewPetStatus;
 	private RecyclerView recyclerViewProduct;
@@ -40,6 +52,12 @@ public class Dashboard extends Fragment {
 	private List<Pet> petList;
 	private List<Product> productList;
 	private List<Veterinarian> veterinarianList;
+	private TextView seeAllFood;
+	private TextView seeAllVet;
+	private ImageView tracksPet;
+	private ImageView checksPet;
+	private MapView mapView;
+	private GoogleMap googleMap;
 
 	@Nullable
 	@Override
@@ -50,6 +68,18 @@ public class Dashboard extends Fragment {
 		recyclerViewProduct = view.findViewById(R.id.product_recycle_view);
 		recyclerViewPet = view.findViewById(R.id.pet_recycle_view);
 		recyclerViewVeterinarian = view.findViewById(R.id.veterinarian_recylce_view);
+		seeAllVet = view.findViewById(R.id.see_all_veterinarian);
+		seeAllFood = view.findViewById(R.id.see_all_petfood);
+		tracksPet = view.findViewById(R.id.trackspet);
+		checksPet = view.findViewById(R.id.checkspet);
+
+		mapView = view.findViewById(R.id.map_view);
+
+		// Initialize MapView
+		if (mapView != null) {
+			mapView.onCreate(savedInstanceState);
+			mapView.getMapAsync(this);
+		}
 
 		recyclerViewPetStatus.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 		recyclerViewProduct.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -83,19 +113,8 @@ public class Dashboard extends Fragment {
 		ImageView pic2 = new ImageView(getContext());
 		pic2.setImageResource(R.drawable.vet2);
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date lastVisit1 = null;
-		Date lastVisit2 = null;
-
-		try {
-			lastVisit1 = sdf.parse("2024-08-15"); // Explicit date
-			lastVisit2 = sdf.parse("2024-07-20"); // Explicit date
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-		veterinarianList.add(new Veterinarian("Dr. Brown", "Bachelor of Veterinary Science", 4.8f, 120, 12, "1.8 km", "$110", "Mon-Sat 8 AM - 4 PM", pic1, lastVisit1));
-		veterinarianList.add(new Veterinarian("Dr. Johnson", "Doctor of Veterinary Medicine", 4.6f, 90, 9, "2.0 km", "$115", "Mon-Fri 10 AM - 6 PM", pic2, lastVisit2));
+		veterinarianList.add(new Veterinarian("Dr. Brown", "Bachelor of Veterinary Science", 4.8f, 120, 12, "1.8 km", "$110", "Mon-Sat 8 AM - 4 PM", pic1, "2024-08-15"));
+		veterinarianList.add(new Veterinarian("Dr. Johnson", "Doctor of Veterinary Medicine", 4.6f, 90, 9, "2.0 km", "$115", "Mon-Fri 10 AM - 6 PM", pic2, "2024-07-20"));
 
 		petStatusAdapter = new PetStatusAdapter(getContext(), petList);
 		productDashboardAdapter = new ProductDashboardAdapter(getContext(), productList);
@@ -107,6 +126,83 @@ public class Dashboard extends Fragment {
 		recyclerViewPet.setAdapter(petDashboardAdapter);
 		recyclerViewVeterinarian.setAdapter(veterinarianDashboardAdapter);
 
+		seeAllVet.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				requireActivity().getSupportFragmentManager().beginTransaction()
+						.replace(R.id.fragment_container, new VisitVeterinarian()).addToBackStack(null).commit();
+			}
+		});
+
+		seeAllFood.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				requireActivity().getSupportFragmentManager().beginTransaction()
+						.replace(R.id.fragment_container, new Shop()).addToBackStack(null).commit();
+			}
+		});
+
+		tracksPet.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				requireActivity().getSupportFragmentManager().beginTransaction()
+						.replace(R.id.fragment_container, new MapsFragment()).addToBackStack(null).commit();
+			}
+		});
+
+		checksPet.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				requireActivity().getSupportFragmentManager().beginTransaction()
+						.replace(R.id.fragment_container, new PetHealth()).addToBackStack(null).commit();
+			}
+		});
+
+
+
 		return view;
 	}
+
+	@Override
+	public void onMapReady(@NonNull GoogleMap googleMap) {
+		this.googleMap = googleMap;
+
+		LatLng location = new LatLng(-34, 151);
+		googleMap.addMarker(new MarkerOptions().position(location).title("You are here"));
+		googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (mapView != null) {
+			mapView.onResume();
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (mapView != null) {
+			mapView.onPause();
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mapView != null) {
+			mapView.onDestroy();
+		}
+	}
+
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		if (mapView != null) {
+			mapView.onLowMemory();
+		}
+	}
+
 }
+

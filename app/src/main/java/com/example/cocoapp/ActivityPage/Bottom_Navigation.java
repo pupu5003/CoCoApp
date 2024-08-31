@@ -9,12 +9,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
+import com.example.cocoapp.Fragment.Dashboard;
 import com.example.cocoapp.Fragment.MapsFragment;
 
 
-import com.example.cocoapp.Fragment.Payment;
+import com.example.cocoapp.Fragment.Notification;
 import com.example.cocoapp.Fragment.PetHealth;
 
+import com.example.cocoapp.Fragment.Profile;
 import com.example.cocoapp.Fragment.Shop;
 import com.example.cocoapp.Fragment.VetVeterinarian;
 import com.example.cocoapp.Fragment.ViewCart;
@@ -40,7 +42,7 @@ public class Bottom_Navigation extends AppCompatActivity {
 
         bottomNavigation.add(new MeowBottomNavigation.Model(home, R.drawable.ic_home));
         bottomNavigation.add(new MeowBottomNavigation.Model(discover, R.drawable.ic_discover));
-        bottomNavigation.add(new MeowBottomNavigation.Model(explore, R.drawable.ic_explore));
+        bottomNavigation.add(new MeowBottomNavigation.Model(explore, R.drawable.shop_ic));
         bottomNavigation.add(new MeowBottomNavigation.Model(manage, R.drawable.ic_manage));
         bottomNavigation.add(new MeowBottomNavigation.Model(profile, R.drawable.ic_profile));
 
@@ -55,7 +57,7 @@ public class Bottom_Navigation extends AppCompatActivity {
             switch (model.getId()) {
                 case home:
                     name = "Home";
-                    selectedFragment = new Payment();
+                    selectedFragment = new Dashboard();
                     break;
                 case discover:
                     name = "Discover";
@@ -63,15 +65,15 @@ public class Bottom_Navigation extends AppCompatActivity {
                     break;
                 case explore:
                     name = "Explore";
-                    selectedFragment = new PetHealth();
+                    selectedFragment = new Shop();
                     break;
                 case manage:
                     name = "Manage";
-                    selectedFragment = new MapsFragment();
+                    selectedFragment = new Notification();
                     break;
                 case profile:
                     name = "Profile";
-                    selectedFragment = new ViewCart();
+                    selectedFragment = new Profile();
                     break;
             }
             if (selectedFragment != null) {
@@ -88,17 +90,17 @@ public class Bottom_Navigation extends AppCompatActivity {
 
         bottomNavigation.show(home, true);
     }
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        //ZaloPaySDK.getInstance().onResult(intent);
-        notifyPaymentFragment(intent);
-    }
-    private void notifyPaymentFragment(Intent intent) {
-        // Get the fragment manager and find your Payment fragment by its tag
-        Payment paymentFragment = (Payment) getSupportFragmentManager().findFragmentByTag("PaymentFragmentTag");
-        if (paymentFragment != null) {
-            paymentFragment.handleNewIntent(intent);
-        }
-    }
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        super.onNewIntent(intent);
+//        //ZaloPaySDK.getInstance().onResult(intent);
+//        notifyPaymentFragment(intent);
+//    }
+//    private void notifyPaymentFragment(Intent intent) {
+//        // Get the fragment manager and find your Payment fragment by its tag
+//        Payment paymentFragment = (Payment) getSupportFragmentManager().findFragmentByTag("PaymentFragmentTag");
+//        if (paymentFragment != null) {
+//            paymentFragment.handleNewIntent(intent);
+//        }
+//    }
 }

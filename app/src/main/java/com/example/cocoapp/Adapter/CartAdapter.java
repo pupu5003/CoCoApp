@@ -45,7 +45,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 	// Make CartViewHolder class public
 	public class CartViewHolder extends RecyclerView.ViewHolder {
 		private final TextView productName, productBrand, productWeight, quantityTextView;
-		private final ImageView productImage, trashIcon;
+		private final ImageView productImage;
 		private final Button incrementButton, decrementButton;
 		private final LinearLayout itemContent;
 
@@ -58,31 +58,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 			quantityTextView = itemView.findViewById(R.id.quantityTextView);
 			incrementButton = itemView.findViewById(R.id.incrementButton);
 			decrementButton = itemView.findViewById(R.id.decrementButton);
-			trashIcon = itemView.findViewById(R.id.trash_icon);
 			itemContent = itemView.findViewById(R.id.item_content);
 
-			// Set up click listener for the trash icon inside the constructor
-			trashIcon.setOnClickListener(v -> {
-				// Remove the item when trash icon is clicked
-				int position = getAdapterPosition();
-				if (position != RecyclerView.NO_POSITION) {
-					cartItemList.remove(position); // Corrected list reference
-					notifyItemRemoved(position); // Correct method call within the adapter
-				}
-			});
-		}
-
-		// Make the revealTrashIcon method public
-		public void revealTrashIcon() {
-			itemContent.animate().translationX(-trashIcon.getWidth() - 20).setDuration(300).withEndAction(() -> {
-				trashIcon.setVisibility(View.VISIBLE);
-			}).start();
-		}
-
-		// Optional: Method to reset the view when needed (e.g., cancel swipe)
-		public void resetView() {
-			itemContent.animate().translationX(0).setDuration(300).start();
-			trashIcon.setVisibility(View.GONE);
 		}
 
 		public void bind(CartItem cartItem) {

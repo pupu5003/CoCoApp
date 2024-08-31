@@ -137,6 +137,7 @@
                     </TextView>
 
                     <ImageView
+                        android:id="@+id/trackspet"
                         android:layout_width="100dp"
                         android:layout_height="30dp"
                         android:src="@drawable/tracks_pet"
@@ -195,13 +196,14 @@
                     </androidx.recyclerview.widget.RecyclerView>
 
                     <ImageView
+                        android:id="@+id/checkspet"
                         android:layout_width="100dp"
                         android:layout_height="30dp"
                         android:src="@drawable/checks_pets"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/petStatus_recycle_view"></ImageView>
+                        app:layout_constraintBottom_toBottomOf="parent">
+                    </ImageView>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -263,6 +265,21 @@
                         tools:itemCount="1">
                     </androidx.recyclerview.widget.RecyclerView>
 
+                    <TextView
+                        android:id="@+id/see_all_petfood"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="See all"
+                        android:textColor="#3B738F"
+                        android:textSize="16sp"
+                        android:layout_marginEnd="20dp"
+                        android:fontFamily="@font/fredoka_medium"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@id/food_logo"
+                        android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+                        android:drawableTint="@color/black"
+                        android:drawablePadding="10dp"/>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -321,7 +338,21 @@
                         app:layout_constraintTop_toBottomOf="@id/vet_ic"
                         app:layout_constraintVertical_bias="0.0"
                         tools:itemCount="1"
-                        tools:listitem="@layout/item_veterinarian_dashboard"></androidx.recyclerview.widget.RecyclerView>
+                        tools:listitem="@layout/item_veterinarian_dashboard"/>
+                    <TextView
+                        android:id="@+id/see_all_veterinarian"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="See all"
+                        android:textColor="#3B738F"
+                        android:textSize="16sp"
+                        android:layout_marginEnd="20dp"
+                        android:fontFamily="@font/fredoka_medium"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@id/vet_ic"
+                        android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+                        android:drawableTint="@color/black"
+                        android:drawablePadding="10dp"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>

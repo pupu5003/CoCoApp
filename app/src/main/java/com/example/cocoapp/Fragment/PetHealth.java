@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,6 +19,7 @@ public class PetHealth extends Fragment {
 	private View tabWellness, tabMedicalRecords;
 	private View lineWellness, lineMedicalRecord;
 	private FragmentManager fragmentManager;
+	private ImageButton backButton;
 
 	@Nullable
 	@Override
@@ -26,8 +30,14 @@ public class PetHealth extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		backButton = view.findViewById(R.id.back_button);
+		backButton.setOnClickListener(v -> {
+			requireActivity().getSupportFragmentManager().beginTransaction()
+					.replace(R.id.fragment_container, new Dashboard()).addToBackStack(null).commit(); // R.id.fragment_container is the ID of your FrameLayout or FragmentContainerView
 
-		fragmentManager = getChildFragmentManager(); // Use child fragment manager for nested fragments
+		});
+
+		fragmentManager = getChildFragmentManager();
 
 		tabWellness = view.findViewById(R.id.tabWellness);
 		tabMedicalRecords = view.findViewById(R.id.tabMedicalRecords);
@@ -53,8 +63,7 @@ public class PetHealth extends Fragment {
 
 	private void showFragment(Fragment fragment) {
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
-		transaction.replace(R.id.fragment_container_small, fragment);
-		transaction.commit();
+		transaction.replace(R.id.fragment_container_small, fragment).commit();
 	}
 
 	private void updateTabUI(boolean isWellness) {

@@ -13,11 +13,11 @@ public class Veterinarian {
     private String distance;
     private String price;
     private String availability;
-    private Date lastVisit;
+    private String lastVisit;
     private ImageView pic;
 
     public Veterinarian(String name, String qualification, float rating, int reviews,
-                        int experience, String distance, String price, String availability, ImageView pic, Date lastVisit) {
+                        int experience, String distance, String price, String availability, ImageView pic, String lastVisit) {
         this.name = name;
         this.qualification = qualification;
         this.rating = rating;
@@ -65,11 +65,11 @@ public class Veterinarian {
         return pic;
     }
 
-    public Date getLastVisit() {
+    public String getLastVisit() {
         return lastVisit;
     }
 
-    public void setLastVisit(Date lastVisit) {
+    public void setLastVisit(String lastVisit) {
         this.lastVisit = lastVisit;
     }
 

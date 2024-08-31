@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.VetVeterinarian">
+    tools:context=".Fragment.VetVeterinarian"
+    android:background="@color/white">
 
 
     <!-- Top Header with Back Button -->
