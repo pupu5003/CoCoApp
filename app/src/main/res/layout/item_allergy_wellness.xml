@@ -3,23 +3,28 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:clipToPadding="false"
-    android:padding="5dp"
+    android:padding="10dp"
+    android:layout_gravity="center"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="100dp"
         android:backgroundTint="@color/white"
-        app:strokeColor="@android:color/transparent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:cardElevation="5dp"
+        android:foregroundGravity="center">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="200dp"
+            android:layout_width="300dp"
             android:layout_height="match_parent"
-            android:layout_marginVertical="10dp">
+            android:layout_marginVertical="10dp"
+            android:layout_gravity="center">
 
             <TextView
                 android:id="@+id/allergy_name"
@@ -46,7 +51,7 @@
                 app:layout_constraintTop_toBottomOf="@id/allergy_name" />
 
             <TextView
-                android:id="@+id/doctor_name"
+                android:id="@+id/allergy_veterinarian"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"

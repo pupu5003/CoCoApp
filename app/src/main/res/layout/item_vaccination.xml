@@ -18,18 +18,17 @@
         app:cardElevation="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
             android:layout_marginVertical="20dp"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="20dp">
+            android:layout_marginHorizontal="15dp">
 
             <TextView
                 android:id="@+id/vaccination_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/fredoka_semibold"
-                android:text="Rabies vaccination"
+                android:text="Parvovirus vaccination"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

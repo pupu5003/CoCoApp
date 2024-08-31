@@ -53,7 +53,7 @@ public class PetHealth extends Fragment {
 
 	private void showFragment(Fragment fragment) {
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
-		transaction.replace(R.id.fragment_container, fragment);
+		transaction.replace(R.id.fragment_container_small, fragment);
 		transaction.commit();
 	}
 

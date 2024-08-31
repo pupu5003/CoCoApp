@@ -1,5 +1,6 @@
 package com.example.cocoapp.Adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,10 @@ import java.util.List;
 public class AllergyAdapter extends RecyclerView.Adapter<AllergyAdapter.AllergyViewHolder> {
 
 	private final List<Allergy> allergies;
+	private Context context;
 
-	public AllergyAdapter(List<Allergy> allergies) {
+	public AllergyAdapter(Context context, List<Allergy> allergies) {
+		this.context =context;
 		this.allergies = allergies;
 	}
 
@@ -22,7 +25,7 @@ public class AllergyAdapter extends RecyclerView.Adapter<AllergyAdapter.AllergyV
 	@Override
 	public AllergyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		View view = LayoutInflater.from(parent.getContext())
-				.inflate(R.layout.item_allergy_medical_record, parent, false);
+				.inflate(R.layout.item_allergy_wellness, parent, false);
 		return new AllergyViewHolder(view);
 	}
 

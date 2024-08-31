@@ -1,5 +1,6 @@
 package com.example.cocoapp.Adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,11 @@ import java.util.Locale;
 public class VaccinationAdapter extends RecyclerView.Adapter<VaccinationAdapter.VaccinationViewHolder> {
 
 	private final List<Vaccination> vaccinations;
+	private Context context;
 
-	public VaccinationAdapter(List<Vaccination> vaccinations) {
+	public VaccinationAdapter(Context context, List<Vaccination> vaccinations) {
 		this.vaccinations = vaccinations;
+		this.context = context;
 	}
 
 	@NonNull
@@ -33,10 +36,7 @@ public class VaccinationAdapter extends RecyclerView.Adapter<VaccinationAdapter.
 	public void onBindViewHolder(@NonNull VaccinationViewHolder holder, int position) {
 		Vaccination vaccination = vaccinations.get(position);
 		holder.nameTextView.setText(vaccination.getName());
-
-		SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-		String date = vaccination.getDate() != null ? sdf.format(vaccination.getDate()) : "No visit data";
-		holder.dateTextView.setText(date);
+		holder.dateTextView.setText(vaccination.getDate());
 		holder.veterinarianTextView.setText(vaccination.getVeterinarian());
 	}
 
