@@ -36,7 +36,7 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.gridlayout)
-    implementation(fileTree(mapOf("dir" to "C:\\University\\ZaloPay", "include" to listOf("*.aar", "*.jar"), "exclude" to listOf(""))))
+    //implementation(fileTree(mapOf("dir" to "C:\\University\\ZaloPay", "include" to listOf("*.aar", "*.jar"), "exclude" to listOf(""))))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
