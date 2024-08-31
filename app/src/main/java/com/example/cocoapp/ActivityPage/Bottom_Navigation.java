@@ -12,6 +12,7 @@ import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.cocoapp.Fragment.MapsFragment;
 
 
+import com.example.cocoapp.Fragment.Payment;
 import com.example.cocoapp.Fragment.PetHealth;
 
 import com.example.cocoapp.Fragment.Shop;
@@ -54,7 +55,7 @@ public class Bottom_Navigation extends AppCompatActivity {
             switch (model.getId()) {
                 case home:
                     name = "Home";
-                    selectedFragment = new Shop();
+                    selectedFragment = new Payment();
                     break;
                 case discover:
                     name = "Discover";
@@ -87,17 +88,17 @@ public class Bottom_Navigation extends AppCompatActivity {
 
         bottomNavigation.show(home, true);
     }
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        super.onNewIntent(intent);
-//        //ZaloPaySDK.getInstance().onResult(intent);
-//        notifyPaymentFragment(intent);
-//    }
-//    private void notifyPaymentFragment(Intent intent) {
-//        // Get the fragment manager and find your Payment fragment by its tag
-//        Payment paymentFragment = (Payment) getSupportFragmentManager().findFragmentByTag("PaymentFragmentTag");
-//        if (paymentFragment != null) {
-//            paymentFragment.handleNewIntent(intent);
-//        }
-//    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        //ZaloPaySDK.getInstance().onResult(intent);
+        notifyPaymentFragment(intent);
+    }
+    private void notifyPaymentFragment(Intent intent) {
+        // Get the fragment manager and find your Payment fragment by its tag
+        Payment paymentFragment = (Payment) getSupportFragmentManager().findFragmentByTag("PaymentFragmentTag");
+        if (paymentFragment != null) {
+            paymentFragment.handleNewIntent(intent);
+        }
+    }
 }

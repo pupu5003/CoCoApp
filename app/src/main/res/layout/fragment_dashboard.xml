@@ -198,10 +198,10 @@
                         android:layout_width="100dp"
                         android:layout_height="30dp"
                         android:src="@drawable/checks_pets"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/petStatus_recycle_view">
-                    </ImageView>
+                        app:layout_constraintTop_toBottomOf="@id/petStatus_recycle_view"></ImageView>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

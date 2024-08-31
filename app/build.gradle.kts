@@ -36,7 +36,11 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.gridlayout)
-    //implementation(fileTree(mapOf("dir" to "C:\\University\\ZaloPay", "include" to listOf("*.aar", "*.jar"), "exclude" to listOf(""))))
+    dependencies {
+        // ...
+        implementation(files(".\\libs\\zpdk-release-v3.1.aar"))
+        // ...
+    }
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

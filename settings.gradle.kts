@@ -21,6 +21,15 @@ dependencyResolutionManagement {
     }
 }
 
+dependencyResolutionManagement {
+    // ...
+    repositories {
+        // ...
+        flatDir {
+            dirs("app/libs")
+        }
+    }
+}
 rootProject.name = "CoCoApp"
 include(":app")
  

@@ -204,6 +204,21 @@
 			android:padding="12dp" />
 	</LinearLayout>
 
+	<EditText
+		android:id="@+id/pet_location"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:hint="Location"
+		android:layout_marginStart="16dp"
+		android:layout_marginEnd="16dp"
+		android:padding="12dp"
+		android:fontFamily="@font/fredoka_medium"
+		android:background="@drawable/edit_text_background"
+		app:layout_constraintTop_toBottomOf="@id/linearLayout4"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		android:layout_marginTop="8dp"/>
+
 	<!-- Add Pet Button -->
 	<Button
 		android:id="@+id/btn"
@@ -217,9 +232,8 @@
 		app:backgroundTint="@color/Primary_color"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintHorizontal_bias="0.0"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+		app:layout_constraintTop_toBottomOf="@id/pet_location" />
 
 
 
