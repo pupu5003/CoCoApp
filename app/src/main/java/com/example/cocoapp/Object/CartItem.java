@@ -15,7 +15,6 @@ public class CartItem {
 		this.quantity = quantity;
 	}
 
-	// Getters and setters
 	public String getProductName() {
 		return productName;
 	}
