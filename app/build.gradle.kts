@@ -36,6 +36,7 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.gridlayout)
+    implementation(fileTree(mapOf("dir" to "C:\\University\\ZaloPay", "include" to listOf("*.aar", "*.jar"), "exclude" to listOf(""))))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -47,4 +48,6 @@ dependencies {
     testImplementation ("junit:junit:4.12")
     androidTestImplementation("androidx.test.ext:junit:1.1.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
+    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+    implementation("commons-codec:commons-codec:1.14")
 }
