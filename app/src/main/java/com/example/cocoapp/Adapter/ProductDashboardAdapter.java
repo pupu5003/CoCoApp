@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cocoapp.R;
-import com.example.cocoapp.object.Product;
+import com.example.cocoapp.Object.Product;
 
 import java.util.List;
 

@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cocoapp.R;
-import com.example.cocoapp.object.Veterinarian;
+import com.example.cocoapp.Object.Veterinarian;
 
 import java.util.List;
 

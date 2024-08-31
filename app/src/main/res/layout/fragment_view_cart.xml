@@ -64,7 +64,8 @@
 			app:layout_constraintHorizontal_bias="1.0"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/top_header"
-			tools:listitem="@layout/cart_item" />
+			tools:listitem="@layout/cart_item"
+			tools:itemCount="3"/>
 
 
 	<androidx.constraintlayout.widget.ConstraintLayout

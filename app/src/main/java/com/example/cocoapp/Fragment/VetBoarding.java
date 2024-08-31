@@ -14,7 +14,7 @@ import android.widget.ImageView;
 
 import com.example.cocoapp.Adapter.GroomingAdapter;
 import com.example.cocoapp.R;
-import com.example.cocoapp.object.Grooming;
+import com.example.cocoapp.Object.Grooming;
 
 import java.util.ArrayList;
 import java.util.List;

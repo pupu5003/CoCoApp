@@ -1,4 +1,4 @@
-package com.example.cocoapp.object;
+package com.example.cocoapp.Object;
 
 import android.widget.ImageView;
 

@@ -39,7 +39,7 @@
 
         <activity
             android:name=".ActivityPage.Bottom_Navigation"
-            android:exported="false" />
+            android:exported="false"/>
         <activity
             android:name=".ActivityPage.LoginScreen"
             android:exported="false" />

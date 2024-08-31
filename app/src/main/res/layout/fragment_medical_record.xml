@@ -56,16 +56,18 @@
                 android:drawablePadding="10dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/vaccination_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginHorizontal="25dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginHorizontal="25dp"
-                app:layout_constraintTop_toBottomOf="@id/vaccination_title"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                tools:listitem="@layout/item_vaccination"
-                tools:itemCount="1">
+                app:layout_constraintTop_toBottomOf="@id/vaccination_title"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:itemCount="1"
+                tools:listitem="@layout/item_vaccination">
             </androidx.recyclerview.widget.RecyclerView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

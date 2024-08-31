@@ -1,6 +1,4 @@
-package com.example.cocoapp.object;
-
-import android.widget.ImageView;
+package com.example.cocoapp.Object;
 
 public class CartItem {
 	private String productName;

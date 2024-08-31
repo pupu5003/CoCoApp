@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cocoapp.R;
-import com.example.cocoapp.object.Pet;
+import com.example.cocoapp.Object.Pet;
 
 import java.util.List;
 

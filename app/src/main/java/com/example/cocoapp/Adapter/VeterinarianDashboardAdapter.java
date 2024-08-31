@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cocoapp.R;
-import com.example.cocoapp.object.Veterinarian;
+import com.example.cocoapp.Object.Veterinarian;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -88,9 +88,7 @@ public class VeterinarianDashboardAdapter extends RecyclerView.Adapter<Veterinar
 			// Format and display the last visit date
 			SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 			String lastVisitFormatted = veterinarian.getLastVisit() != null ? sdf.format(veterinarian.getLastVisit()) : "No visit data";
-			if (lastVisitDate != null) {
-				lastVisitDate.setText(lastVisitFormatted);
-			}
+			lastVisitDate.setText(lastVisitFormatted);
 		}
 	}
 }

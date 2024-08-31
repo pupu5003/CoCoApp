@@ -8,10 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
-import com.example.cocoapp.Fragment.Dashboard;
 import com.example.cocoapp.Fragment.MapsFragment;
+import com.example.cocoapp.Fragment.PetHealth;
 import com.example.cocoapp.Fragment.VetVeterinarian;
-import com.example.cocoapp.Fragment.ViewCart;
 import com.example.cocoapp.R;
 
 public class Bottom_Navigation extends AppCompatActivity {
@@ -54,7 +53,7 @@ public class Bottom_Navigation extends AppCompatActivity {
                     break;
                 case explore:
                     name = "Explore";
-                    selectedFragment = new Dashboard();
+                    selectedFragment = new PetHealth();
                     break;
                 case manage:
                     name = "Manage";

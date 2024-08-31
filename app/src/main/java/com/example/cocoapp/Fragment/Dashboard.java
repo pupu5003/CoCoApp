@@ -14,13 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cocoapp.Adapter.PetDashboardAdapter;
 import com.example.cocoapp.Adapter.PetStatusAdapter;
-import com.example.cocoapp.Adapter.ProductAdapter;
 import com.example.cocoapp.Adapter.ProductDashboardAdapter;
 import com.example.cocoapp.Adapter.VeterinarianDashboardAdapter;
 import com.example.cocoapp.R;
-import com.example.cocoapp.object.Pet;
-import com.example.cocoapp.object.Product;
-import com.example.cocoapp.object.Veterinarian;
+import com.example.cocoapp.Object.Pet;
+import com.example.cocoapp.Object.Product;
+import com.example.cocoapp.Object.Veterinarian;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

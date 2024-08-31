@@ -14,7 +14,7 @@ import android.widget.ImageView;
 
 import com.example.cocoapp.Adapter.VeterinarianAdapter;
 import com.example.cocoapp.R;
-import com.example.cocoapp.object.Veterinarian;
+import com.example.cocoapp.Object.Veterinarian;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
