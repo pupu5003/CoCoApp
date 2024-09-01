@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,8 @@ import com.example.cocoapp.Adapter.PetDashboardAdapter;
 import com.example.cocoapp.Adapter.PetStatusAdapter;
 import com.example.cocoapp.Adapter.ProductDashboardAdapter;
 import com.example.cocoapp.Adapter.VeterinarianDashboardAdapter;
+import com.example.cocoapp.Object.CartItem;
+import com.example.cocoapp.Object.CartManager;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Pet;
 import com.example.cocoapp.Object.Product;
@@ -40,7 +43,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Dashboard extends Fragment implements OnMapReadyCallback{
+public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDashboardAdapter.OnAddToCartListener {
 
 	private RecyclerView recyclerViewPetStatus;
 	private RecyclerView recyclerViewProduct;
@@ -121,7 +124,7 @@ public class Dashboard extends Fragment implements OnMapReadyCallback{
 		veterinarianList.add(new Veterinarian("Dr. Johnson", "Doctor of Veterinary Medicine", 4.6f, 90, 9, "2.0 km", "$115", "Mon-Fri 10 AM - 6 PM", pic2, "2024-07-20"));
 
 		petStatusAdapter = new PetStatusAdapter(getContext(), petList);
-		productDashboardAdapter = new ProductDashboardAdapter(getContext(), productList, false);
+		productDashboardAdapter = new ProductDashboardAdapter(getContext(), productList, false, this);
 		petDashboardAdapter = new PetDashboardAdapter(getContext(), petList);
 		veterinarianDashboardAdapter = new VeterinarianDashboardAdapter(getContext(), veterinarianList, false);
 
@@ -222,5 +225,17 @@ public class Dashboard extends Fragment implements OnMapReadyCallback{
 		}
 	}
 
+	@Override
+	public void onAddToCart(Product product) {
+		CartItem cartItem = new CartItem(
+				product.getName(),
+				product.getBrand(),
+				product.getWeight(),
+				R.drawable.product_img,
+				product.getQuantity()
+		);
+		CartManager.getInstance().addItem(cartItem);
+		Toast.makeText(getContext(), product.getName() + " added to cart", Toast.LENGTH_SHORT).show();
+	}
 }
 

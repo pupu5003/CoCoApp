@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import com.example.cocoapp.Adapter.ProductAdapter;
 import com.example.cocoapp.Adapter.ProductDashboardAdapter;
@@ -20,7 +21,7 @@ import com.example.cocoapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener {
+public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener, ProductDashboardAdapter.OnAddToCartListener {
 
 	private RecyclerView recyclerViewRecommend;
 	private RecyclerView recyclerViewTopSelling;
@@ -68,7 +69,7 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 		productList.add(new Product("", imageView4, "$18", "Fish Food", "300g", "Brand D"));
 
 		recommendAdapter = new ProductAdapter(getContext(), productList, this);
-		topSellingAdapter = new ProductDashboardAdapter(getContext(), productList, true);
+		topSellingAdapter = new ProductDashboardAdapter(getContext(), productList, true, this);
 		recyclerViewRecommend.setAdapter(recommendAdapter);
 		recyclerViewTopSelling.setAdapter(topSellingAdapter);
 
@@ -82,7 +83,7 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 				product.getBrand(),
 				product.getWeight(),
 				R.drawable.product_img,
-				1
+				product.getQuantity()
 		);
 		CartManager.getInstance().addItem(cartItem);
 	}

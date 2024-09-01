@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
+import com.example.cocoapp.ActivityPage.Bottom_Navigation;
 import com.example.cocoapp.Adapter.CartAdapter;
 import com.example.cocoapp.Object.CartItem;
 import com.example.cocoapp.Object.CartManager;
@@ -25,6 +27,7 @@ public class ViewCart extends Fragment {
 	private RecyclerView recyclerView;
 	private CartAdapter cartAdapter;
 	private List<CartItem> cartItemList;
+	private ImageButton shoppingButton;
 
 	public ViewCart() {
 	}
@@ -36,6 +39,7 @@ public class ViewCart extends Fragment {
 
 		recyclerView = view.findViewById(R.id.recyclerView);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+		shoppingButton = view.findViewById(R.id.shoppping_ic);
 
 		cartItemList = CartManager.getInstance().getCartItemList();
 
@@ -94,6 +98,10 @@ public class ViewCart extends Fragment {
 		});
 
 		itemTouchHelper.attachToRecyclerView(recyclerView);
+
+		shoppingButton.setOnClickListener(v -> {
+			getActivity().getSupportFragmentManager().popBackStack();
+		});
 
 		return view;
 	}
