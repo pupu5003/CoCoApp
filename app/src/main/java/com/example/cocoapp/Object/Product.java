@@ -26,6 +26,17 @@ public class Product implements Serializable
 		this.quantity = 1;
 	}
 
+	public Product(String discount, ImageView productImage, String price, String name, String weight, String brand, int quantity)
+	{
+		this.discount = discount;
+		this.productImage = productImage;
+		this.price = price;
+		this.name = name;
+		this.weight = weight;
+		this.brand = brand;
+		this.quantity = quantity;
+	}
+
 	public String getDiscount() { return discount; }
 
 	public void setDiscount(String discount) { this.discount = discount; }

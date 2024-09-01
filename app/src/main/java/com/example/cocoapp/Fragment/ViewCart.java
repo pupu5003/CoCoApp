@@ -12,14 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-
-import com.example.cocoapp.ActivityPage.Bottom_Navigation;
 import com.example.cocoapp.Adapter.CartAdapter;
 import com.example.cocoapp.Object.CartItem;
 import com.example.cocoapp.Object.CartManager;
 import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.R;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ViewCart extends Fragment {
@@ -103,6 +103,7 @@ public class ViewCart extends Fragment {
 			getActivity().getSupportFragmentManager().popBackStack();
 		});
 
+
 		return view;
 	}
 
@@ -113,4 +114,5 @@ public class ViewCart extends Fragment {
 				.setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
 				.show();
 	}
+
 }

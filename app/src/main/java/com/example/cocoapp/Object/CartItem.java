@@ -1,5 +1,7 @@
 package com.example.cocoapp.Object;
 
+import android.widget.ImageView;
+
 public class CartItem {
 	private String productName;
 	private String productBrand;
@@ -38,4 +40,5 @@ public class CartItem {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+
 }

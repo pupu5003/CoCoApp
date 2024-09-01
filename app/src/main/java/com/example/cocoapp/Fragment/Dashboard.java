@@ -137,7 +137,8 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 			@Override
 			public void onClick(View v) {
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, new VisitVeterinarian()).addToBackStack(null).commit();
+						.replace(R.id.fragment_container, new VisitVeterinarian()).commit();
+				((Bottom_Navigation) getActivity()).setSelectedTab(2);
 			}
 		});
 
@@ -145,7 +146,9 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 			@Override
 			public void onClick(View v) {
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, new Shop()).addToBackStack(null).commit();
+						.replace(R.id.fragment_container, new Shop()).commit();
+
+				((Bottom_Navigation) getActivity()).setSelectedTab(3);
 			}
 		});
 
@@ -164,22 +167,6 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 						.replace(R.id.fragment_container, new PetHealth()).addToBackStack(null).commit();
 			}
 		});
-
-		// Find the TextView by its ID
-		TextView exploreButton = view.findViewById(R.id.see_all_petfood);
-
-		// Set the click listener for the TextView
-		exploreButton.setOnClickListener(v -> {
-			// Replace the current fragment with the Shop (Explore) fragment
-			getParentFragmentManager().beginTransaction()
-					.replace(R.id.fragment_container, new Shop()) // Replace with Explore fragment
-					.commit();
-
-			// Call setSelectedTab() on the parent activity to update the bottom navigation
-			((Bottom_Navigation) getActivity()).setSelectedTab(3);  // 'explore' corresponds to 3
-		});
-
-
 
 		return view;
 	}

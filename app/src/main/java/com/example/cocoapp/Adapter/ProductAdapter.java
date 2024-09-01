@@ -17,6 +17,7 @@ import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.R;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
@@ -42,6 +43,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 		Product product = productList.get(position);
 		holder.productNameTextView.setText(product.getName());
 		holder.priceTextView.setText(product.getPrice());
+		if (Objects.equals(product.getDiscount(), "")) holder.discountTextView.setVisibility(View.GONE);
+		else {
+			holder.discountTextView.setVisibility(View.VISIBLE);
+			holder.discountTextView.setText(product.getDiscount());}
 		holder.discountTextView.setText(product.getDiscount());
 		holder.productImageView.setImageDrawable(product.getProductImage().getDrawable());
 		if (product.getQuantity()>0) {

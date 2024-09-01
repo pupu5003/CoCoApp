@@ -63,8 +63,8 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 		ImageView imageView4 = new ImageView(getContext());
 		imageView4.setImageResource(R.drawable.product_img3);
 
-		productList.add(new Product("", imageView1, "$20", "Dog Food", "900g", "Brand A"));
-		productList.add(new Product("", imageView2, "$15", "Cat Food", "500g", "Brand B"));
+		productList.add(new Product("10%", imageView1, "$20", "Dog Food", "900g", "Brand A"));
+		productList.add(new Product("20%", imageView2, "$15", "Cat Food", "500g", "Brand B"));
 		productList.add(new Product("", imageView3, "$25", "Bird Food", "1kg", "Brand C"));
 		productList.add(new Product("", imageView4, "$18", "Fish Food", "300g", "Brand D"));
 
