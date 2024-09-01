@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -108,8 +109,6 @@ public class ViewAll extends Fragment {
 			recommendedVets.add(new Veterinarian("Dr. Jones", "Doctor of Veterinary Medicine", 4.2f, 80, 8, "3.0 km", "$120", "Mon-Fri 9 AM - 6 PM",pic2, "2024-07-20"));
 			VeterinarianAdapter recommendedAdapter = new VeterinarianAdapter(getContext(), recommendedVets);
 			//VeterinarianAdapter recommendedAdapter = new VeterinarianAdapter(getContext(), recommendedVets);
-
-			nearbyRecyclerView.setAdapter(recommendedAdapter);
 		}
 		if (Objects.equals(mParam1, "2") && Objects.equals(mParam2,"1")){
 			text.setText("Nearby Grooming");
@@ -168,6 +167,10 @@ public class ViewAll extends Fragment {
 			recommendedGrooming.setAdapter(recommendedAdapter);
 		}
 
+		ImageButton backButton = view.findViewById(R.id.back_button);
+		backButton.setOnClickListener(v -> {
+			getActivity().getSupportFragmentManager().popBackStack();
+		});
 
 		return view;
 	}

@@ -2,9 +2,9 @@ package com.example.cocoapp.Object;
 
 import android.widget.ImageView;
 
-import java.util.Date;
+import java.io.Serializable;
 
-public class Veterinarian {
+public class Veterinarian implements Serializable {
     private String name;
     private String qualification;
     private float rating;
@@ -61,7 +61,8 @@ public class Veterinarian {
     public String getAvailability() {
         return availability;
     }
-    public ImageView getProfileImage(){
+
+    public ImageView getProfileImage() {
         return pic;
     }
 
@@ -72,5 +73,5 @@ public class Veterinarian {
     public void setLastVisit(String lastVisit) {
         this.lastVisit = lastVisit;
     }
-
 }
+

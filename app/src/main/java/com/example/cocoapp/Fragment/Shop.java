@@ -27,7 +27,6 @@ public class Shop extends Fragment {
 	private ProductAdapter recommendAdapter;
 	private ProductDashboardAdapter topSellingAdapter;
 	private List<Product> productList;
-	private ImageButton backButton;
 	private ImageView cartButton;
 
 	public Shop() {
@@ -46,11 +45,6 @@ public class Shop extends Fragment {
 
 		});
 
-
-		backButton = view.findViewById(R.id.back_button);
-		backButton.setOnClickListener(v -> {
-			getActivity().getSupportFragmentManager().popBackStack();
-		});
 
 		recyclerViewRecommend = view.findViewById(R.id.productRecommend_recycle_view);
 		recyclerViewTopSelling = view.findViewById(R.id.productTopSelling_recycle_view);

@@ -9,23 +9,27 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cocoapp.Fragment.VeterinarianProfile;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Veterinarian;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class VeterinarianDashboardAdapter extends RecyclerView.Adapter<VeterinarianDashboardAdapter.VeterinarianDashboardViewHolder> {
 
 	private List<Veterinarian> veterinarianList;
 	private Context context;
+	private boolean showAll;
 
-	public VeterinarianDashboardAdapter(Context context, List<Veterinarian> veterinarianList) {
+	public VeterinarianDashboardAdapter(Context context, List<Veterinarian> veterinarianList, boolean showAll) {
 		this.context = context;
 		this.veterinarianList = veterinarianList;
+		this.showAll = showAll;
 	}
 
 	@NonNull
@@ -39,13 +43,26 @@ public class VeterinarianDashboardAdapter extends RecyclerView.Adapter<Veterinar
 	@Override
 	public void onBindViewHolder(@NonNull VeterinarianDashboardViewHolder holder, int position) {
 		Veterinarian veterinarian = veterinarianList.get(position);
-		// Bind your data to the view here
 		holder.bind(veterinarian);
+
+		holder.bookAppointment.setOnClickListener(view -> {
+			// Navigate to VeterinarianProfile
+			FragmentActivity activity = (FragmentActivity) context;
+			FragmentManager fragmentManager = activity.getSupportFragmentManager();
+			FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+			// Pass the Veterinarian object using the newInstance method
+			VeterinarianProfile profileFragment = VeterinarianProfile.newInstance(veterinarian);
+
+			transaction.replace(R.id.fragment_container, profileFragment); // fragment_container is the ID of your container layout
+			transaction.addToBackStack(null); // add to backstack so the user can navigate back
+			transaction.commit();
+		});
 	}
 
 	@Override
 	public int getItemCount() {
-		return Math.min(veterinarianList.size(), 2); // Limit to 2 items
+		return showAll ? veterinarianList.size() : Math.min(veterinarianList.size(), 2); // Show all if showAll is true
 	}
 
 	public static class VeterinarianDashboardViewHolder extends RecyclerView.ViewHolder {
@@ -54,10 +71,8 @@ public class VeterinarianDashboardAdapter extends RecyclerView.Adapter<Veterinar
 		private TextView doctorQualification;
 		private RatingBar ratingBar;
 		private TextView reviewText;
-		private TextView experienceText;
 		private TextView distanceText;
 		private TextView priceText;
-		private TextView availabilityText;
 		private TextView lastVisitText;
 		private TextView lastVisitDate;
 		private TextView bookAppointment;
@@ -83,9 +98,9 @@ public class VeterinarianDashboardAdapter extends RecyclerView.Adapter<Veterinar
 			reviewText.setText(String.format("%.1f (%d reviews)", veterinarian.getRating(), veterinarian.getReviews()));
 			distanceText.setText(veterinarian.getDistance());
 			priceText.setText(veterinarian.getPrice());
-			// Set the image from ImageView
 			profileImage.setImageDrawable(veterinarian.getProfileImage().getDrawable());
 			lastVisitDate.setText(veterinarian.getLastVisit());
 		}
 	}
 }
+

@@ -45,7 +45,7 @@ public class VisitVeterinarian extends Fragment {
 
 		// Initialize data
 		veterinarianList = new ArrayList<>();
-		veterinarianAdapter = new VeterinarianDashboardAdapter(getContext(), veterinarianList);
+		veterinarianAdapter = new VeterinarianDashboardAdapter(getContext(), veterinarianList, true);
 		recyclerView.setAdapter(veterinarianAdapter);
 
 		// Load example data
@@ -60,6 +60,8 @@ public class VisitVeterinarian extends Fragment {
 		ImageView pic2 = new ImageView(getContext());
 		pic2.setImageResource(R.drawable.vet2);
 
+		veterinarianList.add(new Veterinarian("Dr. Brown", "Bachelor of Veterinary Science", 4.8f, 120, 12, "1.8 km", "$110", "Mon-Sat 8 AM - 4 PM", pic1, "2024-08-15"));
+		veterinarianList.add(new Veterinarian("Dr. Johnson", "Doctor of Veterinary Medicine", 4.6f, 90, 9, "2.0 km", "$115", "Mon-Fri 10 AM - 6 PM", pic2, "2024-07-20"));
 		veterinarianList.add(new Veterinarian("Dr. Brown", "Bachelor of Veterinary Science", 4.8f, 120, 12, "1.8 km", "$110", "Mon-Sat 8 AM - 4 PM", pic1, "2024-08-15"));
 		veterinarianList.add(new Veterinarian("Dr. Johnson", "Doctor of Veterinary Medicine", 4.6f, 90, 9, "2.0 km", "$115", "Mon-Fri 10 AM - 6 PM", pic2, "2024-07-20"));
 

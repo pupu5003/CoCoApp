@@ -44,9 +44,9 @@
 
 	<ImageView
 		android:id="@+id/imageDoctor"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:scaleType="fitCenter"
+		android:layout_width="match_parent"
+		android:layout_height="400dp"
+		android:scaleType="fitXY"
 		android:src="@drawable/doctor_ava"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -221,13 +221,13 @@
 
 				</androidx.constraintlayout.widget.ConstraintLayout>
 
-			</com.google.android.material.card.MaterialCardView>
+			</com.google.android.material.card.MaterialCardView>/>
 
 			<TextView
 				android:id="@+id/description"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="10dp"
+				android:layout_marginTop="4dp"
 				android:fontFamily="@font/fredoka_regular"
 				android:gravity="fill_horizontal"
 				android:paddingHorizontal="25dp"
@@ -235,14 +235,16 @@
 				android:textAlignment="gravity"
 				android:textSize="12sp"
 				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintHorizontal_bias="0.0"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/card" />
 
 			<Button
+				android:id="@+id/bookAppointment_btn"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginHorizontal="20dp"
-				android:layout_marginTop="40dp"
+				android:layout_marginTop="100dp"
 				android:background="@drawable/round_rectangle_5"
 				android:drawableEnd="@drawable/deadline_ic"
 				android:fontFamily="@font/fredoka_medium"
@@ -252,6 +254,7 @@
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintVertical_bias="1"
 				app:layout_constraintTop_toBottomOf="@id/description" />
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
