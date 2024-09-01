@@ -90,7 +90,7 @@ public class VetGrooming extends Fragment {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, ViewAll.newInstance("2","1")) // Replace with your actual fragment
+                        .replace(R.id.fragment_container, ViewAll.newInstance("2","1")).addToBackStack(null) // Replace with your actual fragment
                         .commit();
             }
         });
@@ -98,7 +98,7 @@ public class VetGrooming extends Fragment {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, ViewAll.newInstance("2","2")) // Replace with your actual fragment
+                        .replace(R.id.fragment_container, ViewAll.newInstance("2","2")).addToBackStack(null) // Replace with your actual fragment
                         .commit();
             }
         });
@@ -132,8 +132,8 @@ public class VetGrooming extends Fragment {
         groomingList.add(new Grooming("Pet Pamper", 4.3f, 80, false, "2.5 km", "$60", "Mon-Fri 10 AM - 5 PM",pic2));
 
         // Set adapter
-        GroomingAdapter NearByAdapter = new GroomingAdapter(groomingList);
-        GroomingAdapter RecommendAdapter = new GroomingAdapter(groomingList);
+        GroomingAdapter NearByAdapter = new GroomingAdapter(groomingList,false);
+        GroomingAdapter RecommendAdapter = new GroomingAdapter(groomingList,false);
         nearbyGrooming.setAdapter(NearByAdapter);
         recommendGrooming.setAdapter(RecommendAdapter);
 
