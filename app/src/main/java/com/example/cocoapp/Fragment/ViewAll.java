@@ -6,12 +6,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.example.cocoapp.Adapter.GroomingAdapter;
 import com.example.cocoapp.Adapter.VeterinarianAdapter;
+import com.example.cocoapp.Object.Grooming;
 import com.example.cocoapp.Object.Veterinarian;
 import com.example.cocoapp.R;
 
@@ -21,10 +25,10 @@ import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ViewAllVet#newInstance} factory method to
+ * Use the {@link ViewAll#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewAllVet extends Fragment {
+public class ViewAll extends Fragment {
 
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,16 +39,17 @@ public class ViewAllVet extends Fragment {
 	private String mParam1;
 	private String mParam2;
 
-	public ViewAllVet() {
+	public ViewAll() {
 		// Required empty public constructor
 	}
 
 
 	// TODO: Rename and change types and number of parameters
-	public static ViewAllVet newInstance(String param1) {
-		ViewAllVet fragment = new ViewAllVet();
+	public static ViewAll newInstance(String param1, String param2) {
+		ViewAll fragment = new ViewAll();
 		Bundle args = new Bundle();
 		args.putString(ARG_PARAM1, param1);
+		args.putString(ARG_PARAM2, param2);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -54,6 +59,8 @@ public class ViewAllVet extends Fragment {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
 			mParam1 = getArguments().getString(ARG_PARAM1);
+			mParam2 = getArguments().getString(ARG_PARAM2);
+
 		}
 	}
 
@@ -66,8 +73,12 @@ public class ViewAllVet extends Fragment {
 		pic1.setImageResource(R.drawable.product_img);
 		ImageView pic2 = new ImageView(getContext());
 		pic2.setImageResource(R.drawable.product_img2);
-		if (Objects.equals(mParam1, "1")) {
+		TextView text = view.findViewById(R.id.tvHeader);
+		Log.d("key 2 " , mParam2);
+		Log.d("key 1" , mParam1);
+		if (Objects.equals(mParam1, "1") && Objects.equals(mParam2,"1")) {
 			RecyclerView nearbyRecyclerView = view.findViewById(R.id.recyclerView);
+			text.setText("Nearby Veterinarians");
 
 
 			// Set up LayoutManager for the RecyclerView
@@ -85,7 +96,9 @@ public class ViewAllVet extends Fragment {
 
 			nearbyRecyclerView.setAdapter(nearbyAdapter);
 			//recommendedRecyclerView.setAdapter(recommendedAdapter);
-		}else{
+		}
+		if (Objects.equals(mParam1, "1") && Objects.equals(mParam2,"2")){
+			text.setText("Recommended Veterinarians");
 			RecyclerView nearbyRecyclerView = view.findViewById(R.id.recyclerView);
 			nearbyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 			List<Veterinarian> recommendedVets = new ArrayList<>();
@@ -98,6 +111,64 @@ public class ViewAllVet extends Fragment {
 
 			nearbyRecyclerView.setAdapter(recommendedAdapter);
 		}
+		if (Objects.equals(mParam1, "2") && Objects.equals(mParam2,"1")){
+			text.setText("Nearby Grooming");
+			// Initialize RecyclerView
+			RecyclerView nearbyGrooming = view.findViewById(R.id.recyclerView);
+
+			nearbyGrooming.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+			// Initialize data
+			List<Grooming> groomingList = new ArrayList<>();
+			groomingList.add(new Grooming("Paws & Claws", 4.5f, 120, true, "1.2 km", "$50", "Mon-Sat 9 AM - 6 PM",pic1));
+			groomingList.add(new Grooming("Pet Pamper", 4.3f, 80, false, "2.5 km", "$60", "Mon-Fri 10 AM - 5 PM",pic2));
+			// Set adapter
+			GroomingAdapter NearByAdapter = new GroomingAdapter(groomingList);
+			nearbyGrooming.setAdapter(NearByAdapter);
+		}
+		if (Objects.equals(mParam1, "2") && Objects.equals(mParam2,"2")){
+			text.setText("Recommended Grooming");
+			// Initialize RecyclerView
+			RecyclerView recommendedGrooming = view.findViewById(R.id.recyclerView);
+
+			recommendedGrooming.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+			// Initialize data
+			List<Grooming> groomingList = new ArrayList<>();
+			groomingList.add(new Grooming("Paws & Claws", 4.5f, 120, true, "1.2 km", "$50", "Mon-Sat 9 AM - 6 PM",pic1));
+			groomingList.add(new Grooming("Pet Pamper", 4.3f, 80, false, "2.5 km", "$60", "Mon-Fri 10 AM - 5 PM",pic2));
+			// Set adapter
+			GroomingAdapter recommendedAdapter = new GroomingAdapter(groomingList);
+			recommendedGrooming.setAdapter(recommendedAdapter);
+		}
+		if (Objects.equals(mParam1, "3") && Objects.equals(mParam2,"1")){
+			text.setText("Nearby Boarding");
+			// Initialize RecyclerView
+			RecyclerView nearbyGrooming = view.findViewById(R.id.recyclerView);
+
+			nearbyGrooming.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+			// Initialize data
+			List<Grooming> groomingList = new ArrayList<>();
+			groomingList.add(new Grooming("Paws & Claws", 4.5f, 120, true, "1.2 km", "$50", "Mon-Sat 9 AM - 6 PM",pic1));
+			groomingList.add(new Grooming("Pet Pamper", 4.3f, 80, false, "2.5 km", "$60", "Mon-Fri 10 AM - 5 PM",pic2));
+			// Set adapter
+			GroomingAdapter NearByAdapter = new GroomingAdapter(groomingList);
+			nearbyGrooming.setAdapter(NearByAdapter);
+		}
+		if (Objects.equals(mParam1, "3") && Objects.equals(mParam2,"2")){
+			text.setText("Recommended Boarding");
+			// Initialize RecyclerView
+			RecyclerView recommendedGrooming = view.findViewById(R.id.recyclerView);
+
+			recommendedGrooming.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+			// Initialize data
+			List<Grooming> groomingList = new ArrayList<>();
+			groomingList.add(new Grooming("Paws & Claws", 4.5f, 120, true, "1.2 km", "$50", "Mon-Sat 9 AM - 6 PM",pic1));
+			groomingList.add(new Grooming("Pet Pamper", 4.3f, 80, false, "2.5 km", "$60", "Mon-Fri 10 AM - 5 PM",pic2));
+			// Set adapter
+			GroomingAdapter recommendedAdapter = new GroomingAdapter(groomingList);
+			recommendedGrooming.setAdapter(recommendedAdapter);
+		}
+
+
 		return view;
 	}
 }

@@ -17,10 +17,7 @@ import com.example.cocoapp.Adapter.VeterinarianAdapter;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Veterinarian;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -108,7 +105,7 @@ public class VetVeterinarian extends Fragment {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, ViewAllVet.newInstance("1")) // Replace with your actual fragment
+                        .replace(R.id.fragment_container, ViewAll.newInstance("1","1")) // Replace with your actual fragment
                         .commit();
             }
         });
@@ -116,7 +113,7 @@ public class VetVeterinarian extends Fragment {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, ViewAllVet.newInstance("2")) // Replace with your actual fragment
+                        .replace(R.id.fragment_container, ViewAll.newInstance("1","2")) // Replace with your actual fragment
                         .commit();
             }
         });

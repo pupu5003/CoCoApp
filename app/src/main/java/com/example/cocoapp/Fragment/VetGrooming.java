@@ -11,10 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.cocoapp.Adapter.GroomingAdapter;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Grooming;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +83,25 @@ public class VetGrooming extends Fragment {
         pic1.setImageResource(R.drawable.product_img);
         ImageView pic2 = new ImageView(getContext());
         pic2.setImageResource(R.drawable.product_img2);
+        TextView seeAll1 = view.findViewById(R.id.see_all);
+        TextView seeAll2 = view.findViewById(R.id.see_all_recommended);
 
+        seeAll1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, ViewAll.newInstance("2","1")) // Replace with your actual fragment
+                        .commit();
+            }
+        });
+        seeAll2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, ViewAll.newInstance("2","2")) // Replace with your actual fragment
+                        .commit();
+            }
+        });
 
         btnVet.setOnClickListener(new View.OnClickListener() {
             @Override
