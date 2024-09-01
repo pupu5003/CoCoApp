@@ -42,7 +42,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 		return cartItemList.size();
 	}
 
-	// Make CartViewHolder class public
 	public class CartViewHolder extends RecyclerView.ViewHolder {
 		private final TextView productName, productBrand, productWeight, quantityTextView;
 		private final ImageView productImage;

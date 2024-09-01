@@ -4,7 +4,7 @@ public class CartItem {
 	private String productName;
 	private String productBrand;
 	private String productWeight;
-	private int productImage; // Image resource ID
+	private int productImage;
 	private int quantity;
 
 	public CartItem(String productName, String productBrand, String productWeight, int productImage, int quantity) {
