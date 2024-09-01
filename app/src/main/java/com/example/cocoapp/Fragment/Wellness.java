@@ -19,10 +19,13 @@ import com.example.cocoapp.Object.Allergy;
 import com.example.cocoapp.Object.Appointment;
 import com.example.cocoapp.Object.Vaccination;
 import com.example.cocoapp.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Wellness extends Fragment {
+
+
+public class Wellness extends Fragment{
 
 	private RecyclerView vaccinationRecyclerView;
 	private RecyclerView allergyRecyclerView;
@@ -48,7 +51,7 @@ public class Wellness extends Fragment {
 		allergyRecyclerView = view.findViewById(R.id.allergies_recycle_view);
 		appointmentRecyclerView = view.findViewById(R.id.appointment_recycle_view);
 
-		// Set up Vaccination RecyclerView
+		// Set up RecyclerViews
 		vaccinationsList = new ArrayList<>();
 		allergiesList = new ArrayList<>();
 		appointmentList = new ArrayList<>();
@@ -67,22 +70,15 @@ public class Wellness extends Fragment {
 
 		loadExampleData();
 
-		seeAllVaccination.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, new VaccinationWellness()).addToBackStack(null).commit(); // R.id.fragment_container is the ID of your FrameLayout or FragmentContainerView
-			}
+		seeAllVaccination.setOnClickListener(v -> {
+			requireActivity().getSupportFragmentManager().beginTransaction()
+					.replace(R.id.fragment_container, new VaccinationWellness()).addToBackStack(null).commit();
 		});
 
-		seeAllTreatment.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, new DiseaseWellness()).addToBackStack(null).commit(); // R.id.fragment_container is the ID of your FrameLayout or FragmentContainerView
-			}
+		seeAllTreatment.setOnClickListener(v -> {
+			requireActivity().getSupportFragmentManager().beginTransaction()
+					.replace(R.id.fragment_container, new DiseaseWellness()).addToBackStack(null).commit();
 		});
-
 
 		return view;
 	}
@@ -98,9 +94,10 @@ public class Wellness extends Fragment {
 		allergiesList.add(new Allergy("Peanuts", "abc", "Dr. Black"));
 		allergyAdapter.notifyDataSetChanged();
 
-		appointmentList.add(new Appointment("Dr. Green", "2024-09-01"));
-		appointmentList.add(new Appointment("Dr. Blue", "2024-09-15"));
-		appointmentList.add(new Appointment("Dr. Red", "2024-10-01"));
+		appointmentList.add(new Appointment("Dr. Green", "2024-09-01", "11:30"));
+		appointmentList.add(new Appointment("Dr. Blue", "2024-09-15", "09:30"));
+		appointmentList.add(new Appointment("Dr. Red", "2024-10-01", "10:30"));
 		appointmentAdapter.notifyDataSetChanged();
 	}
+
 }

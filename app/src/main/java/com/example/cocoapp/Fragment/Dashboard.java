@@ -120,7 +120,7 @@ public class Dashboard extends Fragment implements OnMapReadyCallback{
 		veterinarianList.add(new Veterinarian("Dr. Johnson", "Doctor of Veterinary Medicine", 4.6f, 90, 9, "2.0 km", "$115", "Mon-Fri 10 AM - 6 PM", pic2, "2024-07-20"));
 
 		petStatusAdapter = new PetStatusAdapter(getContext(), petList);
-		productDashboardAdapter = new ProductDashboardAdapter(getContext(), productList);
+		productDashboardAdapter = new ProductDashboardAdapter(getContext(), productList, false);
 		petDashboardAdapter = new PetDashboardAdapter(getContext(), petList);
 		veterinarianDashboardAdapter = new VeterinarianDashboardAdapter(getContext(), veterinarianList, false);
 

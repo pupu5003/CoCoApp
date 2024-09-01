@@ -62,7 +62,7 @@ public class VeterinarianDashboardAdapter extends RecyclerView.Adapter<Veterinar
 
 	@Override
 	public int getItemCount() {
-		return showAll ? veterinarianList.size() : Math.min(veterinarianList.size(), 2); // Show all if showAll is true
+		return showAll ? veterinarianList.size() : Math.min(veterinarianList.size(), 3); // Show all if showAll is true
 	}
 
 	public static class VeterinarianDashboardViewHolder extends RecyclerView.ViewHolder {

@@ -78,7 +78,7 @@ public class Shop extends Fragment {
 		productList.add(new Product("", imageView4, "$18", "Fish Food", "300g", "Brand D"));
 
 		recommendAdapter = new ProductAdapter(getContext(), productList);
-		topSellingAdapter = new ProductDashboardAdapter(getContext(),productList);
+		topSellingAdapter = new ProductDashboardAdapter(getContext(),productList, true);
 		recyclerViewRecommend.setAdapter(recommendAdapter);
 		recyclerViewTopSelling.setAdapter(topSellingAdapter);
 		// Notify the adapter of data changes

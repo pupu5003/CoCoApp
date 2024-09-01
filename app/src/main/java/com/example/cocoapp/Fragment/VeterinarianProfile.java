@@ -68,10 +68,16 @@ public class VeterinarianProfile extends Fragment {
 		bookingAppointment.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				Bundle args = new Bundle();
+				args.putString("veterinarian_name", veterinarian.getName());  // Pass the veterinarian's name
+				BookingAppoinment fragment = new BookingAppoinment();
+				fragment.setArguments(args);
+
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, new BookingAppoinment()).addToBackStack(null).commit();
+						.replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
 			}
 		});
+
 
 		return view;
 	}

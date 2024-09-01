@@ -13,9 +13,31 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
+import com.example.cocoapp.Object.Appointment;
 import com.example.cocoapp.R;
 
 public class BookingAppoinment extends Fragment {
+	private static final String ARG_VETERINARIAN_NAME = "veterinarianName";
+	private Button lastSelectedButton = null;
+	private String veterinarianName;
+
+	public static BookingAppoinment newInstance(String veterinarianName) {
+		BookingAppoinment fragment = new BookingAppoinment();
+		Bundle args = new Bundle();
+		args.putString(ARG_VETERINARIAN_NAME, veterinarianName);
+		fragment.setArguments(args);
+		return fragment;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (getArguments() != null) {
+			veterinarianName = getArguments().getString(ARG_VETERINARIAN_NAME);
+		};
+	}
+
 
 	private static final String ARG_PARAM1 = "param1";
 	private static final String ARG_PARAM2 = "param2";
@@ -36,16 +58,6 @@ public class BookingAppoinment extends Fragment {
 		return fragment;
 	}
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
-		}
-	}
-
-	private Button lastSelectedButton = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,26 +89,42 @@ public class BookingAppoinment extends Fragment {
 			tvHeader.setText(mParam1);
 		}
 
-		setUpButton(btnTime930);
-		setUpButton(btnTime1030);
-		setUpButton(btnTime1130);
-		setUpButton(btnTime330);
-		setUpButton(btnTime430);
-		setUpButton(btnTime530);
+		setUpButton(btnTime930, "09:30");
+		setUpButton(btnTime1030, "10:30");
+		setUpButton(btnTime1130, "11:30");
+		setUpButton(btnTime330, "15:30");
+		setUpButton(btnTime430, "16:30");
+		setUpButton(btnTime530, "17:30");
+
+
+		backButton.setOnClickListener(v -> {
+			getParentFragmentManager().popBackStack();
+		});
+
+		if (veterinarianName != null) {
+			tvHeader.setText("Booking with " + veterinarianName);
+		}
 
 		backButton.setOnClickListener(v -> {
 			getParentFragmentManager().popBackStack();
 		});
 
 		btnBookAppointment.setOnClickListener(v -> {
-			// Handle book appointment button click
-			showBookingSuccessMessage();
+			String selectedDate = getSelectedDate(calendarView);
+			String selectedTime = getSelectedTime();
+			Appointment appointment = new Appointment(veterinarianName, selectedDate, selectedTime);
+			//addAppoinment(appointment);
+			Toast.makeText(getActivity(), "Booking successfully!", Toast.LENGTH_SHORT).show();
+			getParentFragmentManager().popBackStack();
 		});
+
+
 
 		return view;
 	}
 
-	private void setUpButton(Button button) {
+	private String selectedTime = "";
+	private void setUpButton(Button button, String time) {
 		button.setOnClickListener(v -> {
 			// Reset the previously selected button
 			if (lastSelectedButton != null) {
@@ -108,8 +136,27 @@ public class BookingAppoinment extends Fragment {
 			button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.Primary_color)));
 			button.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
 
+			// Store the selected time
+			selectedTime = time;
 			lastSelectedButton = button;
 		});
+	}
+
+
+	private String getSelectedDate(CalendarView calendarView) {
+		final String[] selectedDate = {""};
+		calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+			// CalendarView returns month as zero-based, so add 1
+			month += 1;
+			selectedDate[0] = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", dayOfMonth);
+		});
+
+		return selectedDate[0];
+	}
+
+
+	private String getSelectedTime() {
+		return selectedTime; // Return the stored selected time
 	}
 
 	private void showBookingSuccessMessage() {

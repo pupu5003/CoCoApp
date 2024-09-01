@@ -19,10 +19,12 @@ public class ProductDashboardAdapter extends RecyclerView.Adapter<ProductDashboa
 
 	private Context context;
 	private List<Product> productList;
+	private boolean showAll;
 
-	public ProductDashboardAdapter(Context context, List<Product> productList) {
+	public ProductDashboardAdapter(Context context, List<Product> productList, boolean showAll) {
 		this.context = context;
 		this.productList = productList;
+		this.showAll = showAll;
 	}
 
 	@NonNull
@@ -45,9 +47,8 @@ public class ProductDashboardAdapter extends RecyclerView.Adapter<ProductDashboa
 
 	@Override
 	public int getItemCount() {
-		return productList.size();
+		return showAll ? productList.size() : Math.min(productList.size(), 3); // Show all if showAll is true
 	}
-
 	public static class ProductViewHolder extends RecyclerView.ViewHolder {
 
 		ImageView productImage;
