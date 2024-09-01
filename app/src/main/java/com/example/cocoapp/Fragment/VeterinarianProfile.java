@@ -44,7 +44,7 @@ public class VeterinarianProfile extends Fragment {
 		ImageView imageDoctor = view.findViewById(R.id.imageDoctor);
 		TextView doctorName = view.findViewById(R.id.doctor_name);
 		TextView doctorQualification = view.findViewById(R.id.doctor_qualification);
-		TextView ratingText = view.findViewById(R.id.textView);
+		TextView ratingText = view.findViewById(R.id.ratingTextview);
 		TextView time = view.findViewById(R.id.time);
 		TextView distance = view.findViewById(R.id.distance);
 		TextView price = view.findViewById(R.id.price);
@@ -71,6 +71,19 @@ public class VeterinarianProfile extends Fragment {
 				Bundle args = new Bundle();
 				args.putString("veterinarian_name", veterinarian.getName());  // Pass the veterinarian's name
 				BookingAppoinment fragment = new BookingAppoinment();
+				fragment.setArguments(args);
+
+				requireActivity().getSupportFragmentManager().beginTransaction()
+						.replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+			}
+		});
+
+		ratingText.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Bundle args = new Bundle();
+				args.putString("veterinarian_name", veterinarian.getName());  // Pass the veterinarian's name
+				Review fragment = new Review();
 				fragment.setArguments(args);
 
 				requireActivity().getSupportFragmentManager().beginTransaction()

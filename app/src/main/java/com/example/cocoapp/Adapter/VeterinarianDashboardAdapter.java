@@ -51,7 +51,6 @@ public class VeterinarianDashboardAdapter extends RecyclerView.Adapter<Veterinar
 			FragmentManager fragmentManager = activity.getSupportFragmentManager();
 			FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-			// Pass the Veterinarian object using the newInstance method
 			VeterinarianProfile profileFragment = VeterinarianProfile.newInstance(veterinarian);
 
 			transaction.replace(R.id.fragment_container, profileFragment); // fragment_container is the ID of your container layout

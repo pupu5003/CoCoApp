@@ -1,14 +1,20 @@
 package com.example.cocoapp.Adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cocoapp.Fragment.PetProfile;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Pet;
 
@@ -36,8 +42,18 @@ public class PetDashboardAdapter extends RecyclerView.Adapter<PetDashboardAdapte
 	public void onBindViewHolder(@NonNull PetDashboardViewHolder holder, int position) {
 		Pet pet = petList.get(position);
 		holder.bind(pet);
-		// holder.petImageView.setImageDrawable(pet.getImage().getDrawable()); // Get drawable from ImageView
-		// holder.petName.setText(pet.getName());
+		holder.itemView.setOnClickListener(view -> {
+			FragmentActivity activity = (FragmentActivity) context;
+			FragmentManager fragmentManager = activity.getSupportFragmentManager();
+			FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+			Bundle args = new Bundle();
+			args.putSerializable("PET", pet);
+			PetProfile profileFragment = new PetProfile();
+			profileFragment.setArguments(args);
+
+			transaction.replace(R.id.fragment_container, profileFragment).addToBackStack(null).commit();
+		});
 	}
 
 	@Override

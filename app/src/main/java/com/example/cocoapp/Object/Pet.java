@@ -2,7 +2,9 @@ package com.example.cocoapp.Object;
 
 import android.widget.ImageView;
 
-public class Pet {
+import java.io.Serializable;
+
+public class Pet implements Serializable {
 	private String name;
 	private ImageView image;
 	private String breed;
