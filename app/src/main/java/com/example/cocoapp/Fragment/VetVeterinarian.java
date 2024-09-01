@@ -105,7 +105,7 @@ public class VetVeterinarian extends Fragment {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, ViewAll.newInstance("1","1")) // Replace with your actual fragment
+                        .replace(R.id.fragment_container, ViewAll.newInstance("1","1")).addToBackStack(null) // Replace with your actual fragment
                         .commit();
             }
         });
@@ -113,7 +113,7 @@ public class VetVeterinarian extends Fragment {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, ViewAll.newInstance("1","2")) // Replace with your actual fragment
+                        .replace(R.id.fragment_container, ViewAll.newInstance("1","2")).addToBackStack(null)// Replace with your actual fragment
                         .commit();
             }
         });
@@ -141,8 +141,8 @@ public class VetVeterinarian extends Fragment {
         recommendedVets.add(new Veterinarian("Dr. Jones", "Doctor of Veterinary Medicine", 4.2f, 80, 8, "3.0 km", "$120", "Mon-Fri 9 AM - 6 PM",pic2, "2024-07-20"));
 
         // Create the adapter and set it to the RecyclerView
-        VeterinarianAdapter nearbyAdapter = new VeterinarianAdapter(getContext(), nearbyVets);
-        VeterinarianAdapter recommendedAdapter = new VeterinarianAdapter(getContext(), recommendedVets);
+        VeterinarianAdapter nearbyAdapter = new VeterinarianAdapter(getContext(), nearbyVets,false);
+        VeterinarianAdapter recommendedAdapter = new VeterinarianAdapter(getContext(), recommendedVets,false);
 
         nearbyRecyclerView.setAdapter(nearbyAdapter);
         recommendedRecyclerView.setAdapter(recommendedAdapter);

@@ -18,8 +18,11 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
 
     private List<Grooming> groomingList;
 
-    public GroomingAdapter(List<Grooming> groomingList) {
+    private boolean showAll;
+
+    public GroomingAdapter(List<Grooming> groomingList,boolean showAll) {
         this.groomingList = groomingList;
+        this.showAll = showAll;
     }
 
     @NonNull
@@ -37,7 +40,7 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
 
     @Override
     public int getItemCount() {
-        return groomingList.size();
+        return showAll ? groomingList.size() : Math.min(groomingList.size(), 2);
     }
 
     static class GroomingViewHolder extends RecyclerView.ViewHolder {

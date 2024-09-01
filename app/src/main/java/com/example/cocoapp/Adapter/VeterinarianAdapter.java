@@ -20,10 +20,11 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
 
     private List<Veterinarian> veterinarianList;
     private Context context;
-
-    public VeterinarianAdapter(Context context, List<Veterinarian> veterinarianList) {
+    private boolean showAll;
+    public VeterinarianAdapter(Context context, List<Veterinarian> veterinarianList,boolean showAll) {
         this.context = context;
         this.veterinarianList = veterinarianList;
+        this.showAll = showAll;
     }
 
     @NonNull
@@ -43,7 +44,7 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
 
     @Override
     public int getItemCount() {
-        return veterinarianList.size(); // Limit to 2 items
+        return showAll ? veterinarianList.size() : Math.min(veterinarianList.size(), 2);
     }
 
     public static class VeterinarianViewHolder extends RecyclerView.ViewHolder {
