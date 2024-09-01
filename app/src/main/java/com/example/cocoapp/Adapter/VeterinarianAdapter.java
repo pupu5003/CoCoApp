@@ -43,7 +43,7 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
 
     @Override
     public int getItemCount() {
-        return Math.min(veterinarianList.size(),2); // Limit to 2 items
+        return veterinarianList.size(); // Limit to 2 items
     }
 
     public static class VeterinarianViewHolder extends RecyclerView.ViewHolder {

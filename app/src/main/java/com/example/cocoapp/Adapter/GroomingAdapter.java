@@ -37,7 +37,7 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
 
     @Override
     public int getItemCount() {
-        return Math.min(groomingList.size(),2);
+        return groomingList.size();
     }
 
     static class GroomingViewHolder extends RecyclerView.ViewHolder {
