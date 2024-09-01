@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.example.cocoapp.Adapter.ProductAdapter;
 import com.example.cocoapp.Adapter.ProductDashboardAdapter;
 import com.example.cocoapp.Object.CartItem;
@@ -40,7 +42,17 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 
 		View view = inflater.inflate(R.layout.fragment_shop, container, false);
 		cartButton = view.findViewById(R.id.cart_ic);
+		TextView seeAll = view.findViewById(R.id.see_all);
 		cartButton.setOnClickListener(v -> openCart());
+		seeAll.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				requireActivity().getSupportFragmentManager().beginTransaction()
+						.replace(R.id.fragment_container,new ProductSeeAll()).addToBackStack(null)
+						.commit();
+			}
+		});
+
 
 		recyclerViewRecommend = view.findViewById(R.id.productRecommend_recycle_view);
 		recyclerViewTopSelling = view.findViewById(R.id.productTopSelling_recycle_view);
@@ -68,7 +80,7 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 		productList.add(new Product("", imageView3, "$25", "Bird Food", "1kg", "Brand C"));
 		productList.add(new Product("", imageView4, "$18", "Fish Food", "300g", "Brand D"));
 
-		recommendAdapter = new ProductAdapter(getContext(), productList, this);
+		recommendAdapter = new ProductAdapter(getContext(), productList, this,true);
 		topSellingAdapter = new ProductDashboardAdapter(getContext(), productList, true, this);
 		recyclerViewRecommend.setAdapter(recommendAdapter);
 		recyclerViewTopSelling.setAdapter(topSellingAdapter);

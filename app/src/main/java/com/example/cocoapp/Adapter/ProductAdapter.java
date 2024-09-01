@@ -25,10 +25,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 	private List<Product> productList;
 	private OnAddToCartListener onAddToCartListener;
 
-	public ProductAdapter(Context context, List<Product> productList, OnAddToCartListener onAddToCartListener) {
+	private boolean showAll;
+
+	public ProductAdapter(Context context, List<Product> productList, OnAddToCartListener onAddToCartListener, boolean showAll) {
 		this.context = context;
 		this.productList = productList;
 		this.onAddToCartListener = onAddToCartListener;
+		this.showAll = showAll;
 	}
 
 	@NonNull
@@ -88,7 +91,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
 	@Override
 	public int getItemCount() {
-		return productList.size();
+		return showAll ? productList.size() : Math.min(productList.size(), 4); // Show all if showAll is true
 	}
 
 	public static class ProductViewHolder extends RecyclerView.ViewHolder {
