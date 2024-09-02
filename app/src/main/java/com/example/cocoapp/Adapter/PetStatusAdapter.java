@@ -41,7 +41,7 @@ public class PetStatusAdapter extends RecyclerView.Adapter<PetStatusAdapter.PetV
 		// Load image from URL using Glide
 		Glide.with(context)
 				.load(pet.getImage())
-				.placeholder(R.drawable.dog1)
+				.error(R.drawable.dog1)
 				.into(holder.petImageView);
 
 		holder.healthLabel.setText("Health");

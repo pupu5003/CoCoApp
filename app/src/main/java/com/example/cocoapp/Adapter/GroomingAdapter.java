@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Grooming;
 
@@ -17,10 +18,9 @@ import java.util.List;
 public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.GroomingViewHolder> {
 
     private List<Grooming> groomingList;
-
     private boolean showAll;
 
-    public GroomingAdapter(List<Grooming> groomingList,boolean showAll) {
+    public GroomingAdapter(List<Grooming> groomingList, boolean showAll) {
         this.groomingList = groomingList;
         this.showAll = showAll;
     }
@@ -44,7 +44,7 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
     }
 
     static class GroomingViewHolder extends RecyclerView.ViewHolder {
-        private TextView Grooming_name;
+        private TextView groomingName;
         private RatingBar ratingBar;
         private TextView reviewText;
         private TextView isOpenText;
@@ -55,7 +55,7 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
 
         public GroomingViewHolder(@NonNull View itemView) {
             super(itemView);
-            Grooming_name = itemView.findViewById(R.id.grooming_name);
+            groomingName = itemView.findViewById(R.id.grooming_name);
             ratingBar = itemView.findViewById(R.id.rating_layout);
             reviewText = itemView.findViewById(R.id.textView);
             isOpenText = itemView.findViewById(R.id.open_close);
@@ -64,16 +64,23 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
             availabilityText = itemView.findViewById(R.id.availability);
             profileImage = itemView.findViewById(R.id.profile_image);
         }
+
         public void bind(Grooming grooming) {
-            Grooming_name.setText(grooming.getName());
+            groomingName.setText(grooming.getName());
             ratingBar.setRating(grooming.getRating());
-            reviewText.setText(String.format("%.1f {%d reviews}", grooming.getRating(), grooming.getReviews()));
-            boolean ok = grooming.isOpen();
-            isOpenText.setText(ok ? "Open" : "Closed");
+            reviewText.setText(String.format("%.1f (%d reviews)", grooming.getRating(), grooming.getReviews()));
+            boolean isOpen = grooming.isOpen();
+            isOpenText.setText(isOpen ? "Open" : "Closed");
             distanceText.setText(grooming.getDistance());
             priceText.setText(grooming.getPrice());
             availabilityText.setText(grooming.getAvailability());
-            profileImage.setImageDrawable(grooming.getPic().getDrawable());
+
+            // Load image using Glide
+            Glide.with(profileImage.getContext())
+                    .load(grooming.getPic()) // Load image from the URL or file path stored in the string
+                    .placeholder(R.drawable.vet1) // Placeholder image while loading
+                    .error(R.drawable.vet2) // Error image if loading fails
+                    .into(profileImage); // Set the loaded image into the ImageView
         }
     }
 }

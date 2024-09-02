@@ -1,9 +1,8 @@
 package com.example.cocoapp.Object;
 
-import android.widget.ImageView;
+import java.io.Serializable;
 
-
-public class Grooming {
+public class Grooming implements Serializable {
 
     private String name;
     private float rating;
@@ -12,11 +11,10 @@ public class Grooming {
     private String distance;
     private String price;
     private String availability;
-    private ImageView pic;
-
+    private String pic;  // Changed from ImageView to String
 
     // Constructor
-    public Grooming(String name, float rating, int reviews, boolean isOpen, String distance, String price, String availability,ImageView pic) {
+    public Grooming(String name, float rating, int reviews, boolean isOpen, String distance, String price, String availability, String pic) {
         this.name = name;
         this.rating = rating;
         this.reviews = reviews;
@@ -27,8 +25,15 @@ public class Grooming {
         this.pic = pic;
     }
 
-    public ImageView getPic(){return pic;}
     // Getters and Setters
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
+    }
+
     public String getName() {
         return name;
     }

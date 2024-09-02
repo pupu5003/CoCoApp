@@ -45,7 +45,7 @@ public class PetProfile extends Fragment {
 	public static PetProfile newInstance(Pet pet) {
 		PetProfile fragment = new PetProfile();
 		Bundle args = new Bundle();
-		args.putSerializable(ARG_PET, pet); // Pass the Pet object
+		args.putSerializable("PET", pet);
 		fragment.setArguments(args);
 		return fragment;
 	}

@@ -24,7 +24,7 @@
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			android:src="@drawable/back_arrow_health"
+			android:src="@drawable/baseline_chevron_left_24"
 			android:backgroundTint="@android:color/transparent"
 			/>
 
@@ -79,7 +79,7 @@
 				android:id="@+id/tv_amount_value"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="300000"
+				android:text="2000"
 				android:textSize="35sp"
 				android:fontFamily="@font/fredoka_semibold"
 				android:textColor="@android:color/black"

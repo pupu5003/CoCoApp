@@ -379,15 +379,16 @@
                 android:layout_marginTop="10dp"/>
 
             <ImageButton
-                android:id="@+id/camera_btn"
+                android:id="@+id/edit_btn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:scaleType="fitCenter"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/imageDog"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/location"
                 android:background="@android:color/transparent"
-                android:src="@drawable/camera_ic"
-                android:layout_marginTop="10dp"
+                android:src="@drawable/edit_ic"
+                android:layout_marginTop="50dp"
                 android:layout_marginEnd="10dp"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>

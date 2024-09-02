@@ -41,7 +41,7 @@
 				app:layout_constraintEnd_toEndOf="parent" />
 
 			<ImageButton
-				android:id="@+id/filter_btn"
+				android:id="@+id/cart_btn"
 				android:layout_width="25dp"
 				android:layout_height="25dp"
 				android:scaleType="fitCenter"
@@ -49,9 +49,10 @@
 				app:layout_constraintTop_toTopOf="parent"
 				app:layout_constraintBottom_toBottomOf="parent"
 				android:background="@android:color/transparent"
-				android:src="@drawable/filter_ic"
+				android:src="@drawable/ic_cart"
 				android:layout_marginEnd="15dp"/>
 		</androidx.constraintlayout.widget.ConstraintLayout>
+
 		<androidx.recyclerview.widget.RecyclerView
 			android:id="@+id/recyclerView"
 			android:layout_width="match_parent"
@@ -63,6 +64,18 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 		/>
+
+		<ImageButton
+			android:id="@+id/filter_btn"
+			android:layout_width="50dp"
+			android:layout_height="50dp"
+			android:scaleType="fitCenter"
+			android:background="@android:color/transparent"
+			android:src="@drawable/filter2_ic"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			android:layout_marginEnd="30dp"
+			android:layout_marginBottom="30dp"/>
 
 
 

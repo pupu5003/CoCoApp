@@ -70,10 +70,8 @@ public class ViewAll extends Fragment {
 	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_view_all_vet, container, false);
-		ImageView pic1 = new ImageView(getContext());
-		pic1.setImageResource(R.drawable.product_img);
-		ImageView pic2 = new ImageView(getContext());
-		pic2.setImageResource(R.drawable.product_img2);
+		String pic1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet1;
+		String pic2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet2;
 		TextView text = view.findViewById(R.id.tvHeader);
 		Log.d("key 2 " , mParam2);
 		Log.d("key 1" , mParam1);

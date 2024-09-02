@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.cocoapp.Fragment.VeterinarianProfile;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Veterinarian;
@@ -53,7 +54,7 @@ public class VeterinarianDashboardAdapter extends RecyclerView.Adapter<Veterinar
 
 			VeterinarianProfile profileFragment = VeterinarianProfile.newInstance(veterinarian);
 
-			transaction.replace(R.id.fragment_container, profileFragment); // fragment_container is the ID of your container layout
+			transaction.replace(R.id.fragment_container, profileFragment); // R.id.fragment_container is the ID of your container layout
 			transaction.addToBackStack(null); // add to backstack so the user can navigate back
 			transaction.commit();
 		});
@@ -97,9 +98,13 @@ public class VeterinarianDashboardAdapter extends RecyclerView.Adapter<Veterinar
 			reviewText.setText(String.format("%.1f (%d reviews)", veterinarian.getRating(), veterinarian.getReviews()));
 			distanceText.setText(veterinarian.getDistance());
 			priceText.setText(veterinarian.getPrice());
-			profileImage.setImageDrawable(veterinarian.getProfileImage().getDrawable());
 			lastVisitDate.setText(veterinarian.getLastVisit());
+
+			// Load the image using Glide
+			Glide.with(profileImage.getContext())
+					.load(veterinarian.getProfileImage()) // Placeholder image while loading
+					.error(R.drawable.vet1)  // Error image if loading fails
+					.into(profileImage);  // Set the loaded image into the ImageView
 		}
 	}
 }
-

@@ -112,10 +112,8 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 		productList.add(new Product("", imageView3, "$20", "Dog Food", "900g", "Brand A"));
 		productList.add(new Product("", imageView4, "$15", "Cat Food", "500g", "Brand B"));
 
-		ImageView pic1 = new ImageView(getContext());
-		pic1.setImageResource(R.drawable.doctor_ava);
-		ImageView pic2 = new ImageView(getContext());
-		pic2.setImageResource(R.drawable.vet2);
+		String pic1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet1;
+		String pic2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet2;
 
 		veterinarianList.add(new Veterinarian("Dr. Brown", "Bachelor of Veterinary Science", 4.8f, 120, 12, "1.8 km", "$110", "Mon-Sat 8 AM - 4 PM", pic1, "2024-08-15"));
 		veterinarianList.add(new Veterinarian("Dr. Johnson", "Doctor of Veterinary Medicine", 4.6f, 90, 9, "2.0 km", "$115", "Mon-Fri 10 AM - 6 PM", pic2, "2024-07-20"));

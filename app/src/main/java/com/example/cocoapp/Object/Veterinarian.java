@@ -1,7 +1,5 @@
 package com.example.cocoapp.Object;
 
-import android.widget.ImageView;
-
 import java.io.Serializable;
 
 public class Veterinarian implements Serializable {
@@ -14,10 +12,10 @@ public class Veterinarian implements Serializable {
     private String price;
     private String availability;
     private String lastVisit;
-    private ImageView pic;
+    private String pic; // Changed from ImageView to String
 
     public Veterinarian(String name, String qualification, float rating, int reviews,
-                        int experience, String distance, String price, String availability, ImageView pic, String lastVisit) {
+                        int experience, String distance, String price, String availability, String pic, String lastVisit) {
         this.name = name;
         this.qualification = qualification;
         this.rating = rating;
@@ -26,7 +24,7 @@ public class Veterinarian implements Serializable {
         this.distance = distance;
         this.price = price;
         this.availability = availability;
-        this.pic=pic;
+        this.pic = pic; // Updated to use String
         this.lastVisit = lastVisit;
     }
 
@@ -62,7 +60,7 @@ public class Veterinarian implements Serializable {
         return availability;
     }
 
-    public ImageView getProfileImage() {
+    public String getProfileImage() { // Updated method name to reflect the change
         return pic;
     }
 
@@ -74,4 +72,3 @@ public class Veterinarian implements Serializable {
         this.lastVisit = lastVisit;
     }
 }
-

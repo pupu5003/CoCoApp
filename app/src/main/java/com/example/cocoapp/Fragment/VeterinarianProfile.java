@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.cocoapp.Object.Veterinarian;
 import com.example.cocoapp.R;
 
@@ -53,10 +54,17 @@ public class VeterinarianProfile extends Fragment {
 		// Bind the veterinarian data to the UI elements
 		if (veterinarian != null) {
 			tvHeader.setText(veterinarian.getName());
-			imageDoctor.setImageDrawable(veterinarian.getProfileImage().getDrawable());
+
+			// Load image using Glide
+			Glide.with(this)
+					.load(veterinarian.getProfileImage()) // Load from URL or file path
+					.placeholder(R.drawable.vet1) // Optional: placeholder image
+					.error(R.drawable.vet2) // Optional: error image
+					.into(imageDoctor);
+
 			doctorName.setText(veterinarian.getName());
 			doctorQualification.setText(veterinarian.getQualification());
-			ratingText.setText(veterinarian.getRating() + " (" + veterinarian.getReviews() + " reviews)");
+			ratingText.setText(String.format("%s (%d reviews)", veterinarian.getRating(), veterinarian.getReviews()));
 			time.setText(veterinarian.getAvailability());
 			distance.setText(veterinarian.getDistance());
 			price.setText(veterinarian.getPrice());
@@ -65,22 +73,21 @@ public class VeterinarianProfile extends Fragment {
 		// Handle back button click
 		view.findViewById(R.id.back_button).setOnClickListener(v -> getParentFragmentManager().popBackStack());
 
-		bookingAppointment.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
+		// Handle book appointment button click
+		bookingAppointment.setOnClickListener(v ->
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, BookingAppoinment.newInstance(veterinarian.getName())).addToBackStack(null).commit();
-			}
-		});
+						.replace(R.id.fragment_container, BookingAppoinment.newInstance(veterinarian.getName()))
+						.addToBackStack(null)
+						.commit()
+		);
 
-		ratingText.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
+		// Handle rating text click
+		ratingText.setOnClickListener(v ->
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, Review.newInstance(veterinarian.getName())).addToBackStack(null).commit();
-			}
-		});
-
+						.replace(R.id.fragment_container, Review.newInstance(veterinarian.getName()))
+						.addToBackStack(null)
+						.commit()
+		);
 
 		return view;
 	}

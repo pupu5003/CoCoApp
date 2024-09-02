@@ -8,8 +8,8 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/pet_card"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_margin="@dimen/cardview_compat_inset_shadow"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/pet_name"
@@ -22,10 +22,9 @@
 
         <ImageView
             android:id="@+id/pet_image"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:src="@drawable/dog1"
-            android:scaleType="centerInside"
             android:backgroundTint="@color/Yellow"/>
     </com.google.android.material.card.MaterialCardView>
 

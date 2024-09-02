@@ -79,10 +79,9 @@ public class VetGrooming extends Fragment {
         ImageButton btnVet = view.findViewById(R.id.btn_veterinary);
         ImageButton btnBoarding = view.findViewById(R.id.btn_boarding);
         // Create an ImageView programmatically
-        ImageView pic1 = new ImageView(getContext());
-        pic1.setImageResource(R.drawable.product_img);
-        ImageView pic2 = new ImageView(getContext());
-        pic2.setImageResource(R.drawable.product_img2);
+
+        String pic1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet1;
+        String pic2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet2;
         TextView seeAll1 = view.findViewById(R.id.see_all);
         TextView seeAll2 = view.findViewById(R.id.see_all_recommended);
 

@@ -76,10 +76,8 @@ public class VetBoarding extends Fragment {
         btnBoarding.setSelected(true);
         ImageButton btnVet = view.findViewById(R.id.btn_veterinary);
         ImageButton btnGrooming = view.findViewById(R.id.btn_grooming);
-        ImageView pic1 = new ImageView(getContext());
-        pic1.setImageResource(R.drawable.product_img);
-        ImageView pic2 = new ImageView(getContext());
-        pic2.setImageResource(R.drawable.product_img2);
+        String pic1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet1;
+        String pic2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet2;
         TextView seeAll1 = view.findViewById(R.id.see_all);
         TextView seeAll2 = view.findViewById(R.id.see_all_recommended);
         seeAll1.setOnClickListener(new View.OnClickListener() {

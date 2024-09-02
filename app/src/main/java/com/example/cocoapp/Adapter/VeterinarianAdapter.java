@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Veterinarian;
 
@@ -21,7 +22,8 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
     private List<Veterinarian> veterinarianList;
     private Context context;
     private boolean showAll;
-    public VeterinarianAdapter(Context context, List<Veterinarian> veterinarianList,boolean showAll) {
+
+    public VeterinarianAdapter(Context context, List<Veterinarian> veterinarianList, boolean showAll) {
         this.context = context;
         this.veterinarianList = veterinarianList;
         this.showAll = showAll;
@@ -38,7 +40,6 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
     @Override
     public void onBindViewHolder(@NonNull VeterinarianViewHolder holder, int position) {
         Veterinarian veterinarian = veterinarianList.get(position);
-        // Bind your data to the view here
         holder.bind(veterinarian);
     }
 
@@ -47,7 +48,7 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
         return showAll ? veterinarianList.size() : Math.min(veterinarianList.size(), 2);
     }
 
-    public static class VeterinarianViewHolder extends RecyclerView.ViewHolder {
+    public class VeterinarianViewHolder extends RecyclerView.ViewHolder {
         private ImageView profileImage;
         private TextView doctorName;
         private TextView doctorQualification;
@@ -73,7 +74,6 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
             priceIcon = itemView.findViewById(R.id.price_icon);
             priceText = itemView.findViewById(R.id.price);
             availabilityText = itemView.findViewById(R.id.availability);
-            profileImage = itemView.findViewById(R.id.profile_image);
         }
 
         public void bind(Veterinarian veterinarian) {
@@ -85,7 +85,12 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
             distanceText.setText(veterinarian.getDistance());
             priceText.setText(veterinarian.getPrice());
             availabilityText.setText(veterinarian.getAvailability());
-            profileImage.setImageDrawable(veterinarian.getProfileImage().getDrawable());
+
+            // Load the image from the URL or file path using Glide
+            Glide.with(context)
+                    .load(veterinarian.getProfileImage())
+                    .error(R.drawable.vet1)  // Error image if loading fails
+                    .into(profileImage);  // Set the loaded image into the ImageView
         }
     }
 }

@@ -44,7 +44,6 @@ public class PetDashboardAdapter extends RecyclerView.Adapter<PetDashboardAdapte
 	public void onBindViewHolder(@NonNull PetDashboardViewHolder holder, int position) {
 		Pet pet = petList.get(position);
 		holder.bind(pet);
-
 		holder.itemView.setOnClickListener(view -> {
 			FragmentActivity activity = (FragmentActivity) context;
 			FragmentManager fragmentManager = activity.getSupportFragmentManager();
@@ -52,7 +51,7 @@ public class PetDashboardAdapter extends RecyclerView.Adapter<PetDashboardAdapte
 
 			Bundle args = new Bundle();
 			args.putSerializable("PET", pet);
-			PetProfile profileFragment = new PetProfile();
+			PetProfile profileFragment = PetProfile.newInstance(pet); // Assuming newInstance is defined
 			profileFragment.setArguments(args);
 
 			transaction.replace(R.id.fragment_container, profileFragment).addToBackStack(null).commit();
@@ -75,9 +74,9 @@ public class PetDashboardAdapter extends RecyclerView.Adapter<PetDashboardAdapte
 		}
 
 		public void bind(Pet pet) {
-			Glide.with(itemView.getContext())
+			Glide.with(petImageView.getContext())
 					.load(pet.getImage())
-					.placeholder(R.drawable.dog1)
+					.error(R.drawable.dog1)
 					.into(petImageView);
 
 			petName.setText(pet.getName());
