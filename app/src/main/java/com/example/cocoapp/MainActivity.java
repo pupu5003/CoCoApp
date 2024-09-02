@@ -10,6 +10,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.cocoapp.ActivityPage.Home;
+import com.example.cocoapp.ActivityPage.Loading;
+import com.example.cocoapp.ActivityPage.LoginScreen;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        Intent intent = new Intent(this, Home.class);
+        Intent intent = new Intent(this, Loading.class);
         startActivity(intent);
     }
 }

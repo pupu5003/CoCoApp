@@ -53,7 +53,9 @@
         </intent-filter>
         </activity>
 
-
+        <activity
+            android:name=".ActivityPage.Loading"
+            android:exported="false" />
         <activity
             android:name=".ActivityPage.LoginScreen"
             android:exported="false" />

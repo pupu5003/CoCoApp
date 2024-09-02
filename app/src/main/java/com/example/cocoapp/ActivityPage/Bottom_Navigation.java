@@ -2,6 +2,7 @@ package com.example.cocoapp.ActivityPage;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ public class Bottom_Navigation extends AppCompatActivity {
     private final int explore = 3;
     private final int manage = 4;
     private final int profile = 5;
+    private MeowBottomNavigation bottomNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +42,7 @@ public class Bottom_Navigation extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_bottom_navigation);
 
-        MeowBottomNavigation bottomNavigation = findViewById(R.id.bottomNavigation);
-
+        bottomNavigation = findViewById(R.id.bottomNavigation);
         bottomNavigation.add(new MeowBottomNavigation.Model(home, R.drawable.ic_home));
         bottomNavigation.add(new MeowBottomNavigation.Model(discover, R.drawable.ic_discover));
         bottomNavigation.add(new MeowBottomNavigation.Model(explore, R.drawable.shop_ic));
@@ -89,6 +90,7 @@ public class Bottom_Navigation extends AppCompatActivity {
         MeowBottomNavigation bottomNavigation = findViewById(R.id.bottomNavigation);
         bottomNavigation.show(tabId, true);  // Programmatically update the selected tab
     }
+
 
 //    @Override
 //    protected void onNewIntent(Intent intent) {

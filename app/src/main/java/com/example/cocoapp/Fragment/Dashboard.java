@@ -1,7 +1,9 @@
 package com.example.cocoapp.Fragment;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +14,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.cocoapp.ActivityPage.Bottom_Navigation;
+import com.example.cocoapp.ActivityPage.GettingStarted;
+import com.example.cocoapp.ActivityPage.Loading;
 import com.example.cocoapp.Adapter.PetDashboardAdapter;
 import com.example.cocoapp.Adapter.PetStatusAdapter;
 import com.example.cocoapp.Adapter.ProductDashboardAdapter;
@@ -43,6 +49,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import android.os.CountDownTimer;
+
 
 public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDashboardAdapter.OnAddToCartListener {
 

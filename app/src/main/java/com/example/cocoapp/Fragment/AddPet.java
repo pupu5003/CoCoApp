@@ -57,7 +57,7 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 	private PetAddPetAdapter petAddPetAdapter;
 
 	public AddPet() {
-		// Required empty public constructor
+		
 	}
 
 	public static AddPet newInstance(String param1, String param2) {
@@ -112,6 +112,7 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 				Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
 			}
 		});
+
 	}
 
 	@Override
@@ -121,7 +122,7 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 
 		// Initialize views
 		locationEditText = view.findViewById(R.id.pet_location);
-		Button btn = view.findViewById(R.id.btn);
+		Button addButton = view.findViewById(R.id.btn);
 		Button uploadImage = view.findViewById(R.id.upload_btn);
 		imageView = view.findViewById(R.id.imageView);
 		ImageButton backButton = view.findViewById(R.id.back_button);
@@ -147,7 +148,7 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 		}
 
 		// Set a listener for the Button
-		btn.setOnClickListener(v -> {
+		addButton.setOnClickListener(v -> {
 			String location = locationEditText.getText().toString().trim();
 			if (!TextUtils.isEmpty(location)) {
 				if (mMap != null) {
@@ -159,6 +160,7 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 				Toast.makeText(getContext(), "Please enter a location", Toast.LENGTH_SHORT).show();
 			}
 			String url = (String) imageView.getTag();
+			Log.d("PetImageURL", "URL: " + url);
 
 			Pet pet = new Pet(name.getText().toString(),url,breed.getText().toString(),Integer.parseInt(age.getText().toString()),gender.getText().toString(),color.getText().toString(),
 					Float.parseFloat(height.getText().toString()),Float.parseFloat(weight.getText().toString()),0,0,0);

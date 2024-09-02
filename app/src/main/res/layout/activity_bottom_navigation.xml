@@ -14,6 +14,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/bottomNavigation" />
 
+
     <com.etebarian.meowbottomnavigation.MeowBottomNavigation
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
@@ -26,6 +27,7 @@
         app:mbn_countTextColor="#ffffff"
         app:mbn_defaultIconColor="#90a4ae"
         app:mbn_rippleColor="#2f424242"
-        app:mbn_selectedIconColor="#3c415e" />
+        app:mbn_selectedIconColor="#3c415e"
+        />
 
 </RelativeLayout>
