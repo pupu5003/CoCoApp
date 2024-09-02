@@ -98,6 +98,9 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 					try {
 						Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
 						imageView.setImageBitmap(bitmap);
+
+						// Store the URI as a tag in the ImageView
+						imageView.setTag(imageUri.toString());
 					} catch (IOException e) {
 						e.printStackTrace();
 						Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();

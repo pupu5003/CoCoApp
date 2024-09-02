@@ -112,6 +112,10 @@ public class BookingAppoinment extends Fragment {
 		btnBookAppointment.setOnClickListener(v -> {
 			String selectedDate = getSelectedDate(calendarView);
 			String selectedTime = getSelectedTime();
+			if (selectedTime.isEmpty()) {
+				Toast.makeText(getActivity(), "Please select time.", Toast.LENGTH_SHORT).show();
+				return;
+			}
 			Appointment appointment = new Appointment(veterinarianName, selectedDate, selectedTime);
 			//addAppoinment(appointment);
 			Toast.makeText(getActivity(), "Booking successfully!", Toast.LENGTH_SHORT).show();

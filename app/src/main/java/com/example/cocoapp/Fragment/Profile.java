@@ -71,8 +71,6 @@ public class Profile extends Fragment {
                 Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
             }
         });
-
-        // Registering for image picking result callback
         pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
                 Uri imageUri = result.getData().getData();
@@ -80,15 +78,38 @@ public class Profile extends Fragment {
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
                         ava.setImageBitmap(bitmap);
+
+                        // Store the URI as a tag in the ImageView
+                        ava.setTag(imageUri.toString());
                     } catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
             }
         });
+
+//        // Registering for image picking result callback
+//        pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+//            if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
+//                Uri imageUri = result.getData().getData();
+//                if (imageUri != null) {
+//                    try {
+//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+//                        ava.setImageBitmap(bitmap);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                        Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            } else {
+//                Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -49,7 +50,7 @@ public class VeterinarianProfile extends Fragment {
 		TextView time = view.findViewById(R.id.time);
 		TextView distance = view.findViewById(R.id.distance);
 		TextView price = view.findViewById(R.id.price);
-		TextView bookingAppointment = view.findViewById(R.id.bookAppointment_btn);
+		Button bookingAppointment = view.findViewById(R.id.bookAppointment_btn);
 
 		// Bind the veterinarian data to the UI elements
 		if (veterinarian != null) {

@@ -120,7 +120,7 @@ public class ViewAll extends Fragment {
 			groomingList.add(new Grooming("Paws & Claws", 4.5f, 120, true, "1.2 km", "$50", "Mon-Sat 9 AM - 6 PM",pic1));
 			groomingList.add(new Grooming("Pet Pamper", 4.3f, 80, false, "2.5 km", "$60", "Mon-Fri 10 AM - 5 PM",pic2));
 			// Set adapter
-			GroomingAdapter NearByAdapter = new GroomingAdapter(groomingList,true, getContext());
+			GroomingAdapter NearByAdapter = new GroomingAdapter(groomingList,true, getContext(),true);
 			nearbyGrooming.setAdapter(NearByAdapter);
 		}
 		if (Objects.equals(mParam1, "2") && Objects.equals(mParam2,"2")){
@@ -134,7 +134,7 @@ public class ViewAll extends Fragment {
 			groomingList.add(new Grooming("Paws & Claws", 4.5f, 120, true, "1.2 km", "$50", "Mon-Sat 9 AM - 6 PM",pic1));
 			groomingList.add(new Grooming("Pet Pamper", 4.3f, 80, false, "2.5 km", "$60", "Mon-Fri 10 AM - 5 PM",pic2));
 			// Set adapter
-			GroomingAdapter recommendedAdapter = new GroomingAdapter(groomingList,true, getContext());
+			GroomingAdapter recommendedAdapter = new GroomingAdapter(groomingList,true, getContext(),true);
 			recommendedGrooming.setAdapter(recommendedAdapter);
 		}
 		if (Objects.equals(mParam1, "3") && Objects.equals(mParam2,"1")){
@@ -148,7 +148,7 @@ public class ViewAll extends Fragment {
 			groomingList.add(new Grooming("Paws & Claws", 4.5f, 120, true, "1.2 km", "$50", "Mon-Sat 9 AM - 6 PM",pic1));
 			groomingList.add(new Grooming("Pet Pamper", 4.3f, 80, false, "2.5 km", "$60", "Mon-Fri 10 AM - 5 PM",pic2));
 			// Set adapter
-			GroomingAdapter NearByAdapter = new GroomingAdapter(groomingList,true, getContext());
+			GroomingAdapter NearByAdapter = new GroomingAdapter(groomingList,true, getContext(),false);
 			nearbyGrooming.setAdapter(NearByAdapter);
 		}
 		if (Objects.equals(mParam1, "3") && Objects.equals(mParam2,"2")){
@@ -162,7 +162,7 @@ public class ViewAll extends Fragment {
 			groomingList.add(new Grooming("Paws & Claws", 4.5f, 120, true, "1.2 km", "$50", "Mon-Sat 9 AM - 6 PM",pic1));
 			groomingList.add(new Grooming("Pet Pamper", 4.3f, 80, false, "2.5 km", "$60", "Mon-Fri 10 AM - 5 PM",pic2));
 			// Set adapter
-			GroomingAdapter recommendedAdapter = new GroomingAdapter(groomingList,true, getContext());
+			GroomingAdapter recommendedAdapter = new GroomingAdapter(groomingList,true, getContext(),false);
 			recommendedGrooming.setAdapter(recommendedAdapter);
 		}
 

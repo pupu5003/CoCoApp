@@ -47,7 +47,7 @@ public class PetAddPetAdapter extends RecyclerView.Adapter<PetAddPetAdapter.PetV
 		// Load image from URL using Glide
 		Glide.with(context)
 				.load(pet.getImage())
-				.placeholder(R.drawable.dog1)
+				.error(R.drawable.dog1)
 				.into(holder.ivPetImage);
 
 		holder.link.setOnClickListener(view -> {

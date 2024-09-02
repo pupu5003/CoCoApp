@@ -26,11 +26,13 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
     private List<Grooming> groomingList;
     private boolean showAll;
     private Context context;
+    private boolean isGrooming;
 
-    public GroomingAdapter(List<Grooming> groomingList, boolean showAll, Context context) {
+    public GroomingAdapter(List<Grooming> groomingList, boolean showAll, Context context, boolean isGrooming) {
         this.groomingList = groomingList;
         this.showAll = showAll;
         this.context = context;
+        this.isGrooming = isGrooming;
     }
 
     @NonNull
@@ -46,10 +48,17 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
         holder.bind(grooming);
 
         holder.itemView.setOnClickListener(view -> {
-            FragmentActivity activity = (FragmentActivity) context;
-            activity.getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, Review.newInstance(grooming.getName()))
-                    .addToBackStack(null).commit();
+            if (isGrooming) {
+                FragmentActivity activity = (FragmentActivity) context;
+                activity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, Review.newInstance(grooming.getName(),"1"))
+                        .addToBackStack(null).commit();
+            }else{
+                FragmentActivity activity = (FragmentActivity) context;
+                activity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, Review.newInstance(grooming.getName(),"2"))
+                        .addToBackStack(null).commit();
+            }
         });
     }
 
