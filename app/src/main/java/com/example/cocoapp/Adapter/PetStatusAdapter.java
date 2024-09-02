@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Pet;
 
@@ -37,8 +38,11 @@ public class PetStatusAdapter extends RecyclerView.Adapter<PetStatusAdapter.PetV
 	public void onBindViewHolder(@NonNull PetViewHolder holder, int position) {
 		Pet pet = petList.get(position);
 
-		// Set ImageView from the Pet object
-		holder.petImageView.setImageDrawable(pet.getImage().getDrawable()); // Get drawable from ImageView
+		// Load image from URL using Glide
+		Glide.with(context)
+				.load(pet.getImage())
+				.placeholder(R.drawable.dog1)
+				.into(holder.petImageView);
 
 		holder.healthLabel.setText("Health");
 		holder.healthProgressBar.setProgress(pet.getHealthValue());

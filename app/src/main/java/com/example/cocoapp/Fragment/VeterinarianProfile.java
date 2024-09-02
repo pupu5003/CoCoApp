@@ -21,7 +21,7 @@ public class VeterinarianProfile extends Fragment {
 	public static VeterinarianProfile newInstance(Veterinarian veterinarian) {
 		VeterinarianProfile fragment = new VeterinarianProfile();
 		Bundle args = new Bundle();
-		args.putSerializable(ARG_VETERINARIAN, veterinarian);  // Add the veterinarian object to the bundle
+		args.putSerializable(ARG_VETERINARIAN, veterinarian);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -68,26 +68,16 @@ public class VeterinarianProfile extends Fragment {
 		bookingAppointment.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Bundle args = new Bundle();
-				args.putString("veterinarian_name", veterinarian.getName());  // Pass the veterinarian's name
-				BookingAppoinment fragment = new BookingAppoinment();
-				fragment.setArguments(args);
-
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+						.replace(R.id.fragment_container, BookingAppoinment.newInstance(veterinarian.getName())).addToBackStack(null).commit();
 			}
 		});
 
 		ratingText.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Bundle args = new Bundle();
-				args.putString("veterinarian_name", veterinarian.getName());  // Pass the veterinarian's name
-				Review fragment = new Review();
-				fragment.setArguments(args);
-
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+						.replace(R.id.fragment_container, Review.newInstance(veterinarian.getName())).addToBackStack(null).commit();
 			}
 		});
 

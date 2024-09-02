@@ -60,8 +60,7 @@ public class MedicalRecord extends Fragment {
 			@Override
 			public void onClick(View v) {
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, new PastVaccination()) // R.id.fragment_container is the ID of your FrameLayout or FragmentContainerView
-						.commit();
+						.replace(R.id.fragment_container, new PastVaccination()).addToBackStack(null).commit();
 			}
 		});
 
@@ -69,7 +68,7 @@ public class MedicalRecord extends Fragment {
 			@Override
 			public void onClick(View v) {
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, new PastTreatment()) // R.id.fragment_container is the ID of your FrameLayout or FragmentContainerView
+						.replace(R.id.fragment_container, new PastTreatment()).addToBackStack(null)
 						.commit();
 			}
 		});

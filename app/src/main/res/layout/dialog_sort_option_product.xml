@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="200dp"
+	android:layout_height="wrap_content"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:padding="16dp">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Sort by"
+		android:textSize="18sp"
+		android:textStyle="bold" />
+
+	<RadioGroup
+		android:id="@+id/radioGroupSort"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:buttonTint="@color/Primary_color">
+
+		<RadioButton
+			android:id="@+id/radioDefault"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Default"
+			app:buttonTint="@color/Primary_color"
+			android:checked="true"/>
+
+		<RadioButton
+			android:id="@+id/radioSortByWeight"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:buttonTint="@color/Primary_color"
+			android:text="Weight" />
+
+		<RadioButton
+			android:id="@+id/radioSortByPrice"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Price"
+			app:buttonTint="@color/Primary_color"/>
+	</RadioGroup>
+
+	<Button
+		android:id="@+id/btnApplySort"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Apply"
+		android:backgroundTint="@color/Primary_color"
+		android:layout_gravity="end" />
+</LinearLayout>

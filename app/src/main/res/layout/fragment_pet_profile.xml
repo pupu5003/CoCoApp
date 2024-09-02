@@ -52,6 +52,19 @@
         app:layout_constraintTop_toBottomOf="@id/header"
         tools:ignore="MissingConstraints" />
 
+    <ImageButton
+        android:id="@+id/camera_btn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/imageDog"
+        android:background="@android:color/transparent"
+        android:src="@drawable/camera_ic"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,9 +77,11 @@
         app:layout_constraintVertical_bias="0.28">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/information_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginVertical="20dp">
+            android:layout_marginVertical="20dp"
+            android:visibility="visible">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_dog_name"
@@ -176,7 +191,8 @@
                 <RelativeLayout
                     android:id="@+id/age_box"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -211,7 +227,8 @@
                     android:id="@+id/weight_box"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp">
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -246,7 +263,8 @@
                     android:id="@+id/height_box"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp">
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -280,7 +298,8 @@
                 <RelativeLayout
                     android:id="@+id/color_box"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -324,12 +343,12 @@
                 app:layout_constraintTop_toBottomOf="@id/linearlayout" />
 
             <TextView
-                android:id="@+id/statusText"
+                android:id="@+id/location_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5dp"
                 android:fontFamily="@font/fredokaone_regular"
-                android:text="Status of"
+                android:text="Location of"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="@id/icon_smiley"
                 app:layout_constraintStart_toEndOf="@id/icon_smiley"
@@ -344,169 +363,213 @@
                 android:text="Bella"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="@id/icon_smiley"
-                app:layout_constraintStart_toEndOf="@id/statusText"
+                app:layout_constraintStart_toEndOf="@id/location_title"
                 app:layout_constraintTop_toTopOf="@id/icon_smiley" />
 
-            <ImageView
-                android:id="@+id/health_ic"
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/location_title"
+                android:text="123 Nguyen Trai, Ho Chi Minh City"
+                android:fontFamily="@font/fredoka_regular"
+                android:textSize="15sp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="10dp"/>
+
+            <ImageButton
+                android:id="@+id/camera_btn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/health_ic"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/icon_smiley" />
-
-            <TextView
-                android:id="@+id/health_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/fredoka_medium"
-                android:text="Health"
-                android:textSize="10sp"
-                android:layout_marginTop="5dp"
-                app:layout_constraintBottom_toTopOf="@id/health_status"
-                app:layout_constraintStart_toEndOf="@id/health_ic"
-                app:layout_constraintTop_toTopOf="@id/health_ic" />
-
-            <TextView
-                android:id="@+id/health_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/fredoka_regular"
-                android:text="Abnormal"
-                android:textColor="@color/Grey2"
-                android:textSize="10sp"
-                app:layout_constraintStart_toEndOf="@id/health_ic"
-                app:layout_constraintTop_toBottomOf="@id/health_title"
-                app:layout_constraintBottom_toBottomOf="@id/health_ic"
-                android:layout_marginBottom="15dp"/>
-
-            <Button
-                android:id="@+id/contactVet_btn"
-                android:layout_width="140dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/round_rectangle_5"
-                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
-                android:paddingStart="10dp"
-                android:paddingTop="2dp"
-                android:paddingEnd="5dp"
-                android:paddingBottom="2dp"
-                android:text="Contact Vet"
-                android:textAlignment="center"
-                android:textSize="12sp"
-                app:backgroundTint="@color/Red"
-                app:layout_constraintBottom_toBottomOf="@id/health_ic"
+                android:scaleType="fitCenter"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/health_ic" />
+                app:layout_constraintTop_toTopOf="@id/imageDog"
+                android:background="@android:color/transparent"
+                android:src="@drawable/camera_ic"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <ImageView
-                android:id="@+id/food_ic"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="20dp"
-                android:src="@drawable/food_ic_2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/health_ic" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/edit_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="40dp"
+            android:visibility="gone">
 
             <TextView
-                android:id="@+id/food_title"
+                android:id="@+id/edit_pet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:fontFamily="@font/fredoka_medium"
-                android:text="Food"
-                android:textSize="10sp"
-                android:layout_marginTop="5dp"
-                app:layout_constraintBottom_toTopOf="@id/food_status"
-                app:layout_constraintStart_toEndOf="@id/food_ic"
-                app:layout_constraintTop_toTopOf="@id/food_ic" />
+                android:text="Edit information"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
-            <TextView
-                android:id="@+id/food_status"
-                android:layout_width="wrap_content"
+
+            <EditText
+                android:id="@+id/pet_name_edit"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/fredoka_regular"
-                android:text="Hungry"
-                android:textColor="@color/Grey2"
-                android:textSize="10sp"
-                app:layout_constraintStart_toEndOf="@id/food_ic"
-                app:layout_constraintTop_toBottomOf="@id/food_title"
-                app:layout_constraintBottom_toBottomOf="@id/food_ic"
-                android:layout_marginBottom="15dp"/>
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/edit_text_background"
+                android:fontFamily="@font/fredoka_medium"
+                android:hint="Pet Name"
+                android:padding="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_pet" />
 
+            <EditText
+                android:id="@+id/pet_breed_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Breed Name"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:padding="12dp"
+                android:fontFamily="@font/fredoka_medium"
+                android:background="@drawable/edit_text_background"
+                app:layout_constraintTop_toBottomOf="@id/pet_name_edit"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"/>
 
+            <!-- Gender, Age, Colour Row -->
+            <LinearLayout
+                android:id="@+id/gender_age_colour_row"
+                android:layout_width="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/pet_breed_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"
+                android:weightSum="3">
+
+                <EditText
+                    android:id="@+id/pet_gender"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Gender"
+                    android:layout_weight="1"
+                    android:padding="12dp"
+                    android:layout_marginEnd="7dp"
+                    android:fontFamily="@font/fredoka_medium"
+                    android:background="@drawable/edit_text_background"/>
+
+                <EditText
+                    android:id="@+id/pet_age"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Age"
+                    android:layout_weight="1"
+                    android:padding="12dp"
+                    android:fontFamily="@font/fredoka_medium"
+                    android:layout_marginEnd="7dp"
+                    android:background="@drawable/edit_text_background"/>
+
+                <EditText
+                    android:id="@+id/pet_colour"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Colour"
+                    android:layout_weight="1"
+                    android:padding="12dp"
+                    android:fontFamily="@font/fredoka_medium"
+                    android:layout_marginEnd="7dp"
+                    android:background="@drawable/edit_text_background"/>
+            </LinearLayout>
+
+            <!-- Height, Weight Row -->
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                android:layout_width="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/gender_age_colour_row">
+
+                <EditText
+                    android:id="@+id/pet_height"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="7dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edit_text_background"
+                    android:fontFamily="@font/fredoka_medium"
+                    android:hint="Height (cm)"
+                    android:padding="12dp" />
+
+                <EditText
+                    android:id="@+id/pet_weight"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="7dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edit_text_background"
+                    android:fontFamily="@font/fredoka_medium"
+                    android:hint="Weight (kg)"
+                    android:padding="12dp" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/pet_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Location"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:padding="12dp"
+                android:fontFamily="@font/fredoka_medium"
+                android:background="@drawable/edit_text_background"
+                app:layout_constraintTop_toBottomOf="@id/linearLayout4"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"/>
+
+            <!-- Add Pet Button -->
             <Button
-                android:id="@+id/check_shop_btn"
-                android:layout_width="140dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="20dp"
+                android:id="@+id/done_btn"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/round_rectangle_5"
-                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
-                android:paddingStart="10dp"
-                android:paddingTop="2dp"
-                android:paddingEnd="5dp"
-                android:paddingBottom="2dp"
-                android:text="Check Food"
-                android:textAlignment="center"
-                android:textSize="12sp"
+                android:text="Done"
+                android:textColor="@android:color/white"
                 app:backgroundTint="@color/Primary_color"
-                app:layout_constraintBottom_toBottomOf="@id/food_ic"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/food_ic" />
-
-            <ImageView
-                android:id="@+id/mood_ic"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="20dp"
-                android:src="@drawable/mood_ic"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/food_ic" />
-
-            <TextView
-                android:id="@+id/mood_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/fredoka_medium"
-                android:text="Mood"
-                android:textSize="10sp"
-                app:layout_constraintBottom_toTopOf="@id/mood_status"
-                app:layout_constraintStart_toEndOf="@id/mood_ic"
-                app:layout_constraintTop_toTopOf="@id/mood_ic" />
-
-            <TextView
-                android:id="@+id/mood_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:fontFamily="@font/fredoka_regular"
-                android:text="Abnormal"
-                android:textColor="@color/Grey2"
-                android:textSize="10sp"
-                app:layout_constraintBottom_toBottomOf="@id/mood_ic"
-                app:layout_constraintStart_toEndOf="@id/mood_ic"
-                app:layout_constraintTop_toBottomOf="@id/mood_title" />
-
-            <Button
-                android:id="@+id/check_status_btn"
-                android:layout_width="140dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/round_rectangle_5"
-                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
-                android:paddingStart="20dp"
-                android:paddingTop="2dp"
-                android:paddingEnd="5dp"
-                android:paddingBottom="2dp"
-                android:text="Check status"
-                android:textAlignment="center"
-                android:textSize="12sp"
-                app:backgroundTint="@color/Red"
-                app:layout_constraintBottom_toBottomOf="@id/mood_ic"
+                app:layout_constraintTop_toBottomOf="@id/pet_location"
+                android:layout_marginTop="20dp"/>
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/mood_ic" />
+                android:visibility="gone"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

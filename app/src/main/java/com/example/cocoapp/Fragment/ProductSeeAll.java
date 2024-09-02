@@ -1,5 +1,6 @@
 package com.example.cocoapp.Fragment;
 
+import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 
 import com.example.cocoapp.Adapter.ProductAdapter;
 import com.example.cocoapp.Object.CartItem;
@@ -77,12 +80,17 @@ public class ProductSeeAll extends Fragment implements ProductAdapter.OnAddToCar
 		recyclerViewRecommend.setLayoutManager(new GridLayoutManager(getContext(), 2));
 		List<Product> productList = new ArrayList<>();
 		ImageButton backbtn = view.findViewById(R.id.back_button);
+		ImageButton filterButton = view.findViewById(R.id.filter_btn);
+
 		backbtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				getActivity().getSupportFragmentManager().popBackStack();
 			}
 		});
+
+		filterButton.setOnClickListener(v -> showSortDialog());
+
 		ImageView imageView1 = new ImageView(getContext());
 		imageView1.setImageResource(R.drawable.product_img);
 
@@ -109,6 +117,29 @@ public class ProductSeeAll extends Fragment implements ProductAdapter.OnAddToCar
 		return view;
 	}
 
+	private void showSortDialog() {
+		Dialog dialog = new Dialog(getContext());
+		dialog.setContentView(R.layout.dialog_sort_option_product);
+
+		RadioGroup radioGroupSort = dialog.findViewById(R.id.radioGroupSort);
+		Button btnApplySort = dialog.findViewById(R.id.btnApplySort);
+
+		btnApplySort.setOnClickListener(v -> {
+			int selectedId = radioGroupSort.getCheckedRadioButtonId();
+
+			if (selectedId == R.id.radioSortByWeight) {
+				sortByWeight();
+			} else if (selectedId == R.id.radioSortByPrice) {
+				sortByPrice();
+			}
+			else sortByDefault();
+
+			dialog.dismiss();
+		});
+
+		dialog.show();
+	}
+
 	@Override
 	public void onAddToCart(Product product) {
 		CartItem cartItem = new CartItem(
@@ -119,5 +150,16 @@ public class ProductSeeAll extends Fragment implements ProductAdapter.OnAddToCar
 				product.getQuantity()
 		);
 		CartManager.getInstance().addItem(cartItem);
+	}
+
+	private void sortByWeight() {
+		// Implement your sorting logic here
+	}
+
+	private void sortByPrice() {
+		// Implement your sorting logic here
+	}
+
+	private void sortByDefault() {
 	}
 }

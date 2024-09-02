@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.cocoapp.Api.SendEmail;
+import com.example.cocoapp.Fragment.ProductSeeAll;
 import com.example.cocoapp.R;
 import com.google.android.material.button.MaterialButton;
 
@@ -53,16 +54,20 @@ public class LoginScreen extends AppCompatActivity {
         registerTextView.setOnClickListener(v -> setActiveTab(false));
 
         loginBtn.setOnClickListener(v -> {
-            hideKeyboard();
-            String email = editTextEmail.getText().toString().trim();
+//            hideKeyboard();
+//            String email = editTextEmail.getText().toString().trim();
+//
+//            if (email.isEmpty()) {
+//                Toast.makeText(this, "Please enter your email.", Toast.LENGTH_SHORT).show();
+//            } else {
+//                generatedCode = generateVerificationCode();
+//                sendVerificationEmail(email, generatedCode);
+//                showCodeInputDialog();
+//            }
 
-            if (email.isEmpty()) {
-                Toast.makeText(this, "Please enter your email.", Toast.LENGTH_SHORT).show();
-            } else {
-                generatedCode = generateVerificationCode();
-                sendVerificationEmail(email, generatedCode);
-                showCodeInputDialog();
-            }
+
+            Intent intent = new Intent(LoginScreen.this, Bottom_Navigation.class);
+            startActivity(intent);
         });
         setupSocialButtons();
     }

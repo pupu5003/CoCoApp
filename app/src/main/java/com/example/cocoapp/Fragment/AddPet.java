@@ -1,9 +1,14 @@
 package com.example.cocoapp.Fragment;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
+import android.os.Build;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +16,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.cocoapp.Adapter.PetAddPetAdapter;
+import com.example.cocoapp.Object.Pet;
 import com.example.cocoapp.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,21 +36,19 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AddPet#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AddPet extends Fragment implements OnMapReadyCallback {
 	private static final String ARG_PARAM1 = "param1";
 	private static final String ARG_PARAM2 = "param2";
 	private String mParam1;
-	private String mParam2;
-
+	private ActivityResultLauncher<Intent> resultLauncher;
+	private ActivityResultLauncher<String> requestPermissionLauncher;
+	private ImageView imageView;
 	private GoogleMap mMap;
 	private EditText locationEditText;
 
@@ -53,10 +68,43 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+			requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+				if (isGranted) {
+					openGallery();
+				} else {
+					Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+				}
+			});
+		} else {
+			requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+				if (isGranted) {
+					openGallery();
+				} else {
+					Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+				}
+			});
 		}
+
+		resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+			if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
+				Uri imageUri = result.getData().getData();
+				if (imageUri != null) {
+					try {
+						Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+						imageView.setImageBitmap(bitmap);
+					} catch (IOException e) {
+						e.printStackTrace();
+						Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();
+					}
+				} else {
+					Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
+				}
+			} else {
+				Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 	@Override
@@ -67,6 +115,13 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 		// Initialize views
 		locationEditText = view.findViewById(R.id.pet_location);
 		Button btn = view.findViewById(R.id.btn);
+		Button uploadImage = view.findViewById(R.id.upload_btn);
+		imageView = view.findViewById(R.id.imageView);
+		ImageButton backButton = view.findViewById(R.id.back_button);
+
+		backButton.setOnClickListener(view1 -> {
+			getActivity().getSupportFragmentManager().popBackStack();
+		});
 
 		// Initialize the map
 		SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
@@ -75,23 +130,50 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 		}
 
 		// Set a listener for the Button
-		btn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String location = locationEditText.getText().toString().trim();
-				if (!TextUtils.isEmpty(location)) {
-					if (mMap != null) {
-						convertLocationToCoordinates(location);
-					} else {
-						Toast.makeText(getContext(), "Map is not ready yet", Toast.LENGTH_SHORT).show();
-					}
+		btn.setOnClickListener(v -> {
+			String location = locationEditText.getText().toString().trim();
+			if (!TextUtils.isEmpty(location)) {
+				if (mMap != null) {
+					convertLocationToCoordinates(location);
 				} else {
-					Toast.makeText(getContext(), "Please enter a location", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getContext(), "Map is not ready yet", Toast.LENGTH_SHORT).show();
 				}
+			} else {
+				Toast.makeText(getContext(), "Please enter a location", Toast.LENGTH_SHORT).show();
 			}
 		});
 
+		// Handle image upload
+		uploadImage.setOnClickListener(v -> {
+			String permission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ? "android.permission.READ_MEDIA_IMAGES" : "android.permission.READ_EXTERNAL_STORAGE";
+			if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+				requestPermissionLauncher.launch(permission);
+			} else {
+				openGallery();
+			}
+		});
+
+		// Initialize RecyclerView with dummy data
+		PetAddPetAdapter petAddPetAdapter;
+		List<Pet> petList = new ArrayList<>();
+		RecyclerView recyclerView = view.findViewById(R.id.recycler_view_pets);
+		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+		String imageUrl1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.dog1;
+		String imageUrl2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.dog2;
+
+		petList.add(new Pet("Buddy", imageUrl1, "Golden Retriever", 5, "Male", "Golden", 60.0f, 30.0f, 75, 50, 80));
+		petList.add(new Pet("Lucy", imageUrl2, "Labrador", 4, "Female", "Black", 55.0f, 25.0f, 60, 40, 70));
+
+		petAddPetAdapter = new PetAddPetAdapter(petList, getContext());
+		recyclerView.setAdapter(petAddPetAdapter);
+
 		return view;
+	}
+
+	private void openGallery() {
+		Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		resultLauncher.launch(intent);
 	}
 
 	@Override
@@ -119,7 +201,7 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 
 				// Show the coordinates in a Toast
 				Toast.makeText(getContext(), "Location: " + address.getLatitude() + ", " + address.getLongitude(), Toast.LENGTH_LONG).show();
-				Log.d("Location", "Location: " + address.getLatitude() + ", " + address.getLongitude() + "");
+				Log.d("Location", "Location: " + address.getLatitude() + ", " + address.getLongitude());
 			} else {
 				Toast.makeText(getContext(), "Location not found", Toast.LENGTH_SHORT).show();
 			}

@@ -11,15 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import com.example.cocoapp.Adapter.CartAdapter;
 import com.example.cocoapp.Object.CartItem;
 import com.example.cocoapp.Object.CartManager;
 import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.R;
-
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ViewCart extends Fragment {
@@ -28,6 +26,7 @@ public class ViewCart extends Fragment {
 	private CartAdapter cartAdapter;
 	private List<CartItem> cartItemList;
 	private ImageButton shoppingButton;
+	private Button checkoutButton;
 
 	public ViewCart() {
 	}
@@ -40,6 +39,8 @@ public class ViewCart extends Fragment {
 		recyclerView = view.findViewById(R.id.recyclerView);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		shoppingButton = view.findViewById(R.id.shoppping_ic);
+		checkoutButton = view.findViewById(R.id.checkout_button);
+
 
 		cartItemList = CartManager.getInstance().getCartItemList();
 
@@ -102,6 +103,17 @@ public class ViewCart extends Fragment {
 		shoppingButton.setOnClickListener(v -> {
 			getActivity().getSupportFragmentManager().popBackStack();
 		});
+
+		checkoutButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				requireActivity().getSupportFragmentManager().beginTransaction()
+						.replace(R.id.fragment_container,new Payment()).addToBackStack(null)
+						.commit();
+			}
+		});
+
+
 
 
 		return view;

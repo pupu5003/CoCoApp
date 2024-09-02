@@ -96,7 +96,6 @@
 			card_view:layout_constraintBottom_toBottomOf="parent"
 			android:orientation="horizontal"
 			android:gravity="center_vertical"
-			android:layout_margin="8dp"
 			android:visibility="gone">
 
 			<!-- Decrement Button -->

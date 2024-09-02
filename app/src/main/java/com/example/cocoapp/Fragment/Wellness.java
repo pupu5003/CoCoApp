@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cocoapp.ActivityPage.Bottom_Navigation;
 import com.example.cocoapp.Adapter.AllergyAdapter;
 import com.example.cocoapp.Adapter.AppointmentAdapter;
 import com.example.cocoapp.Adapter.VaccinationAdapter;
@@ -38,6 +41,7 @@ public class Wellness extends Fragment{
 	private List<Appointment> appointmentList;
 	private TextView seeAllVaccination;
 	private TextView seeAllTreatment;
+	private Button startButton;
 
 	@Nullable
 	@Override
@@ -45,6 +49,7 @@ public class Wellness extends Fragment{
 		View view = inflater.inflate(R.layout.fragment_wellness, container, false);
 		seeAllVaccination = view.findViewById(R.id.see_all_vaccination);
 		seeAllTreatment = view.findViewById(R.id.see_all_disease);
+		startButton = view.findViewById(R.id.buttonStart);
 
 		// Initialize RecyclerViews
 		vaccinationRecyclerView = view.findViewById(R.id.vaccination_recycler_view);
@@ -79,6 +84,14 @@ public class Wellness extends Fragment{
 			requireActivity().getSupportFragmentManager().beginTransaction()
 					.replace(R.id.fragment_container, new DiseaseWellness()).addToBackStack(null).commit();
 		});
+
+		startButton.setOnClickListener(v -> {
+			requireActivity().getSupportFragmentManager().beginTransaction()
+					.replace(R.id.fragment_container, new VetVeterinarian()).addToBackStack(null).commit();
+			((Bottom_Navigation) getActivity()).setSelectedTab(2);
+		});
+
+
 
 		return view;
 	}

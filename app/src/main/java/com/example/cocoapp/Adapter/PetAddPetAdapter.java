@@ -17,35 +17,40 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cocoapp.Fragment.PetProfile;
-import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Pet;
+import com.example.cocoapp.R;
 
 import java.util.List;
 
-public class PetDashboardAdapter extends RecyclerView.Adapter<PetDashboardAdapter.PetDashboardViewHolder> {
+public class PetAddPetAdapter extends RecyclerView.Adapter<PetAddPetAdapter.PetViewHolder> {
 
-	private final List<Pet> petList;
+	private List<Pet> petList;
 	private final Context context;
 
-	public PetDashboardAdapter(Context context, List<Pet> petList) {
-		this.context = context;
+	public PetAddPetAdapter(List<Pet> petList, Context context) {
 		this.petList = petList;
+		this.context = context;
 	}
 
 	@NonNull
 	@Override
-	public PetDashboardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(context)
-				.inflate(R.layout.item_pet_dashboard, parent, false);
-		return new PetDashboardViewHolder(view);
+	public PetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pet_add_pet, parent, false);
+		return new PetViewHolder(view);
 	}
 
 	@Override
-	public void onBindViewHolder(@NonNull PetDashboardViewHolder holder, int position) {
+	public void onBindViewHolder(@NonNull PetViewHolder holder, int position) {
 		Pet pet = petList.get(position);
-		holder.bind(pet);
+		holder.tvPetName.setText(pet.getName());
 
-		holder.itemView.setOnClickListener(view -> {
+		// Load image from URL using Glide
+		Glide.with(context)
+				.load(pet.getImage())
+				.placeholder(R.drawable.dog1)
+				.into(holder.ivPetImage);
+
+		holder.link.setOnClickListener(view -> {
 			FragmentActivity activity = (FragmentActivity) context;
 			FragmentManager fragmentManager = activity.getSupportFragmentManager();
 			FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -64,23 +69,16 @@ public class PetDashboardAdapter extends RecyclerView.Adapter<PetDashboardAdapte
 		return petList.size();
 	}
 
-	public static class PetDashboardViewHolder extends RecyclerView.ViewHolder {
-		ImageView petImageView;
-		TextView petName;
+	static class PetViewHolder extends RecyclerView.ViewHolder {
+		TextView tvPetName;
+		ImageView ivPetImage;
+		ImageButton link;
 
-		public PetDashboardViewHolder(@NonNull View itemView) {
+		PetViewHolder(@NonNull View itemView) {
 			super(itemView);
-			petImageView = itemView.findViewById(R.id.pet_image); // Assuming you have an ImageView with this ID
-			petName = itemView.findViewById(R.id.pet_name);
-		}
-
-		public void bind(Pet pet) {
-			Glide.with(itemView.getContext())
-					.load(pet.getImage())
-					.placeholder(R.drawable.dog1)
-					.into(petImageView);
-
-			petName.setText(pet.getName());
+			tvPetName = itemView.findViewById(R.id.pet_name);
+			ivPetImage = itemView.findViewById(R.id.pet_image);
+			link = itemView.findViewById(R.id.link_ic);
 		}
 	}
 }

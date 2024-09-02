@@ -1,5 +1,6 @@
 package com.example.cocoapp.Fragment;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,14 +96,12 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 		productList = new ArrayList<>();
 		veterinarianList = new ArrayList<>();
 
-		ImageView imageView1 = new ImageView(getContext());
-		imageView1.setImageResource(R.drawable.dog1);
-		ImageView imageView2 = new ImageView(getContext());
-		imageView2.setImageResource(R.drawable.dog2);
+		String imageUrl1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.dog1;
+		String imageUrl2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.dog2;
 
-		// Add sample data for pets
-		petList.add(new Pet("Buddy", imageView1, "Golden Retriever", 5, "Male", "Golden", 60.0f, 30.0f, 75, 50, 80));
-		petList.add(new Pet("Lucy", imageView2, "Labrador", 4, "Female", "Black", 55.0f, 25.0f, 60, 40, 70));
+		petList.add(new Pet("Buddy", imageUrl1, "Golden Retriever", 5, "Male", "Golden", 60.0f, 30.0f, 75, 50, 80));
+		petList.add(new Pet("Lucy", imageUrl2, "Labrador", 4, "Female", "Black", 55.0f, 25.0f, 60, 40, 70));
+
 
 		// Add sample data for products
 		ImageView imageView3 = new ImageView(getContext());
@@ -138,7 +137,6 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 			public void onClick(View v) {
 				requireActivity().getSupportFragmentManager().beginTransaction()
 						.replace(R.id.fragment_container, new VisitVeterinarian()).commit();
-				((Bottom_Navigation) getActivity()).setSelectedTab(2);
 			}
 		});
 

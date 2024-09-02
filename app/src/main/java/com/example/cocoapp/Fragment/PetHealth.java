@@ -24,7 +24,7 @@ public class PetHealth extends Fragment{
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_header_pet_health, container, false);
+		return inflater.inflate(R.layout.fragment_pet_health, container, false);
 	}
 
 	@Override

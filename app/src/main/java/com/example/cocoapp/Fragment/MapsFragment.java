@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 
 import com.example.cocoapp.R;
@@ -42,16 +43,6 @@ public class MapsFragment extends Fragment {
 	private LatLng currentLocationLatLng;
 	private final static int LOCATION_PERMISSION_REQUEST_CODE = 100;
 	private OnMapReadyCallback callback = new OnMapReadyCallback() {
-
-		/**
-		 * Manipulates the map once available.
-		 * This callback is triggered when the map is ready to be used.
-		 * This is where we can add markers or lines, add listeners or move the camera.
-		 * In this case, we just add a marker near Sydney, Australia.
-		 * If Google Play services is not installed on the device, the user will be prompted to
-		 * install it inside the SupportMapFragment. This method will only be triggered once the
-		 * user has installed Google Play services and returned to the app.
-		 */
 		@Override
 		public void onMapReady(GoogleMap googleMap) {
 			// Example: Add markers for retail shops
@@ -99,6 +90,11 @@ public class MapsFragment extends Fragment {
 		Log.d("Location","Location");
 		mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 		getLastLocation();
+
+		ImageButton backButton = view.findViewById(R.id.back_button);
+		backButton.setOnClickListener(v -> {
+			getActivity().getSupportFragmentManager().popBackStack();
+		});
 	}
 
 	private void getLastLocation() {

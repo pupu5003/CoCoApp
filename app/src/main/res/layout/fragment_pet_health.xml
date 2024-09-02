@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="@id/tvHeader"
             app:layout_constraintBottom_toBottomOf="@id/tvHeader"
             app:layout_constraintStart_toStartOf="parent"
-            android:src="@drawable/back_arrow_health"
+            android:src="@drawable/baseline_chevron_left_24"
             android:backgroundTint="@android:color/transparent"
             />
 

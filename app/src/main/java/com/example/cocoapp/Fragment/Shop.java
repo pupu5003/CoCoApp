@@ -100,7 +100,6 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 		CartManager.getInstance().addItem(cartItem);
 	}
 
-
 	private void openCart() {
 		ViewCart viewCartFragment = new ViewCart();
 		Bundle bundle = new Bundle();

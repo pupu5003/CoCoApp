@@ -17,6 +17,14 @@ public class CartItem {
 		this.quantity = quantity;
 	}
 
+	public CartItem(String productName, String productBrand, String productWeight, int productImage) {
+		this.productName = productName;
+		this.productBrand = productBrand;
+		this.productWeight = productWeight;
+		this.productImage = productImage;
+		this.quantity = 1;
+	}
+
 	public String getProductName() {
 		return productName;
 	}

@@ -53,11 +53,7 @@ public class VaccinationWellness extends Fragment {
 		backButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FragmentManager fragmentManager = getParentFragmentManager();
-				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				fragmentTransaction.replace(R.id.fragment_container, new PetHealth());
-				fragmentTransaction.addToBackStack(null);
-				fragmentTransaction.commit();
+				getActivity().getSupportFragmentManager().popBackStack();
 			}
 		});
 

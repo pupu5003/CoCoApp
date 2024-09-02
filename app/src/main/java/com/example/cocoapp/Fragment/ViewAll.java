@@ -99,7 +99,7 @@ public class ViewAll extends Fragment {
 			//recommendedRecyclerView.setAdapter(recommendedAdapter);
 		}
 		if (Objects.equals(mParam1, "1") && Objects.equals(mParam2,"2")){
-			text.setText("Recommended Veterinarians");
+			text.setText("Veterinarians");
 			RecyclerView nearbyRecyclerView = view.findViewById(R.id.recyclerView);
 			nearbyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 			List<Veterinarian> recommendedVets = new ArrayList<>();
@@ -109,6 +109,7 @@ public class ViewAll extends Fragment {
 			recommendedVets.add(new Veterinarian("Dr. Jones", "Doctor of Veterinary Medicine", 4.2f, 80, 8, "3.0 km", "$120", "Mon-Fri 9 AM - 6 PM",pic2, "2024-07-20"));
 			VeterinarianAdapter recommendedAdapter = new VeterinarianAdapter(getContext(), recommendedVets,true);
 			//VeterinarianAdapter recommendedAdapter = new VeterinarianAdapter(getContext(), recommendedVets);
+			nearbyRecyclerView.setAdapter(recommendedAdapter);
 		}
 		if (Objects.equals(mParam1, "2") && Objects.equals(mParam2,"1")){
 			text.setText("Nearby Grooming");
@@ -125,7 +126,7 @@ public class ViewAll extends Fragment {
 			nearbyGrooming.setAdapter(NearByAdapter);
 		}
 		if (Objects.equals(mParam1, "2") && Objects.equals(mParam2,"2")){
-			text.setText("Recommended Grooming");
+			text.setText("Grooming");
 			// Initialize RecyclerView
 			RecyclerView recommendedGrooming = view.findViewById(R.id.recyclerView);
 
@@ -153,7 +154,7 @@ public class ViewAll extends Fragment {
 			nearbyGrooming.setAdapter(NearByAdapter);
 		}
 		if (Objects.equals(mParam1, "3") && Objects.equals(mParam2,"2")){
-			text.setText("Recommended Boarding");
+			text.setText("Boarding");
 			// Initialize RecyclerView
 			RecyclerView recommendedGrooming = view.findViewById(R.id.recyclerView);
 

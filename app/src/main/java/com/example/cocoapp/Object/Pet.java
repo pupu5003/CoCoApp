@@ -1,12 +1,12 @@
 package com.example.cocoapp.Object;
 
-import android.widget.ImageView;
+import android.net.Uri;
 
 import java.io.Serializable;
 
 public class Pet implements Serializable {
 	private String name;
-	private ImageView image;
+	private String image;
 	private String breed;
 	private int age;
 	private String gender;
@@ -18,7 +18,7 @@ public class Pet implements Serializable {
 	private int moodValue;
 
 	// Constructor
-	public Pet(String name, ImageView image, String breed, int age, String gender, String color,
+	public Pet(String name, String image, String breed, int age, String gender, String color,
 	           float height, float weight, int healthValue, int foodValue, int moodValue) {
 		this.name = name;
 		this.image = image;
@@ -37,8 +37,8 @@ public class Pet implements Serializable {
 	public String getName() { return name; }
 	public void setName(String name) { this.name = name; }
 
-	public ImageView getImage() { return image; }
-	public void setImage(ImageView image) { this.image = image; }
+	public String getImage() { return image; }  // Updated to Uri
+	public void setImage(String image) { this.image = image; }  // Updated to Uri
 
 	public String getBreed() { return breed; }
 	public void setBreed(String breed) { this.breed = breed; }
