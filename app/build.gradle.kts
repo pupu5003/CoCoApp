@@ -27,6 +27,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    packagingOptions {
+        exclude ("META-INF/LICENSE.md")
+        exclude ("META-INF/LICENSE.txt")
+        exclude ("META-INF/NOTICE")
+        exclude ("META-INF/NOTICE.md")
+        exclude ("META-INF/NOTICE.txt")
+    }
 }
 
 dependencies {
@@ -54,6 +61,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
     implementation("com.squareup.okhttp3:okhttp:4.6.0")
     implementation("commons-codec:commons-codec:1.14")
+    implementation ("com.sun.mail:android-mail:1.6.7")
+    implementation ("com.sun.mail:android-activation:1.6.7")
 
 
 
