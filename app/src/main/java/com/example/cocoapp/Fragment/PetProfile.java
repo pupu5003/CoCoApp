@@ -181,6 +181,11 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 			EditText petColorEditText = view.findViewById(R.id.pet_colour);
 			EditText petHeightEditText = view.findViewById(R.id.pet_height);
 			EditText petLocationEditText = view.findViewById(R.id.pet_location);
+			if (pet.getGender().equals("Male")) {
+			petgenderImageView.setImageResource(R.drawable.male);
+			} else {
+			petgenderImageView.setImageResource(R.drawable.gender);
+			}
 
 			if (!TextUtils.isEmpty(petNameEditText.getText())) {
 				petNameTextView.setText(petNameEditText.getText().toString());
