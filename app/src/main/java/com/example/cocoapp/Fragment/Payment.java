@@ -11,7 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cocoapp.Api.CreateOrder;
 import com.example.cocoapp.MainActivity;
@@ -79,45 +82,66 @@ public class Payment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_payment, container, false);
 		Button btn_pay = view.findViewById(R.id.btn_pay_now);
 		TextView amount = view.findViewById(R.id.tv_amount_value);
+		ImageButton backbtn = view.findViewById(R.id.back_button);
+		RadioButton rb_momo = view.findViewById(R.id.rb_momo);
+		RadioButton rb_zalopay = view.findViewById(R.id.rb_zalopay);
 
-		StrictMode.ThreadPolicy policy = new
-				StrictMode.ThreadPolicy.Builder().permitAll().build();
-		StrictMode.setThreadPolicy(policy);
-
-		// ZaloPay SDK Init
-		ZaloPaySDK.init(2553, Environment.SANDBOX);
-		btn_pay.setOnClickListener(new View.OnClickListener() {
+		rb_momo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				CreateOrder orderApi = new CreateOrder();
-				try {
-					JSONObject data = orderApi.createOrder(amount.getText().toString());
-					String code = data.getString("return_code");
-					Log.d("data", code);
+				Toast.makeText(getActivity(), "MoMo is not supported yet", Toast.LENGTH_SHORT).show();
+			}
+		});
 
-					if (code.equals("1")) {
-						String token = data.getString("zp_trans_token");
-						ZaloPaySDK.getInstance().payOrder(requireActivity(), token, "demozpdk://app", new PayOrderListener() {
+		backbtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getActivity().getSupportFragmentManager().popBackStack();
+			}
+		});
+		rb_zalopay.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				StrictMode.ThreadPolicy policy = new
+						StrictMode.ThreadPolicy.Builder().permitAll().build();
+				StrictMode.setThreadPolicy(policy);
 
-							@Override
-							public void onPaymentSucceeded(String s, String s1, String s2) {
+				// ZaloPay SDK Init
+				ZaloPaySDK.init(2553, Environment.SANDBOX);
+				btn_pay.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						CreateOrder orderApi = new CreateOrder();
+						try {
+							JSONObject data = orderApi.createOrder(amount.getText().toString());
+							String code = data.getString("return_code");
+							Log.d("data", code);
+
+							if (code.equals("1")) {
+								String token = data.getString("zp_trans_token");
+								ZaloPaySDK.getInstance().payOrder(requireActivity(), token, "demozpdk://app", new PayOrderListener() {
+
+									@Override
+									public void onPaymentSucceeded(String s, String s1, String s2) {
+									}
+
+									@Override
+									public void onPaymentCanceled(String s, String s1) {
+
+									}
+
+									@Override
+									public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
+
+									}
+								});
 							}
 
-							@Override
-							public void onPaymentCanceled(String s, String s1) {
-
-							}
-
-							@Override
-							public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
-
-							}
-						});
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				});
 			}
 		});
 		return view;

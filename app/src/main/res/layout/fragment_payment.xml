@@ -43,7 +43,7 @@
 			app:layout_constraintEnd_toEndOf="parent" />
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
-	
+
 	<com.google.android.material.card.MaterialCardView
 		android:id="@+id/card_transaction_details"
 		android:layout_width="match_parent"
@@ -119,65 +119,113 @@
 				app:layout_constraintBottom_toBottomOf="parent"
 				android:layout_marginBottom="10dp"/>
 		</androidx.constraintlayout.widget.ConstraintLayout>
-		
+
 	</com.google.android.material.card.MaterialCardView>
 
-	<!-- Select card type -->
-	<TextView
-		android:id="@+id/tv_select_method_type"
+
+
+		<!-- Existing views -->
+
+		<!-- Payment Method Selection Title -->
+		<TextView
+			android:id="@+id/tv_select_method_type"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Select method type"
+			android:textSize="20sp"
+			android:textColor="@android:color/black"
+			android:fontFamily="@font/fredoka_medium"
+			app:layout_constraintStart_toStartOf="@id/card_transaction_details"
+			app:layout_constraintTop_toBottomOf="@id/card_transaction_details"
+			android:layout_marginTop="20dp" />
+
+		<!-- Card type icons -->
+		<LinearLayout
+			android:id="@+id/ll_method_types"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:layout_marginTop="10dp"
+			app:layout_constraintTop_toBottomOf="@id/tv_select_method_type"
+			app:layout_constraintStart_toStartOf="@id/tv_select_method_type">
+
+			<!-- Visa Icon -->
+
+			<!-- Mastercard Icon -->
+		</LinearLayout>
+
+		<!-- Add RadioGroup for Payment Method Selection -->
+	<RadioGroup
+		android:id="@+id/rg_payment_method"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Select method type"
-		android:textSize="20sp"
-		android:textColor="@android:color/black"
-		android:fontFamily="@font/fredoka_medium"
-		app:layout_constraintStart_toStartOf="@id/card_transaction_details"
-		app:layout_constraintTop_toBottomOf="@id/card_transaction_details"
-		android:layout_marginTop="20dp"
-		/>
+		android:orientation="vertical"
+		app:buttonTint="@color/Primary_color"
+		app:layout_constraintStart_toStartOf="@id/ll_method_types"
+		app:layout_constraintTop_toBottomOf="@id/ll_method_types">
 
-	<!-- Card type icons -->
-	<LinearLayout
-		android:id="@+id/ll_method_types"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		android:layout_marginTop="10dp"
-		app:layout_constraintTop_toBottomOf="@id/tv_select_method_type"
-		app:layout_constraintStart_toStartOf="@id/tv_select_method_type">
+		<!-- Momo Radio Button -->
+		<RadioButton
+			android:id="@+id/rb_momo"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:fontFamily="@font/fredoka_regular"
+			android:text="Momo"
+			app:buttonTint="@color/Primary_color"
+			android:textColor="@android:color/black"
+			android:textSize="16sp" />
 
-		<!-- Visa Icon -->
-		<ImageView
-			android:id="@+id/momo_ic"
-			android:layout_width="40dp"
-			android:layout_height="40dp"
-			android:src="@drawable/momo_ic" />
+		<!-- Zalopay Radio Button -->
+		<RadioButton
+			android:id="@+id/rb_zalopay"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:fontFamily="@font/fredoka_regular"
+			android:text="Zalopay"
+			app:buttonTint="@color/Primary_color"
+			android:textColor="@android:color/black"
+			android:textSize="16sp" />
 
-		<!-- Mastercard Icon -->
-		<ImageView
-			android:id="@+id/zalopay_ic"
-			android:layout_width="40dp"
-			android:layout_height="40dp"
-			android:layout_marginStart="15dp"
-			android:src="@drawable/zalopay_ic" />
-	</LinearLayout>
+	</RadioGroup>
 
-	<!-- Pay Now Button -->
-	<Button
-		android:id="@+id/btn_pay_now"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:text="PAY NOW"
-		android:textColor="@android:color/white"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		android:layout_marginBottom="20dp"
-		android:layout_marginHorizontal="30dp"
-		android:background="@drawable/round_rectangle_5"
-		app:backgroundTint="@color/Primary_color"
-		android:textSize="20sp"
-		android:fontFamily="@font/fredoka_medium"
-		/>
+		<!-- Existing Pay Now Button -->
+		<Button
+			android:id="@+id/btn_pay_now"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginHorizontal="20dp"
+			android:layout_marginTop="40dp"
+			android:layout_marginBottom="10dp"
+			app:backgroundTint="@color/Primary_color"
+			android:fontFamily="@font/fredoka_medium"
+			android:text="Pay now"
+			android:background="@drawable/round_rectangle_5"
+			android:textColor="@android:color/white"
+			android:textSize="18sp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent" />
+
+	<ImageView
+		android:id="@+id/momo_ic"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:layout_marginStart="104dp"
+		android:src="@drawable/momo_ic"
+		app:layout_constraintBottom_toBottomOf="@+id/rg_payment_method"
+		app:layout_constraintStart_toStartOf="@+id/rg_payment_method"
+		app:layout_constraintTop_toTopOf="@+id/rg_payment_method"
+		app:layout_constraintVertical_bias="0.0" />
+
+	<ImageView
+		android:id="@+id/zalopay_ic"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:layout_marginStart="104dp"
+		android:src="@drawable/zalopay_ic"
+		app:layout_constraintBottom_toBottomOf="@+id/rg_payment_method"
+		app:layout_constraintStart_toStartOf="@+id/rg_payment_method"
+		app:layout_constraintTop_toTopOf="@+id/rg_payment_method"
+		app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
