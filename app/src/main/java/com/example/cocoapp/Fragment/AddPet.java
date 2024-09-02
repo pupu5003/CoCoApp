@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -27,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.cocoapp.Adapter.PetAddPetAdapter;
 import com.example.cocoapp.Object.Pet;
 import com.example.cocoapp.R;
@@ -51,6 +53,8 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 	private ImageView imageView;
 	private GoogleMap mMap;
 	private EditText locationEditText;
+	private List<Pet> petList;
+	private PetAddPetAdapter petAddPetAdapter;
 
 	public AddPet() {
 		// Required empty public constructor
@@ -118,6 +122,16 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 		Button uploadImage = view.findViewById(R.id.upload_btn);
 		imageView = view.findViewById(R.id.imageView);
 		ImageButton backButton = view.findViewById(R.id.back_button);
+		EditText name = view.findViewById(R.id.pet_name);
+		EditText breed = view.findViewById(R.id.pet_breed_name);
+		EditText age = view.findViewById(R.id.pet_age);
+		EditText gender = view.findViewById(R.id.pet_gender);
+		EditText color = view.findViewById(R.id.pet_colour);
+		EditText weight = view.findViewById(R.id.pet_weight);
+		EditText height = view.findViewById(R.id.pet_height);
+		petList = new ArrayList<>();
+
+
 
 		backButton.setOnClickListener(view1 -> {
 			getActivity().getSupportFragmentManager().popBackStack();
@@ -141,6 +155,12 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 			} else {
 				Toast.makeText(getContext(), "Please enter a location", Toast.LENGTH_SHORT).show();
 			}
+			String url = (String) imageView.getTag();
+
+			Pet pet = new Pet(name.getText().toString(),url,breed.getText().toString(),Integer.parseInt(age.getText().toString()),gender.getText().toString(),color.getText().toString(),
+					Float.parseFloat(height.getText().toString()),Float.parseFloat(weight.getText().toString()),0,0,0);
+			petList.add(pet);
+			petAddPetAdapter.notifyDataSetChanged();
 		});
 
 		// Handle image upload
@@ -152,10 +172,6 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 				openGallery();
 			}
 		});
-
-		// Initialize RecyclerView with dummy data
-		PetAddPetAdapter petAddPetAdapter;
-		List<Pet> petList = new ArrayList<>();
 		RecyclerView recyclerView = view.findViewById(R.id.recycler_view_pets);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -210,4 +226,5 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 			Toast.makeText(getContext(), "Unable to get location", Toast.LENGTH_SHORT).show();
 		}
 	}
+
 }

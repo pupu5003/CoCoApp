@@ -16,6 +16,7 @@ public class Pet implements Serializable {
 	private int healthValue;
 	private int foodValue;
 	private int moodValue;
+	private float latitude ,longitude;
 
 	// Constructor
 	public Pet(String name, String image, String breed, int age, String gender, String color,
@@ -34,6 +35,18 @@ public class Pet implements Serializable {
 	}
 
 	// Getters and Setters
+	public float getlongitude(){
+		return longitude;
+	}
+	public float getlatitude(){
+		return latitude;
+	}
+	public void setlongitude(float a){
+		longitude=a;
+	}
+	public void setlatitude(float a){
+		latitude=a;
+	}
 	public String getName() { return name; }
 	public void setName(String name) { this.name = name; }
 
