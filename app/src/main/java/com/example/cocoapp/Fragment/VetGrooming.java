@@ -131,8 +131,8 @@ public class VetGrooming extends Fragment {
         groomingList.add(new Grooming("Pet Pamper", 4.3f, 80, false, "2.5 km", "$60", "Mon-Fri 10 AM - 5 PM",pic2));
 
         // Set adapter
-        GroomingAdapter NearByAdapter = new GroomingAdapter(groomingList,false);
-        GroomingAdapter RecommendAdapter = new GroomingAdapter(groomingList,false);
+        GroomingAdapter NearByAdapter = new GroomingAdapter(groomingList,false, getContext());
+        GroomingAdapter RecommendAdapter = new GroomingAdapter(groomingList,false, getContext());
         nearbyGrooming.setAdapter(NearByAdapter);
         recommendGrooming.setAdapter(RecommendAdapter);
 

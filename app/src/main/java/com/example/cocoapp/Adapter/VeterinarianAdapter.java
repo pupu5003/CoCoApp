@@ -9,9 +9,14 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.cocoapp.Fragment.Review;
+import com.example.cocoapp.Fragment.VeterinarianProfile;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Veterinarian;
 
@@ -41,6 +46,13 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
     public void onBindViewHolder(@NonNull VeterinarianViewHolder holder, int position) {
         Veterinarian veterinarian = veterinarianList.get(position);
         holder.bind(veterinarian);
+
+        holder.itemView.setOnClickListener(view -> {
+            FragmentActivity activity = (FragmentActivity) context;
+            activity.getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, VeterinarianProfile.newInstance(veterinarian))
+                    .addToBackStack(null).commit();
+        });
     }
 
     @Override

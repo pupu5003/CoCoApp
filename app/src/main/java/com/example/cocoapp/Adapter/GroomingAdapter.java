@@ -1,5 +1,6 @@
 package com.example.cocoapp.Adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,9 +8,14 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.cocoapp.Fragment.Review;
+import com.example.cocoapp.Fragment.VeterinarianProfile;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Grooming;
 
@@ -19,10 +25,12 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
 
     private List<Grooming> groomingList;
     private boolean showAll;
+    private Context context;
 
-    public GroomingAdapter(List<Grooming> groomingList, boolean showAll) {
+    public GroomingAdapter(List<Grooming> groomingList, boolean showAll, Context context) {
         this.groomingList = groomingList;
         this.showAll = showAll;
+        this.context = context;
     }
 
     @NonNull
@@ -36,6 +44,13 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
     public void onBindViewHolder(@NonNull GroomingViewHolder holder, int position) {
         Grooming grooming = groomingList.get(position);
         holder.bind(grooming);
+
+        holder.itemView.setOnClickListener(view -> {
+            FragmentActivity activity = (FragmentActivity) context;
+            activity.getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, Review.newInstance(grooming.getName()))
+                    .addToBackStack(null).commit();
+        });
     }
 
     @Override
