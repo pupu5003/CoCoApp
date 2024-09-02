@@ -66,6 +66,7 @@
         />
 
     <FrameLayout
+        android:id="@+id/frameLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_profile"
@@ -132,6 +133,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/pet_name" />
 
                     <ImageView
+                        android:id="@+id/gender"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="20dp"
@@ -178,8 +180,9 @@
                 app:layout_constraintStart_toEndOf="@id/aboutText"
                 app:layout_constraintTop_toTopOf="@id/icon_pet_foot" />
 
-            <LinearLayout
-                android:id="@+id/linearlayout"
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
@@ -188,149 +191,197 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/icon_pet_foot">
 
-                <RelativeLayout
+                <!-- Age Box -->
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/age_box"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/weight_box"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
+                        android:id="@+id/imageView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/pet_characteristics_box" />
+                        android:src="@drawable/pet_characteristics_box"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/age_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="7dp"
+                        android:layout_marginTop="5dp"
                         android:fontFamily="@font/fredoka_light"
                         android:text="Age"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
 
                     <TextView
                         android:id="@+id/age"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/age_title"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="2dp"
                         android:fontFamily="@font/fredokaone_regular"
                         android:text="1y 4m 11d"
                         android:textColor="#064357"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/age_title" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </RelativeLayout>
-
-                <RelativeLayout
+                <!-- Weight Box -->
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/weight_box"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_weight="1">
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/height_box"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toEndOf="@id/age_box"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/pet_characteristics_box" />
+                        android:src="@drawable/pet_characteristics_box"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/weight_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="7dp"
+                        android:layout_marginTop="5dp"
                         android:fontFamily="@font/fredoka_light"
                         android:text="Weight"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/weight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/weight_title"
-                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="2dp"
                         android:fontFamily="@font/fredokaone_regular"
                         android:text="7,5 kg"
                         android:textColor="#064357"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/weight_title" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </RelativeLayout>
-
-                <RelativeLayout
+                <!-- Height Box -->
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/height_box"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1">
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/color_box"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toEndOf="@id/weight_box"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/pet_characteristics_box" />
+                        android:src="@drawable/pet_characteristics_box"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/height_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="7dp"
+                        android:layout_marginTop="5dp"
                         android:fontFamily="@font/fredoka_light"
                         android:text="Height"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/height"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/height_title"
-                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="2dp"
                         android:fontFamily="@font/fredokaone_regular"
                         android:text="54 cm"
                         android:textColor="#064357"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/height_title" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </RelativeLayout>
-
-                <RelativeLayout
+                <!-- Color Box -->
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/color_box"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7">
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toEndOf="@id/height_box"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/pet_characteristics_box" />
+                        android:src="@drawable/pet_characteristics_box"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
 
                     <TextView
                         android:id="@+id/color_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="7dp"
+                        android:layout_marginTop="5dp"
                         android:fontFamily="@font/fredoka_light"
                         android:text="Color"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/color"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/color_title"
-                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="2dp"
                         android:fontFamily="@font/fredokaone_regular"
                         android:text="Black"
                         android:textColor="#064357"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/color_title" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </LinearLayout>
 
             <ImageView
                 android:id="@+id/icon_smiley"
@@ -340,7 +391,7 @@
                 android:layout_marginTop="15dp"
                 android:src="@drawable/smiley_ic"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/linearlayout" />
+                app:layout_constraintTop_toBottomOf="@id/constraintlayout" />
 
             <TextView
                 android:id="@+id/location_title"
@@ -370,27 +421,16 @@
                 android:id="@+id/location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/location_title"
-                android:text="123 Nguyen Trai, Ho Chi Minh City"
-                android:fontFamily="@font/fredoka_regular"
-                android:textSize="15sp"
                 android:layout_marginStart="40dp"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/fredoka_regular"
+                android:text="123 Nguyen Trai, Ho Chi Minh City"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/location_title" />
 
-            <ImageButton
-                android:id="@+id/edit_btn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:scaleType="fitCenter"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/location"
-                android:background="@android:color/transparent"
-                android:src="@drawable/edit_ic"
-                android:layout_marginTop="50dp"
-                android:layout_marginEnd="10dp"
-                />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -410,8 +450,7 @@
                 android:textColor="#000000"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <EditText
@@ -434,73 +473,73 @@
                 android:id="@+id/pet_breed_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Breed Name"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:padding="12dp"
-                android:fontFamily="@font/fredoka_medium"
                 android:background="@drawable/edit_text_background"
-                app:layout_constraintTop_toBottomOf="@id/pet_name_edit"
-                app:layout_constraintStart_toStartOf="parent"
+                android:fontFamily="@font/fredoka_medium"
+                android:hint="Breed Name"
+                android:padding="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="8dp"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pet_name_edit" />
 
             <!-- Gender, Age, Colour Row -->
             <LinearLayout
                 android:id="@+id/gender_age_colour_row"
                 android:layout_width="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/pet_breed_name"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:weightSum="3">
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pet_breed_name">
 
                 <EditText
                     android:id="@+id/pet_gender"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Gender"
-                    android:layout_weight="1"
-                    android:padding="12dp"
                     android:layout_marginEnd="7dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edit_text_background"
                     android:fontFamily="@font/fredoka_medium"
-                    android:background="@drawable/edit_text_background"/>
+                    android:hint="Gender"
+                    android:padding="12dp" />
 
                 <EditText
                     android:id="@+id/pet_age"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Age"
-                    android:layout_weight="1"
-                    android:padding="12dp"
-                    android:fontFamily="@font/fredoka_medium"
                     android:layout_marginEnd="7dp"
-                    android:background="@drawable/edit_text_background"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/edit_text_background"
+                    android:fontFamily="@font/fredoka_medium"
+                    android:hint="Age"
+                    android:padding="12dp" />
 
                 <EditText
                     android:id="@+id/pet_colour"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Colour"
-                    android:layout_weight="1"
-                    android:padding="12dp"
-                    android:fontFamily="@font/fredoka_medium"
                     android:layout_marginEnd="7dp"
-                    android:background="@drawable/edit_text_background"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/edit_text_background"
+                    android:fontFamily="@font/fredoka_medium"
+                    android:hint="Colour"
+                    android:padding="12dp" />
             </LinearLayout>
 
             <!-- Height, Weight Row -->
             <LinearLayout
                 android:id="@+id/linearLayout4"
                 android:layout_width="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
                 android:orientation="horizontal"
                 android:weightSum="2"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -534,24 +573,25 @@
                 android:id="@+id/pet_location"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Location"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:padding="12dp"
-                android:fontFamily="@font/fredoka_medium"
                 android:background="@drawable/edit_text_background"
-                app:layout_constraintTop_toBottomOf="@id/linearLayout4"
-                app:layout_constraintStart_toStartOf="parent"
+                android:fontFamily="@font/fredoka_medium"
+                android:hint="Location"
+                android:padding="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="8dp"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linearLayout4" />
 
             <!-- Add Pet Button -->
             <Button
                 android:id="@+id/done_btn"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
                 android:background="@drawable/round_rectangle_5"
                 android:text="Done"
                 android:textColor="@android:color/white"
@@ -559,23 +599,35 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/pet_location"
-                android:layout_marginTop="20dp"/>
+                app:layout_constraintTop_toBottomOf="@id/pet_location" />
+
             <fragment
                 android:id="@+id/map"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintTop_toBottomOf="parent"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:visibility="gone"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </FrameLayout>
+    <ImageButton
+        android:id="@+id/edit_btn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/edit_ic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="visible"/>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

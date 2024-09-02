@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class Profile extends Fragment {
     // ActivityResultLaunchers for handling permission requests and image picking
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private ActivityResultLauncher<Intent> pickImageLauncher;
+
 
     public Profile() {
         // Required empty public constructor
@@ -99,17 +101,35 @@ public class Profile extends Fragment {
         ImageButton imageButton = view.findViewById(R.id.camera_btn);
         ava = view.findViewById(R.id.imageOwner);
 
+        TextView ownerName = view.findViewById(R.id.owner_name);
+        TextView ownerEmail = view.findViewById(R.id.owner_email);
+        TextView ownerPhone = view.findViewById(R.id.owner_phone);
+
         View editFrame = view.findViewById(R.id.information_frame_edit);
         View informationFrame = view.findViewById(R.id.information_frame);
 
         editButton.setOnClickListener(v -> {
             informationFrame.setVisibility(View.GONE);
             editFrame.setVisibility(View.VISIBLE);
+
         });
 
         doneButton.setOnClickListener(v -> {
             editFrame.setVisibility(View.GONE);
             informationFrame.setVisibility(View.VISIBLE);
+            TextView ownerNameEdit = view.findViewById(R.id.owner_name_edit);
+            TextView ownerEmailEdit = view.findViewById(R.id.owner_email_edit);
+            TextView ownerPhoneEdit = view.findViewById(R.id.owner_phone_edit);
+            if (!TextUtils.isEmpty(ownerNameEdit.getText())) {
+                ownerName.setText(ownerName.getText().toString());
+            }
+            if (!TextUtils.isEmpty(ownerEmailEdit.getText())) {
+                ownerEmail.setText(ownerEmailEdit.getText().toString());
+            }
+            if (!TextUtils.isEmpty(ownerPhoneEdit.getText())) {
+                ownerPhone.setText(ownerPhoneEdit.getText().toString());
+            }
+
         });
 
         addPetbtn.setOnClickListener(v -> {
