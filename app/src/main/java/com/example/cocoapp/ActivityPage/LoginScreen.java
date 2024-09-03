@@ -30,25 +30,29 @@ import android.util.Log;
 
 public class LoginScreen extends AppCompatActivity {
     private TextView loginTextView, registerTextView, titleTextView, forgetPasswordTextView;
-    private MaterialButton loginBtn;
+    private MaterialButton loginBtn,registerBtn;
     private View underlineView;
-    private EditText editTextEmail, editTextPassword;
+    private EditText editTextEmail, editTextPassword, editTextName, editTextGmail;
     private String generatedCode;
+    private ConstraintLayout loginLayout, registerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login_screen);
-
         loginTextView = findViewById(R.id.loginTextView);
         registerTextView = findViewById(R.id.registerTextView);
         titleTextView = findViewById(R.id.textViewLogin);
-        loginBtn = findViewById(R.id.buttonLogin);
         underlineView = findViewById(R.id.underlineView);
-        editTextEmail = findViewById(R.id.editTextEmail);
-        editTextPassword = findViewById(R.id.editTextPassword);
+        loginLayout = findViewById(R.id.constraintLayoutLogin);
+        registerLayout = findViewById(R.id.constraintLayoutRegister);
         forgetPasswordTextView = findViewById(R.id.forgetPasswordTextView);
+        loginBtn = findViewById(R.id.buttonLogin);
+        registerBtn = findViewById(R.id.buttonRegister);
+
+
+
 
         loginTextView.setOnClickListener(v -> setActiveTab(true));
         registerTextView.setOnClickListener(v -> setActiveTab(false));
@@ -79,16 +83,18 @@ public class LoginScreen extends AppCompatActivity {
             registerTextView.setTextColor(Color.parseColor("#5F5F63"));
             registerTextView.setTextSize(16);
             titleTextView.setText("Login");
-            loginBtn.setText("Login");
             moveUnderline(loginTextView);
+            loginLayout.setVisibility(View.VISIBLE);
+            registerLayout.setVisibility(View.GONE);
         } else {
             registerTextView.setTextColor(Color.parseColor("#419C82"));
             registerTextView.setTextSize(18);
             loginTextView.setTextColor(Color.parseColor("#5F5F63"));
             loginTextView.setTextSize(16);
             titleTextView.setText("Register");
-            loginBtn.setText("Register");
             moveUnderline(registerTextView);
+            loginLayout.setVisibility(View.GONE);
+            registerLayout.setVisibility(View.VISIBLE);
         }
     }
 
