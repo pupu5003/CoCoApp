@@ -143,6 +143,8 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 			public void onClick(View v) {
 				requireActivity().getSupportFragmentManager().beginTransaction()
 						.replace(R.id.fragment_container, new VisitVeterinarian()).commit();
+
+				((Bottom_Navigation) getActivity()).setSelectedTab(2);
 			}
 		});
 
