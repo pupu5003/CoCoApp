@@ -23,11 +23,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CoCoApp"
         tools:targetApi="31"
-        android:enableOnBackInvokedCallback="true">
+        android:enableOnBackInvokedCallback="true"
+        android:usesCleartextTraffic="true">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAjcFUiAsyPfMop7_cfVOa1x6m9C4liYso" />
-
 
         <!--
 			 TODO: Before you run your application, you need a Google Maps API key.

@@ -67,7 +67,10 @@ dependencies {
     implementation ("com.sun.mail:android-activation:1.6.7")
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     implementation ("androidx.work:work-runtime:2.7.1")
-
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
 
 
 

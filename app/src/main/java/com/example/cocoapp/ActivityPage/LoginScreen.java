@@ -1,46 +1,52 @@
+// LoginScreen.java
 package com.example.cocoapp.ActivityPage;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.cocoapp.Api.ApiClient;
+import com.example.cocoapp.Api.ApiService;
+import com.example.cocoapp.Api.Auth.AuthResponse;
+import com.example.cocoapp.Api.Auth.LoginRequest;
 import com.example.cocoapp.Api.SendEmail;
-import com.example.cocoapp.Fragment.ProductSeeAll;
 import com.example.cocoapp.R;
 import com.google.android.material.button.MaterialButton;
 
-import android.content.DialogInterface;
-import android.widget.EditText;
-import android.widget.Toast;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-import java.util.Random;
-import android.util.Log;
+import java.util.Random;  // Add this line at the top of your file
+
 
 public class LoginScreen extends AppCompatActivity {
     private TextView loginTextView, registerTextView, titleTextView, forgetPasswordTextView;
     private MaterialButton loginBtn,registerBtn;
     private View underlineView;
-    private EditText editTextEmail, editTextPassword, editTextName, editTextGmail;
+    private EditText editTextEmail, editTextPassword;
     private String generatedCode;
     private ConstraintLayout loginLayout, registerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login_screen);
+
         loginTextView = findViewById(R.id.loginTextView);
         registerTextView = findViewById(R.id.registerTextView);
         titleTextView = findViewById(R.id.textViewLogin);
@@ -50,9 +56,8 @@ public class LoginScreen extends AppCompatActivity {
         forgetPasswordTextView = findViewById(R.id.forgetPasswordTextView);
         loginBtn = findViewById(R.id.buttonLogin);
         registerBtn = findViewById(R.id.buttonRegister);
-
-
-
+        editTextEmail = findViewById(R.id.username);
+        editTextPassword = findViewById(R.id.editTextPassword);
 
         loginTextView.setOnClickListener(v -> setActiveTab(true));
         registerTextView.setOnClickListener(v -> setActiveTab(false));
@@ -70,9 +75,18 @@ public class LoginScreen extends AppCompatActivity {
 //            }
 
 
-            Intent intent = new Intent(LoginScreen.this, Bottom_Navigation.class);
-            startActivity(intent);
+//          Intent intent = new Intent(LoginScreen.this, Bottom_Navigation.class);
+//          startActivity(intent);
+            String email = editTextEmail.getText().toString().trim();
+            String password = editTextPassword.getText().toString().trim();
+
+            if (email.isEmpty() || password.isEmpty())
+            {
+                Toast.makeText(this, "Please enter your email and password", Toast.LENGTH_SHORT).show();
+            }
+            else { performLogin(email, password); }
         });
+
         setupSocialButtons();
     }
 
@@ -110,23 +124,17 @@ public class LoginScreen extends AppCompatActivity {
         final int endWidth = targetView.getWidth();
 
         ValueAnimator positionAnimator = ValueAnimator.ofFloat(startX, endX);
-        positionAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float animatedValue = (Float) animation.getAnimatedValue();
-                underlineView.setX(animatedValue);
-            }
+        positionAnimator.addUpdateListener(animation -> {
+            float animatedValue = (Float) animation.getAnimatedValue();
+            underlineView.setX(animatedValue);
         });
 
         ValueAnimator widthAnimator = ValueAnimator.ofInt(startWidth, endWidth);
-        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int animatedWidth = (Integer) animation.getAnimatedValue();
-                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) underlineView.getLayoutParams();
-                params.width = animatedWidth;
-                underlineView.setLayoutParams(params);
-            }
+        widthAnimator.addUpdateListener(animation -> {
+            int animatedWidth = (Integer) animation.getAnimatedValue();
+            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) underlineView.getLayoutParams();
+            params.width = animatedWidth;
+            underlineView.setLayoutParams(params);
         });
 
         AnimatorSet animatorSet = new AnimatorSet();
@@ -137,13 +145,52 @@ public class LoginScreen extends AppCompatActivity {
 
     private void setupSocialButtons() {
         ViewGroup socialMediaLayout = findViewById(R.id.linearLayoutSocialMedia);
-
         if (socialMediaLayout != null && socialMediaLayout.getChildCount() > 0) {
             View firstButton = socialMediaLayout.getChildAt(0);
             firstButton.setOnClickListener(v -> showEmailInputDialog());
         } else {
             Toast.makeText(this, "Social media buttons layout not found or empty.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void performLogin(String email, String password)
+    {
+        ApiService apiService = ApiClient.getClient(this, true).create(ApiService.class);
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+        Call<AuthResponse> call = apiService.loginUser(loginRequest);
+        call.enqueue(new Callback<AuthResponse>() {
+            @Override
+            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    AuthResponse authResponse = response.body();
+
+                    // Save JWT token
+                    String accessToken = authResponse.getAccessToken();
+                    saveToken(accessToken);
+
+                    // Next activity
+                    Intent intent = new Intent(LoginScreen.this, Bottom_Navigation.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(LoginScreen.this, "Login failed. Please check your credentials.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AuthResponse> call, Throwable t) {
+                Toast.makeText(LoginScreen.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Save JWT token using SharedPreferences
+    private void saveToken(String token) {
+        getSharedPreferences("app_prefs", MODE_PRIVATE)
+                .edit()
+                .putString("jwt_token", token)
+                .apply();
     }
 
     private void showEmailInputDialog() {
@@ -160,14 +207,14 @@ public class LoginScreen extends AppCompatActivity {
             if (email.isEmpty()) {
                 Toast.makeText(this, "Please enter your email.", Toast.LENGTH_SHORT).show();
             } else {
-                generatedCode = generateVerificationCode();
+                // For generate verification codes and send emails
+                String generatedCode = generateVerificationCode();
                 sendVerificationEmail(email, generatedCode);
                 showCodeInputDialog();
             }
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
         builder.show();
     }
 
@@ -209,7 +256,6 @@ public class LoginScreen extends AppCompatActivity {
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
         builder.show();
     }
 
