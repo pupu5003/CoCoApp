@@ -3,12 +3,19 @@ package com.example.cocoapp.Fragment;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.cocoapp.Adapter.NotificationAdapter;
+import com.example.cocoapp.Object.NotificationItem;
 import com.example.cocoapp.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +23,9 @@ import com.example.cocoapp.R;
  * create an instance of this fragment.
  */
 public class Notification extends Fragment {
+	private RecyclerView recyclerView;
+	private NotificationAdapter notificationAdapter;
+	private List<NotificationItem> notificationList;
 
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,6 +71,31 @@ public class Notification extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_notification, container, false);
+		View view = inflater.inflate(R.layout.fragment_notification, container, false);
+
+		// Initialize RecyclerView
+		recyclerView = view.findViewById(R.id.nearby_recycler_view);
+		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+		String pic1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet1;
+		String pic2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet2;
+
+		// Initialize data
+		notificationList = new ArrayList<>();
+		notificationList.add(new NotificationItem(
+				"Dr. Smith",
+				"Upcoming appointment at 10 AM",
+				"10m ago",
+				pic1
+		));
+		notificationList.add(new NotificationItem(
+				"Dr. Johnson",
+				"Follow-up required",
+				"1h ago",
+				pic2
+		));
+		// Initialize adapter and set it to RecyclerView
+		notificationAdapter = new NotificationAdapter(getContext(), notificationList);
+		recyclerView.setAdapter(notificationAdapter);
+		return view;
 	}
 }

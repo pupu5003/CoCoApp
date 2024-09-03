@@ -27,7 +27,7 @@
 			app:layout_constraintTop_toTopOf="parent" />
 
 		<TextView
-			android:id="@+id/notification_title_1"
+			android:id="@+id/Doctor_name"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="10dp"
@@ -47,15 +47,15 @@
 			android:layout_marginStart="10dp"
 			android:layout_marginTop="1dp"
 			android:fontFamily="@font/fredoka_regular"
-			android:text="Food quantity is low refill soon."
+			android:text="Comming appointment"
 			android:textColor="#666666"
 			android:textSize="15sp"
 			app:layout_constraintEnd_toStartOf="@id/notification_arrow_1"
 			app:layout_constraintStart_toEndOf="@id/notification_icon_1"
-			app:layout_constraintTop_toBottomOf="@id/notification_title_1" />
+			app:layout_constraintTop_toBottomOf="@id/Doctor_name" />
 
 		<TextView
-			android:id="@+id/notification_time_1"
+			android:id="@+id/notification_time"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="10dp"

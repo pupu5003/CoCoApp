@@ -22,7 +22,7 @@
 			android:layout_height="wrap_content"
 			android:fontFamily="@font/fredoka_semibold"
 			android:padding="10dp"
-			android:text="Notifications"
+			android:text="Comming Appointment"
 			android:textColor="@android:color/white"
 			android:textSize="25sp"
 			android:textStyle="bold"
