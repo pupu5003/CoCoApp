@@ -208,7 +208,7 @@ public class LoginScreen extends AppCompatActivity {
                 Toast.makeText(this, "Please enter your email.", Toast.LENGTH_SHORT).show();
             } else {
                 // For generate verification codes and send emails
-                String generatedCode = generateVerificationCode();
+                generatedCode = generateVerificationCode();
                 sendVerificationEmail(email, generatedCode);
                 showCodeInputDialog();
             }
