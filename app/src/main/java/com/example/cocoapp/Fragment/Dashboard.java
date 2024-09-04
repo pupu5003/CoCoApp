@@ -107,8 +107,8 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 		String imageUrl1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.dog1;
 		String imageUrl2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.dog2;
 
-		petList.add(new Pet("Buddy", imageUrl1, "Golden Retriever", 5, "Male", "Golden", 60.0f, 30.0f, 75, 50, 80));
-		petList.add(new Pet("Lucy", imageUrl2, "Labrador", 4, "Female", "Black", 55.0f, 25.0f, 60, 40, 70));
+//		petList.add(new Pet("Buddy", imageUrl1, "Golden Retriever", 5, "Male", "Golden", 60.0f, 30.0f, 75, 50, 80));
+//		petList.add(new Pet("Lucy", imageUrl2, "Labrador", 4, "Female", "Black", 55.0f, 25.0f, 60, 40, 70));
 
 
 		// Add sample data for products

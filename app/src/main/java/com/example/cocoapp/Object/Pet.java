@@ -1,66 +1,63 @@
 package com.example.cocoapp.Object;
 
-import android.net.Uri;
-
 import java.io.Serializable;
 
 public class Pet implements Serializable {
-	private String name;
-	private String image;
-	private String breed;
+	private String id;
+	private String petName;
+	private String breedName;
+	private Character gender;
 	private int age;
-	private String gender;
 	private String color;
 	private float height;
 	private float weight;
+	private String imageUrl;   // The URL of the image
+	private String ownerId;
+	private float northCoordinate;
+	private float eastCoordinate;
 	private int healthValue;
 	private int foodValue;
 	private int moodValue;
-	private float latitude ,longitude;
+
+	private String location;
 
 	// Constructor
-	public Pet(String name, String image, String breed, int age, String gender, String color,
-	           float height, float weight, int healthValue, int foodValue, int moodValue) {
-		this.name = name;
-		this.image = image;
-		this.breed = breed;
+	public Pet(String petName, String imageUrl, String breedName, int age, Character gender, String color,
+	           float height, float weight) {
+		this.petName = petName;
+		this.imageUrl = imageUrl;
+		this.breedName = breedName;
 		this.age = age;
 		this.gender = gender;
 		this.color = color;
 		this.height = height;
 		this.weight = weight;
-		this.healthValue = healthValue;
-		this.foodValue = foodValue;
-		this.moodValue = moodValue;
 	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
 
 	// Getters and Setters
-	public float getlongitude(){
-		return longitude;
-	}
-	public float getlatitude(){
-		return latitude;
-	}
-	public void setlongitude(float a){
-		longitude=a;
-	}
-	public void setlatitude(float a){
-		latitude=a;
-	}
-	public String getName() { return name; }
-	public void setName(String name) { this.name = name; }
+	public String getId() { return id; }
+	public void setId(String id) { this.id = id; }
 
-	public String getImage() { return image; }  // Updated to Uri
-	public void setImage(String image) { this.image = image; }  // Updated to Uri
+	public String getPetName() { return petName; }
+	public void setPetName(String petName) { this.petName = petName; }
 
-	public String getBreed() { return breed; }
-	public void setBreed(String breed) { this.breed = breed; }
+	public String getBreedName() { return breedName; }
+	public void setBreedName(String breedName) { this.breedName = breedName; }
+
+	public Character getGender() { return gender; }
+	public void setGender(Character gender) { this.gender = gender; }
 
 	public int getAge() { return age; }
 	public void setAge(int age) { this.age = age; }
-
-	public String getGender() { return gender; }
-	public void setGender(String gender) { this.gender = gender; }
 
 	public String getColor() { return color; }
 	public void setColor(String color) { this.color = color; }
@@ -70,6 +67,19 @@ public class Pet implements Serializable {
 
 	public float getWeight() { return weight; }
 	public void setWeight(float weight) { this.weight = weight; }
+
+
+	public String getImage() { return imageUrl; }
+	public void setImage(String imageUrl) { this.imageUrl = imageUrl; }
+
+	public String getOwnerId() { return ownerId; }
+	public void setOwnerId(String ownerId) { this.ownerId = ownerId; }
+
+	public float getNorthCoordinate() { return northCoordinate; }
+	public void setNorthCoordinate(float northCoordinate) { this.northCoordinate = northCoordinate; }
+
+	public float getEastCoordinate() { return eastCoordinate; }
+	public void setEastCoordinate(float eastCoordinate) { this.eastCoordinate = eastCoordinate; }
 
 	public int getHealthValue() { return healthValue; }
 	public void setHealthValue(int healthValue) { this.healthValue = healthValue; }

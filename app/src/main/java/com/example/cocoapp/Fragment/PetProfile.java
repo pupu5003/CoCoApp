@@ -155,7 +155,7 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 
 
 		if (pet != null) {
-			petNameTextView.setText(pet.getName());
+			petNameTextView.setText(pet.getPetName());
 			Glide.with(this)
 					.load(pet.getImage())
 					.placeholder(R.drawable.dog1)

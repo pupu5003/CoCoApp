@@ -1,6 +1,8 @@
 package com.example.cocoapp.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Address;
@@ -30,6 +32,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cocoapp.Adapter.PetAddPetAdapter;
+import com.example.cocoapp.Api.ApiClient;
+import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.Pet;
 import com.example.cocoapp.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,11 +42,21 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AddPet extends Fragment implements OnMapReadyCallback {
 	private static final String ARG_PARAM1 = "param1";
@@ -55,6 +69,8 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 	private EditText locationEditText;
 	private List<Pet> petList;
 	private PetAddPetAdapter petAddPetAdapter;
+	private float lat,lont;
+	private Pet pet;
 
 	public AddPet() {
 		
@@ -149,23 +165,62 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 
 		// Set a listener for the Button
 		addButton.setOnClickListener(v -> {
+			String url = (String) imageView.getTag();
+			Log.d("PetImageURL", "URL: " + url);
 			String location = locationEditText.getText().toString().trim();
+			String genderText = gender.getText().toString();
+			Character genderChar = genderText.length() > 0 ? genderText.charAt(0) : '\0';
+			pet = new Pet(name.getText().toString(),url,breed.getText().toString(),Integer.parseInt(age.getText().toString()),genderChar,color.getText().toString(),
+					Float.parseFloat(height.getText().toString()),Float.parseFloat(weight.getText().toString()));
 			if (!TextUtils.isEmpty(location)) {
 				if (mMap != null) {
 					convertLocationToCoordinates(location);
+					pet.setLocation(location);
 				} else {
 					Toast.makeText(getContext(), "Map is not ready yet", Toast.LENGTH_SHORT).show();
 				}
 			} else {
 				Toast.makeText(getContext(), "Please enter a location", Toast.LENGTH_SHORT).show();
 			}
-			String url = (String) imageView.getTag();
-			Log.d("PetImageURL", "URL: " + url);
 
-			Pet pet = new Pet(name.getText().toString(),url,breed.getText().toString(),Integer.parseInt(age.getText().toString()),gender.getText().toString(),color.getText().toString(),
-					Float.parseFloat(height.getText().toString()),Float.parseFloat(weight.getText().toString()),0,0,0);
-			petList.add(pet);
-			petAddPetAdapter.notifyDataSetChanged();
+			// Convert the Pet object to JSON
+			Gson gson = new Gson();
+			String petJson = gson.toJson(pet);
+
+			// Create RequestBody for the pet object
+			RequestBody petRequestBody = RequestBody.create(MediaType.parse("application/json"), petJson);
+
+			// Convert ImageView to File
+			File file = getImageFileFromImageView(imageView);
+			// Create MultipartBody.Part from File
+			MultipartBody.Part body = createMultipartBodyPartFromFile(file);
+
+
+			ApiService apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
+			SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+			String token = prefs.getString("jwt_token", null);
+			Log.d("Token", "Token: " + token);
+			Call<Pet> call = apiService.addPet(body, petRequestBody,"Bearer " + token);
+			call.enqueue(new Callback<Pet>() {
+				@Override
+				public void onResponse(Call<Pet> call, Response<Pet> response) {
+					if (response.isSuccessful()) {
+						Toast.makeText(getContext(),
+								"Pet added successfully",
+								Toast.LENGTH_SHORT).show();
+						petList.add(pet);
+						petAddPetAdapter.notifyDataSetChanged();
+					} else {
+						Toast.makeText(getContext(), "Failed to add pet", Toast.LENGTH_SHORT).show();
+					}
+				}
+
+				@Override
+				public void onFailure(Call<Pet> call, Throwable t) {
+					Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+				}
+			});
+
 		});
 
 		// Handle image upload
@@ -183,8 +238,8 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 		String imageUrl1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.dog1;
 		String imageUrl2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.dog2;
 
-		petList.add(new Pet("Buddy", imageUrl1, "Golden Retriever", 5, "Male", "Golden", 60.0f, 30.0f, 75, 50, 80));
-		petList.add(new Pet("Lucy", imageUrl2, "Labrador", 4, "Female", "Black", 55.0f, 25.0f, 60, 40, 70));
+//		petList.add(new Pet("Buddy", imageUrl1, "Golden Retriever", 5, "Male", "Golden", 60.0f, 30.0f, 75, 50, 80));
+//		petList.add(new Pet("Lucy", imageUrl2, "Labrador", 4, "Female", "Black", 55.0f, 25.0f, 60, 40, 70));
 
 		petAddPetAdapter = new PetAddPetAdapter(petList, getContext());
 		recyclerView.setAdapter(petAddPetAdapter);
@@ -221,8 +276,11 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 				mMap.addMarker(new MarkerOptions().position(latLng).title(address.getAddressLine(0)));
 
 				// Show the coordinates in a Toast
-				Toast.makeText(getContext(), "Location: " + address.getLatitude() + ", " + address.getLongitude(), Toast.LENGTH_LONG).show();
-				Log.d("Location", "Location: " + address.getLatitude() + ", " + address.getLongitude());
+				//Toast.makeText(getContext(), "Location: " + address.getLatitude() + ", " + address.getLongitude(), Toast.LENGTH_LONG).show();
+				lat = (float) address.getLatitude();
+				lont = (float) address.getLongitude();
+				pet.setNorthCoordinate(lat);
+				pet.setEastCoordinate(lont);
 			} else {
 				Toast.makeText(getContext(), "Location not found", Toast.LENGTH_SHORT).show();
 			}
@@ -230,6 +288,25 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 			e.printStackTrace();
 			Toast.makeText(getContext(), "Unable to get location", Toast.LENGTH_SHORT).show();
 		}
+	}
+	private File getImageFileFromImageView(ImageView imageView) {
+		// Enable drawing cache
+		imageView.setDrawingCacheEnabled(true);
+		Bitmap bitmap = Bitmap.createBitmap(imageView.getDrawingCache());
+		imageView.setDrawingCacheEnabled(false);
+
+		// Create a file in cache directory
+		File file = new File(getContext().getCacheDir(), "image.png");
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos); // Save the bitmap to file
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return file;
+	}
+	private MultipartBody.Part createMultipartBodyPartFromFile(File file) {
+		RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+		return MultipartBody.Part.createFormData("image", file.getName(), requestFile);
 	}
 
 }

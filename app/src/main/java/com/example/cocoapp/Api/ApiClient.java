@@ -2,6 +2,8 @@ package com.example.cocoapp.Api;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -20,14 +22,12 @@ public class ApiClient
 
 	public static Retrofit getClient(Context context, boolean useBasicAuth)
 	{
-		if (retrofit == null)
-		{
 			retrofit = new Retrofit.Builder()
 					.baseUrl(BASE_URL)
 					.addConverterFactory(GsonConverterFactory.create())
 					.client(getOkHttpClient(context, useBasicAuth))
 					.build();
-		}
+
 		return retrofit;
 	}
 
@@ -55,6 +55,7 @@ public class ApiClient
 			}
 
 			Request authenticatedRequest = requestBuilder.build();
+
 			return chain.proceed(authenticatedRequest);
 		};
 

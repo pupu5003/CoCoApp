@@ -42,7 +42,7 @@ public class PetAddPetAdapter extends RecyclerView.Adapter<PetAddPetAdapter.PetV
 	@Override
 	public void onBindViewHolder(@NonNull PetViewHolder holder, int position) {
 		Pet pet = petList.get(position);
-		holder.tvPetName.setText(pet.getName());
+		holder.tvPetName.setText(pet.getPetName());
 
 		// Load image from URL using Glide
 		Glide.with(context)

@@ -79,7 +79,7 @@ public class PetDashboardAdapter extends RecyclerView.Adapter<PetDashboardAdapte
 					.error(R.drawable.dog1)
 					.into(petImageView);
 
-			petName.setText(pet.getName());
+			petName.setText(pet.getPetName());
 		}
 	}
 }
