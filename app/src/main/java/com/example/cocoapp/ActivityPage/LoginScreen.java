@@ -85,6 +85,7 @@ public class LoginScreen extends AppCompatActivity {
 						if (response.isSuccessful()) {
 							AuthResponse authResponse = response.body();
 							Toast.makeText(getApplicationContext(), "Registration successful!", Toast.LENGTH_SHORT).show();
+							setActiveTab(true);
 						} else {
 							// Handle error response
 						}
