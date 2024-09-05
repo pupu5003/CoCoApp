@@ -71,6 +71,8 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 	private PetAddPetAdapter petAddPetAdapter;
 	private float lat,lont;
 	private Pet pet;
+	private String token;
+	private ApiService apiService;
 
 	public AddPet() {
 		
@@ -135,6 +137,9 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_add_pet, container, false);
+		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		token = prefs.getString("jwt_token", null);
+		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
 
 		// Initialize views
 		locationEditText = view.findViewById(R.id.pet_location);
@@ -196,9 +201,6 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 			MultipartBody.Part body = createMultipartBodyPartFromFile(file);
 
 
-			ApiService apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
-			SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
-			String token = prefs.getString("jwt_token", null);
 			Log.d("Token", "Token: " + token);
 			Call<Pet> call = apiService.addPet(body, petRequestBody,"Bearer " + token);
 			call.enqueue(new Callback<Pet>() {
@@ -235,16 +237,37 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 		RecyclerView recyclerView = view.findViewById(R.id.recycler_view_pets);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-		String imageUrl1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.dog1;
-		String imageUrl2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.dog2;
-
-//		petList.add(new Pet("Buddy", imageUrl1, "Golden Retriever", 5, "Male", "Golden", 60.0f, 30.0f, 75, 50, 80));
-//		petList.add(new Pet("Lucy", imageUrl2, "Labrador", 4, "Female", "Black", 55.0f, 25.0f, 60, 40, 70));
-
 		petAddPetAdapter = new PetAddPetAdapter(petList, getContext());
 		recyclerView.setAdapter(petAddPetAdapter);
+		fetchPets(token);
 
 		return view;
+	}
+	public void fetchPets(String token) {
+		Call<List<Pet>> call = apiService.fetchPets("Bearer " + token);
+		call.enqueue(new Callback<List<Pet>>() {
+			@Override
+			public void onResponse(Call<List<Pet>> call, Response<List<Pet>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					List<Pet> pets = response.body();
+					petList.clear();
+					petList.addAll(pets);
+					petAddPetAdapter.notifyDataSetChanged();
+					Toast.makeText(getContext(),
+							"Fetch successfull",
+							Toast.LENGTH_SHORT).show();
+					// Process the list of pets
+				} else {
+					Toast.makeText(getContext(), "Failed to fetch pets", Toast.LENGTH_SHORT).show();
+					// Handle unsuccessful response
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<Pet>> call, Throwable t) {
+				// Handle failure
+			}
+		});
 	}
 
 	private void openGallery() {

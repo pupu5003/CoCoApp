@@ -5,10 +5,13 @@ import com.example.cocoapp.Api.Auth.RegisterRequest;
 import com.example.cocoapp.Api.Auth.AuthResponse;
 import com.example.cocoapp.Object.Pet;
 
+import java.util.List;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -30,4 +33,6 @@ public interface ApiService
 			@Part("pet") RequestBody pet,
 			@Header("Authorization") String authHeader
 	);
+	@GET("api/v1/user/getPets")
+	Call<List<Pet>> fetchPets(@Header("Authorization") String token);
 }
