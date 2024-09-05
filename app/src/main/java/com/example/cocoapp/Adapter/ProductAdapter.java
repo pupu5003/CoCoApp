@@ -81,17 +81,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 		SharedPreferences prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
 		String token = prefs.getString("jwt_token", null);
 
-		OkHttpClient okHttpClient = new OkHttpClient.Builder()
-				.addInterceptor(new Interceptor() {
-					@Override
-					public okhttp3.Response intercept(Chain chain) throws IOException {
-						Request request = chain.request().newBuilder()
-								.addHeader("Authorization", "Bearer " + token)
-								.build();
-						return chain.proceed(request);
-					}
-				})
-				.build();
+
 
 		apiService.fetchImageFile("Bearer " + token, fileName).enqueue(new Callback<Void>() {
 			@Override
@@ -99,16 +89,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 				if (response.isSuccessful()) {
 					// Load image with Glide
 					String fileName = product.getProductImageUrl();
-//					Glide.with(context)
-//							.load(baseUrl+fileName)  // Construct full URL for Glide
-//							.error(R.drawable.vet1)  // Error image if loading fails
-//							.into(holder.productImageView);
 					Glide.with(context)
 							.load(baseUrl+fileName)
-							.apply(new RequestOptions()
-									.error(R.drawable.vet1))  // Optional
+							.error(R.drawable.dog1)
 							.into(holder.productImageView);
-
 
 					Log.e("Full Image URL", baseUrl + fileName);
 				} else {
