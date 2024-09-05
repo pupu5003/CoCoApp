@@ -71,4 +71,9 @@ public interface ApiService
 	// Fetch user appointments
 	// @GET("/api/v1/user/getAppointments")
 	// Call<List<Appointment>> fetchAppointments(@Header("Authorization") String token);
+
+	// Fetch product by ID
+	@GET("/api/v1/shopItem/get/{shopItemId}")
+	Call<Product> fetchProductById(@Header("Authorization") String authHeader, @Path("shopItemId") String productId);
+
 }

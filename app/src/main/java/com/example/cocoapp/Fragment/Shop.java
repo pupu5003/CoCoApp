@@ -64,6 +64,7 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 		cartButton = view.findViewById(R.id.cart_ic);
 		TextView seeAll = view.findViewById(R.id.see_all);
 		cartButton.setOnClickListener(v -> openCart());
+
 		seeAll.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -95,9 +96,9 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 //		productList.add(new Product(0, imageView4, 13F, "Fish Food", "300g", "Brand D", 100));
 //
 		recommendAdapter = new ProductAdapter(getContext(), productList, this,true);
-		//topSellingAdapter = new ProductDashboardAdapter(getContext(), productList, true, this);
+		topSellingAdapter = new ProductDashboardAdapter(getContext(), productList, false, this);
 		recyclerViewRecommend.setAdapter(recommendAdapter);
-		//recyclerViewTopSelling.setAdapter(topSellingAdapter);
+		recyclerViewTopSelling.setAdapter(topSellingAdapter);
 
 		fetchProducts();
 
@@ -140,6 +141,7 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 					productList.clear();
 					productList.addAll(response.body());
 					recommendAdapter.notifyDataSetChanged();
+					topSellingAdapter.notifyDataSetChanged();
 				} else {
 					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
 					Toast.makeText(getContext(), "Failed to fetch products", Toast.LENGTH_SHORT).show();

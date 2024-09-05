@@ -93,8 +93,6 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
 		token = prefs.getString("jwt_token", null);
 
-
-
 		recyclerViewPetStatus = view.findViewById(R.id.petStatus_recycle_view);
 		recyclerViewProduct = view.findViewById(R.id.product_recycle_view);
 		recyclerViewPet = view.findViewById(R.id.pet_recycle_view);
@@ -132,6 +130,7 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 		recyclerViewPet.setAdapter(petDashboardAdapter);
 		recyclerViewVeterinarian.setAdapter(veterinarianDashboardAdapter);
 		fetchPets(token);
+		fetchProducts();
 
 		seeAllVet.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -174,27 +173,53 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 
 	public void fetchPets(String token) {
 		Call<List<Pet>> call = apiService.fetchPets("Bearer " + token);
-			call.enqueue(new Callback<List<Pet>>() {
-				@Override
-				public void onResponse(Call<List<Pet>> call, Response<List<Pet>> response) {
-					if (response.isSuccessful() && response.body() != null) {
-						List<Pet> pets = response.body();
-						petList.clear();
-						petList.addAll(pets);
-						petDashboardAdapter.notifyDataSetChanged();
-						// Process the list of pets
-					} else {
-						//Toast.makeText(getContext(), "Failed to fetch pets", Toast.LENGTH_SHORT).show();
-						// Handle unsuccessful response
-					}
+		call.enqueue(new Callback<List<Pet>>() {
+			@Override
+			public void onResponse(Call<List<Pet>> call, Response<List<Pet>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					List<Pet> pets = response.body();
+					petList.clear();
+					petList.addAll(pets);
+					petDashboardAdapter.notifyDataSetChanged();
+					// Process the list of pets
+				} else {
+					//Toast.makeText(getContext(), "Failed to fetch pets", Toast.LENGTH_SHORT).show();
+					// Handle unsuccessful response
 				}
+			}
 
-				@Override
-				public void onFailure(Call<List<Pet>> call, Throwable t) {
-					// Handle failure
+			@Override
+			public void onFailure(Call<List<Pet>> call, Throwable t) {
+				// Handle failure
+			}
+
+		});
+	}
+
+	private void fetchProducts() {
+		apiService.fetchAllShopItems("Bearer " + token).enqueue(new Callback<List<Product>>() {
+			@Override
+			public void onResponse(@NonNull Call<List<Product>> call, Response<List<Product>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					productList.clear();
+					productList.addAll(response.body());
+					productDashboardAdapter.notifyDataSetChanged();
+					for (int i=0; i<productList.size(); i++)
+						Log.e("API Product", String.valueOf(productList.get(i).getPrice()));
+				} else {
+					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
+					Toast.makeText(getContext(), "Failed to fetch products", Toast.LENGTH_SHORT).show();
 				}
+			}
 
-			});
+			@Override
+			public void onFailure(@NonNull Call<List<Product>> call, @NonNull Throwable t) {
+				Log.e("API Error fetch product", t.getMessage());
+				if (getContext() != null) {
+					Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 	}
 
 
@@ -252,4 +277,3 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 		Toast.makeText(getContext(), product.getName() + " added to cart", Toast.LENGTH_SHORT).show();
 	}
 }
-

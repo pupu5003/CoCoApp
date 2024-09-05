@@ -2,6 +2,7 @@ package com.example.cocoapp.Adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,21 +14,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
+import com.example.cocoapp.Fragment.ProductProfile;
 import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.R;
 
-import java.io.IOException;
 import java.util.List;
 
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -81,8 +81,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 		SharedPreferences prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
 		String token = prefs.getString("jwt_token", null);
 
-
-
 		apiService.fetchImageFile("Bearer " + token, fileName).enqueue(new Callback<Void>() {
 			@Override
 			public void onResponse(Call<Void> call, Response<Void> response) {
@@ -109,8 +107,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 		});
 
 
-
-
 		if (product.getQuantity()>0) {
 			int quantity = Integer.parseInt(holder.quantityTextView.getText().toString());
 			holder.quantityTextView.setText(String.valueOf(quantity));
@@ -121,6 +117,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 			String weight = String.valueOf(product.getSizeObject().getValue()) + " " + product.getSizeObject().getUnit();
 			holder.weightTextView.setText(weight);
 		}
+
+		if(product.getPrice() != 0) holder.priceTextView.setText(String.valueOf(product.getPrice()) + " VND");
 
 		holder.addToCartButton.setOnClickListener(v -> {
 			holder.addToCartButton.setVisibility(View.GONE);
@@ -151,6 +149,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 				holder.addToCartButton.setVisibility(View.VISIBLE);
 			}
 		});
+
+		holder.itemView.setOnClickListener(v -> {
+			FragmentActivity activity = (FragmentActivity) context;
+
+			ProductProfile productProfileFragment = new ProductProfile();
+			Bundle bundle = new Bundle();
+			bundle.putString("product_id", product.getId());
+			productProfileFragment.setArguments(bundle);
+
+			FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+			transaction.replace(R.id.fragment_container, productProfileFragment)
+					.addToBackStack(null)
+					.commit();
+		});
 	}
 
 	@Override
@@ -159,7 +171,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 	}
 
 	public static class ProductViewHolder extends RecyclerView.ViewHolder {
-		TextView productNameTextView, priceTextView, discountTextView, quantityTextView, weightTextView;
+		TextView productNameTextView, priceTextView, discountTextView, quantityTextView, weightTextView, productPrice;
 		ImageView productImageView;
 		Button addToCartButton;
 		LinearLayout quantityLayout;

@@ -212,7 +212,7 @@
 			<androidx.recyclerview.widget.RecyclerView
 				android:id="@+id/productRecommend_recycle_view"
 				android:layout_width="match_parent"
-				android:layout_height="500dp"
+				android:layout_height="400dp"
 				android:layout_margin="8dp"
 				tools:listitem="@layout/product_item"
 				app:layout_constraintStart_toStartOf="parent"

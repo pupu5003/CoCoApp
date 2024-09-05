@@ -17,14 +17,14 @@ public class Product implements Serializable {
 	private int stock;
 	private String description;
 
-	public Product(int discount, String productImageUrl, float price, String name, String weight, String brand, int stock) {
+	public Product(int discount, String productImageUrl, float price, String name, String weight, String brand, int stock, int quantitySold) {
 		this.discount = discount;
 		this.imageUrl = productImageUrl;
 		this.price = price;
 		this.name = name;
 		this.size1 = weight;
 		this.brand = brand;
-		this.quantitySold = 0;
+		this.quantitySold = quantitySold;
 		this.stock = stock;
 	}
 
@@ -93,14 +93,6 @@ public class Product implements Serializable {
 		this.size1 = size;
 	}
 
-//	public void setSizeFromApi(Size size) {
-//		if (size != null) {
-//			this.size1 = size.getValue() + " " + size.getUnit();
-//		} else {
-//			this.size1 = "";
-//		}
-//	}
-
 	public Size getSizeObject() {
 		return size;
 	}
@@ -111,6 +103,14 @@ public class Product implements Serializable {
 
 	public void setSize(String size) {
 		this.size1 = size;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 }
 
