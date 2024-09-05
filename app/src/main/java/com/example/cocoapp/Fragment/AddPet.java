@@ -156,8 +156,6 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 		EditText height = view.findViewById(R.id.pet_height);
 		petList = new ArrayList<>();
 
-
-
 		backButton.setOnClickListener(view1 -> {
 			getActivity().getSupportFragmentManager().popBackStack();
 		});
@@ -201,7 +199,7 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 			MultipartBody.Part body = createMultipartBodyPartFromFile(file);
 
 
-			Log.d("Token", "Token: " + token);
+
 			Call<Pet> call = apiService.addPet(body, petRequestBody,"Bearer " + token);
 			call.enqueue(new Callback<Pet>() {
 				@Override
@@ -243,6 +241,9 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 
 		return view;
 	}
+
+
+
 	public void fetchPets(String token) {
 		Call<List<Pet>> call = apiService.fetchPets("Bearer " + token);
 		call.enqueue(new Callback<List<Pet>>() {
