@@ -19,7 +19,7 @@ public class Pet implements Serializable {
 	private int foodValue;
 	private int moodValue;
 
-	private String location;
+	private String address;
 
 	// Constructor
 	public Pet(String petName, String imageUrl, String breedName, int age, Character gender, String color,
@@ -35,11 +35,11 @@ public class Pet implements Serializable {
 	}
 
 	public String getLocation() {
-		return location;
+		return address;
 	}
 
 	public void setLocation(String location) {
-		this.location = location;
+		this.address = location;
 	}
 
 
@@ -89,4 +89,7 @@ public class Pet implements Serializable {
 
 	public int getMoodValue() { return moodValue; }
 	public void setMoodValue(int moodValue) { this.moodValue = moodValue; }
+
+
+
 }

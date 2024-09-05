@@ -1,6 +1,8 @@
 package com.example.cocoapp.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Address;
@@ -29,6 +31,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.cocoapp.Api.ApiClient;
+import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.Pet;
 import com.example.cocoapp.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -42,6 +46,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class PetProfile extends Fragment implements OnMapReadyCallback {
 
 	private static final String ARG_PET = "PET";
@@ -52,6 +60,9 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 	private ActivityResultLauncher<String> requestPermissionLauncher;
 	private ImageView petImageView;
 
+	private ApiService apiService;
+	private SharedPreferences prefs;
+	private String token;
 	public PetProfile() {
 		// Required empty public constructor
 	}
@@ -59,7 +70,7 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 	public static PetProfile newInstance(Pet pet) {
 		PetProfile fragment = new PetProfile();
 		Bundle args = new Bundle();
-		args.putSerializable("PET", pet);
+		args.putSerializable(ARG_PET, pet);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -68,9 +79,8 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			pet = (Pet) getArguments().getSerializable(ARG_PET);
+			pet = (Pet) getArguments().getSerializable(ARG_PET);  // Retrieve the Pet object
 		}
-
 		pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 			if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
 				Uri imageUri = result.getData().getData();
@@ -128,6 +138,10 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 		TextView petweight = view.findViewById(R.id.weight);
 		TextView petcolor = view.findViewById(R.id.color);
 		TextView petheight = view.findViewById(R.id.height);
+		TextView petLocation = view.findViewById(R.id.location);
+		TextView header = view.findViewById(R.id.tvHeader);
+		TextView name2 = view.findViewById(R.id.name2);
+		TextView name3 = view.findViewById(R.id.name3);
 
 
 		ImageButton editButton = view.findViewById(R.id.edit_btn);
@@ -137,30 +151,28 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 		ImageButton imageButton = view.findViewById(R.id.camera_btn);
 
 
-//		petBreedTextView.setText(pet.getBreed());
-//		petage.setText(pet.getAge());
-//		petNameTextView.setText(pet.getName());
-//		petweight.setText(String.valueOf(pet.getWeight()));
-//		petcolor.setText(pet.getColor());
-//		petheight.setText(String.valueOf(pet.getHeight()));
-//		Glide.with(this)
-//				.load(pet.getImage())
-//				.placeholder(R.drawable.dog1)
-//				.into(petImageView);
-//		if (pet.getGender().equals("Male")) {
-//			petgenderImageView.setImageResource(R.drawable.male);
-//		} else {
-//			petgenderImageView.setImageResource(R.drawable.female);
-//		}
-
-
 		if (pet != null) {
+			name2.setText(pet.getPetName());
+			name3.setText(pet.getPetName());
+			header.setText(pet.getPetName());
+			petBreedTextView.setText(pet.getBreedName());
+			petage.setText(String.valueOf(pet.getAge()));
 			petNameTextView.setText(pet.getPetName());
-			Glide.with(this)
-					.load(pet.getImage())
-					.placeholder(R.drawable.dog1)
-					.into(petImageView);
+			petheight.setText((String.valueOf(pet.getHeight())) + "cm");
+			petcolor.setText(pet.getColor());
+			petweight.setText((String.valueOf(pet.getWeight())) + "kg");
+			petLocation.setText(pet.getLocation());
+			fetchPNG(pet.getImage());
+			petLocation.setText(pet.getLocation());
+			if (pet.getGender().equals("M")) {
+				petgenderImageView.setImageResource(R.drawable.male);
+			} else {
+				petgenderImageView.setImageResource(R.drawable.female);
+			}
+		}else{
+			petNameTextView.setText("No pet found");
 		}
+
 
 		editButton.setOnClickListener(v -> {
 			informationFrame.setVisibility(View.GONE);
@@ -175,16 +187,18 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 			Toast.makeText(getActivity(), "Profile updated", Toast.LENGTH_SHORT).show();
 			EditText petNameEditText = view.findViewById(R.id.pet_name_edit);
 			EditText petBreedEditText = view.findViewById(R.id.pet_breed_name);
-			EditText petGenderImageView = view.findViewById(R.id.pet_gender);
 			EditText petAgeEditText = view.findViewById(R.id.pet_age);
 			EditText petWeightEditText = view.findViewById(R.id.pet_weight);
 			EditText petColorEditText = view.findViewById(R.id.pet_colour);
 			EditText petHeightEditText = view.findViewById(R.id.pet_height);
 			EditText petLocationEditText = view.findViewById(R.id.pet_location);
-			if (pet.getGender().equals("Male")) {
-			petgenderImageView.setImageResource(R.drawable.male);
+			name2.setText(pet.getPetName());
+			name3.setText(pet.getPetName());
+			header.setText(pet.getPetName());
+			if (pet.getGender().equals("M")) {
+				petgenderImageView.setImageResource(R.drawable.male);
 			} else {
-			petgenderImageView.setImageResource(R.drawable.gender);
+				petgenderImageView.setImageResource(R.drawable.female);
 			}
 
 			if (!TextUtils.isEmpty(petNameEditText.getText())) {
@@ -204,6 +218,8 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 				if (convertLocationToCoordinates(petLocationEditText.getText().toString()))
 					petLocationEditText.setText(petLocationEditText.getText().toString());
 			}
+
+
 		});
 
 		backButton.setOnClickListener(v ->
@@ -222,6 +238,36 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 			mapFragment.getMapAsync(this); // Pass 'this' since this class implements OnMapReadyCallback
 		}
 
+	}
+
+	private void fetchPNG(String image) {
+		String baseUrl = "http://172.28.102.169:8080";
+		String basePath = "/file/";
+		String fileName = image.substring(basePath.length());
+		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
+		prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		token = prefs.getString("jwt_token", null);
+		apiService.fetchImageFile("Bearer " + token, fileName).enqueue(new Callback<Void>() {
+			@Override
+			public void onResponse(Call<Void> call, Response<Void> response) {
+				if (response.isSuccessful()) {
+					// Load image with Glide
+					String fileName = pet.getImage();
+					Glide.with(requireActivity())
+							.load(baseUrl+fileName)
+							.error(R.drawable.dog1)
+							.into(petImageView);
+				} else {
+					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
+
+				}
+			}
+
+			@Override
+			public void onFailure(Call<Void> call, Throwable t) {
+				Log.e("API Error", "Error accessing image: " + t.getMessage());
+			}
+		});
 	}
 
 	private void openGallery() {

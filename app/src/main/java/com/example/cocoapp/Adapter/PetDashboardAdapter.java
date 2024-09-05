@@ -35,9 +35,10 @@ public class PetDashboardAdapter extends RecyclerView.Adapter<PetDashboardAdapte
 
 	private final List<Pet> petList;
 	private final Context context;
-	ApiService apiService;
-	SharedPreferences prefs;
-	String token;
+	private ApiService apiService;
+	private SharedPreferences prefs;
+	private String token;
+
 
 	public PetDashboardAdapter(Context context, List<Pet> petList) {
 		this.context = context;
@@ -55,15 +56,14 @@ public class PetDashboardAdapter extends RecyclerView.Adapter<PetDashboardAdapte
 	@Override
 	public void onBindViewHolder(@NonNull PetDashboardViewHolder holder, int position) {
 		Pet pet = petList.get(position);
+		holder.petName.setText(pet.getPetName());
 		String baseUrl = "http://172.28.102.169:8080";
 		String fileName = pet.getImage();
 		String basePath = "/file/";
 		fileName = fileName.substring(basePath.length());
 		apiService = ApiClient.getClient(context, false).create(ApiService.class);
-		SharedPreferences prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
 		token = prefs.getString("jwt_token", null);
-
-
 		apiService.fetchImageFile("Bearer " + token, fileName).enqueue(new Callback<Void>() {
 			@Override
 			public void onResponse(Call<Void> call, Response<Void> response) {
@@ -74,8 +74,6 @@ public class PetDashboardAdapter extends RecyclerView.Adapter<PetDashboardAdapte
 							.load(baseUrl+fileName)
 							.error(R.drawable.dog1)
 							.into(holder.petImageView);
-
-					Log.e("Full Image URL", baseUrl + fileName);
 				} else {
 					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
 					Toast.makeText(context, "Failed to access image", Toast.LENGTH_SHORT).show();
@@ -89,19 +87,13 @@ public class PetDashboardAdapter extends RecyclerView.Adapter<PetDashboardAdapte
 			}
 		});
 
-		holder.petName.setText(pet.getPetName());
+
 
 		holder.itemView.setOnClickListener(view -> {
-			FragmentActivity activity = (FragmentActivity) context;
-			FragmentManager fragmentManager = activity.getSupportFragmentManager();
-			FragmentTransaction transaction = fragmentManager.beginTransaction();
-
-			Bundle args = new Bundle();
-			args.putSerializable("PET", pet);
-			PetProfile profileFragment = PetProfile.newInstance(pet); // Assuming newInstance is defined
-			profileFragment.setArguments(args);
-
-			transaction.replace(R.id.fragment_container, profileFragment).addToBackStack(null).commit();
+			((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
+					.replace(R.id.fragment_container, PetProfile.newInstance(pet))
+					.addToBackStack(null)
+					.commit();
 		});
 	}
 

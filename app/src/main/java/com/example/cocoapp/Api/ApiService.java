@@ -80,4 +80,8 @@ public interface ApiService
 	//Fetch all Vet
 	@GET("/api/v1/vet/getAll")
 	Call<List<Veterinarian>> fetchVets(@Header("Authorization") String token);
+
+	@GET("/get/{petId}")
+	Call<Pet> getPet(@Header("Authorization") String authHeader,@Path("petId") String petId);
+
 }
