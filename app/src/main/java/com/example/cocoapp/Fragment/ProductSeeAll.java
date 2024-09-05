@@ -91,25 +91,19 @@ public class ProductSeeAll extends Fragment implements ProductAdapter.OnAddToCar
 
 		filterButton.setOnClickListener(v -> showSortDialog());
 
-		ImageView imageView1 = new ImageView(getContext());
-		imageView1.setImageResource(R.drawable.product_img);
+		String imageView3 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
+		String imageView4 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
+		String imageView2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
+		String imageView1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
 
-		ImageView imageView2 = new ImageView(getContext());
-		imageView2.setImageResource(R.drawable.product_img2);
-
-		ImageView imageView3 = new ImageView(getContext());
-		imageView3.setImageResource(R.drawable.product_img3);
-
-		ImageView imageView4 = new ImageView(getContext());
-		imageView4.setImageResource(R.drawable.product_img3);
-		productList.add(new Product("10%", imageView1, "$20", "Dog Food", "900g", "Brand A"));
-		productList.add(new Product("20%", imageView2, "$15", "Cat Food", "500g", "Brand B"));
-		productList.add(new Product("", imageView3, "$25", "Bird Food", "1kg", "Brand C"));
-		productList.add(new Product("", imageView4, "$18", "Fish Food", "300g", "Brand D"));
-		productList.add(new Product("10%", imageView1, "$20", "Dog Food", "900g", "Brand A"));
-		productList.add(new Product("20%", imageView2, "$15", "Cat Food", "500g", "Brand B"));
-		productList.add(new Product("", imageView3, "$25", "Bird Food", "1kg", "Brand C"));
-		productList.add(new Product("", imageView4, "$18", "Fish Food", "300g", "Brand D"));
+		productList.add(new Product(10, imageView1, 20F, "Dog Food", "900g", "Brand A", 100));
+		productList.add(new Product(0, imageView2, 30F, "Cat Food", "500g", "Brand B", 100));
+		productList.add(new Product(20, imageView3, 30F, "Bird Food", "1kg", "Brand C", 100));
+		productList.add(new Product(10, imageView4, 30F, "Fish Food", "300g", "Brand D", 100));
+		productList.add(new Product(0, imageView1, 30F, "Dog Food", "900g", "Brand A", 100));
+		productList.add(new Product(0, imageView2, 30F, "Cat Food", "500g", "Brand B", 100));
+		productList.add(new Product(20, imageView3, 30F, "Bird Food", "1kg", "Brand C", 100));
+		productList.add(new Product(10, imageView4, 30F, "Fish Food", "300g", "Brand D", 100));
 
 		ProductAdapter recommendAdapter = new ProductAdapter(getContext(), productList, this,true);
 
@@ -145,7 +139,7 @@ public class ProductSeeAll extends Fragment implements ProductAdapter.OnAddToCar
 		CartItem cartItem = new CartItem(
 				product.getName(),
 				product.getBrand(),
-				product.getWeight(),
+				product.getSize(),
 				R.drawable.product_img,
 				product.getQuantity()
 		);

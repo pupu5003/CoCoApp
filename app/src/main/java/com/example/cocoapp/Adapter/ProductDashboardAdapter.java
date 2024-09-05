@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Product;
 
@@ -39,6 +40,13 @@ public class ProductDashboardAdapter extends RecyclerView.Adapter<ProductDashboa
 		return new ProductViewHolder(view);
 	}
 
+	public void updateProductList(List<Product> products) {
+		this.productList.clear();
+		this.productList.addAll(products);
+		notifyDataSetChanged();  // Notify the adapter that the data has changed
+	}
+
+
 	@Override
 	public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
 		Product product = productList.get(position);
@@ -46,12 +54,20 @@ public class ProductDashboardAdapter extends RecyclerView.Adapter<ProductDashboa
 		// Bind product data to views
 		holder.productName.setText(product.getName());
 		holder.productBrand.setText(product.getBrand());
-		holder.productWeight.setText(product.getWeight());
-		holder.productImage.setImageDrawable(product.getProductImage().getDrawable()); // Assuming ImageView has drawable set
-
+		holder.productWeight.setText(product.getSize());
+		Glide.with(context)
+				.load(product.getProductImageUrl())
+				.error(R.drawable.product_img)  // Error image if loading fails
+				.into(holder.productImage);
 		// Initially show cart icon and hide quantity layout
 		holder.cartIcon.setVisibility(View.VISIBLE);
 		holder.quantityLayout.setVisibility(View.GONE);
+
+		if (product.getDiscount() == 0) holder.productDiscount.setVisibility(View.GONE);
+		else {
+			holder.productDiscount.setVisibility(View.VISIBLE);
+			holder.productDiscount.setText(String.valueOf(product.getDiscount()) + "%");}
+		holder.productDiscount.setText(String.valueOf(product.getDiscount()) + "%");
 
 		if (product.getQuantity()>0) {
 			holder.cartIcon.setVisibility(View.GONE);
@@ -107,6 +123,7 @@ public class ProductDashboardAdapter extends RecyclerView.Adapter<ProductDashboa
 		TextView productName;
 		TextView productBrand;
 		TextView productWeight;
+		TextView productDiscount;
 		ImageView cartIcon;
 		LinearLayout quantityLayout;
 		TextView quantityTextView;
@@ -124,6 +141,7 @@ public class ProductDashboardAdapter extends RecyclerView.Adapter<ProductDashboa
 			quantityTextView = itemView.findViewById(R.id.quantityTextView);
 			incrementButton = itemView.findViewById(R.id.incrementButton);
 			decrementButton = itemView.findViewById(R.id.decrementButton);
+			productDiscount = itemView.findViewById(R.id.discountTextView);
 		}
 	}
 

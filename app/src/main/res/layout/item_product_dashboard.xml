@@ -102,6 +102,18 @@
             android:visibility="visible">
         </ImageView>
 
+        <TextView
+            android:id="@+id/discountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/discount_background"
+            android:text="16%"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="15sp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <LinearLayout
             android:id="@+id/linearlayout_quantity"
             android:layout_width="0dp"

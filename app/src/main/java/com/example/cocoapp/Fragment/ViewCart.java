@@ -52,7 +52,7 @@ public class ViewCart extends Fragment {
 					cartItemList.add(new CartItem(
 							product.getName(),
 							product.getBrand(),
-							product.getWeight(),
+							product.getSize(),
 							R.drawable.product_img,
 							product.getQuantity()
 					));

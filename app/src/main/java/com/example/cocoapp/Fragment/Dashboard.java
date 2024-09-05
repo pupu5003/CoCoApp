@@ -112,13 +112,11 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 
 
 		// Add sample data for products
-		ImageView imageView3 = new ImageView(getContext());
-		imageView3.setImageResource(R.drawable.product_img);
-		ImageView imageView4 = new ImageView(getContext());
-		imageView4.setImageResource(R.drawable.product_img2);
+		String imageView3 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
+		String imageView4 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
 
-		productList.add(new Product("", imageView3, "$20", "Dog Food", "900g", "Brand A"));
-		productList.add(new Product("", imageView4, "$15", "Cat Food", "500g", "Brand B"));
+		productList.add(new Product(0, imageView3, 20.7F, "Dog Food", "900g", "Brand A", 100));
+		productList.add(new Product(0, imageView4, 16.9F, "Cat Food", "500g", "Brand B", 100));
 
 		String pic1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet1;
 		String pic2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet2;
@@ -223,7 +221,7 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 		CartItem cartItem = new CartItem(
 				product.getName(),
 				product.getBrand(),
-				product.getWeight(),
+				product.getSize(),
 				R.drawable.product_img,
 				product.getQuantity()
 		);

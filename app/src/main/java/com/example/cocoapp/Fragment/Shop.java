@@ -1,27 +1,47 @@
 package com.example.cocoapp.Fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cocoapp.Adapter.ProductAdapter;
 import com.example.cocoapp.Adapter.ProductDashboardAdapter;
+import com.example.cocoapp.Api.ApiClient;
+import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.CartItem;
 import com.example.cocoapp.Object.CartManager;
 import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener, ProductDashboardAdapter.OnAddToCartListener {
 
@@ -63,27 +83,23 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 		productList = new ArrayList<>();
 		cartList = new ArrayList<>();
 
-		ImageView imageView1 = new ImageView(getContext());
-		imageView1.setImageResource(R.drawable.product_img);
-
-		ImageView imageView2 = new ImageView(getContext());
-		imageView2.setImageResource(R.drawable.product_img2);
-
-		ImageView imageView3 = new ImageView(getContext());
-		imageView3.setImageResource(R.drawable.product_img3);
-
-		ImageView imageView4 = new ImageView(getContext());
-		imageView4.setImageResource(R.drawable.product_img3);
-
-		productList.add(new Product("10%", imageView1, "$20", "Dog Food", "900g", "Brand A"));
-		productList.add(new Product("20%", imageView2, "$15", "Cat Food", "500g", "Brand B"));
-		productList.add(new Product("", imageView3, "$25", "Bird Food", "1kg", "Brand C"));
-		productList.add(new Product("", imageView4, "$18", "Fish Food", "300g", "Brand D"));
-
+//		String imageView3 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
+//		String imageView4 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
+//		String imageView2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
+//		String imageView1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
+//
+//
+//		productList.add(new Product(10, imageView1, 20F, "Dog Food", "900g", "Brand A", 100));
+//		productList.add(new Product(20, imageView2, 43F, "Cat Food", "500g", "Brand B", 100));
+//		productList.add(new Product(0, imageView3, 30F, "Bird Food", "1kg", "Brand C", 100));
+//		productList.add(new Product(0, imageView4, 13F, "Fish Food", "300g", "Brand D", 100));
+//
 		recommendAdapter = new ProductAdapter(getContext(), productList, this,true);
-		topSellingAdapter = new ProductDashboardAdapter(getContext(), productList, true, this);
+		//topSellingAdapter = new ProductDashboardAdapter(getContext(), productList, true, this);
 		recyclerViewRecommend.setAdapter(recommendAdapter);
-		recyclerViewTopSelling.setAdapter(topSellingAdapter);
+		//recyclerViewTopSelling.setAdapter(topSellingAdapter);
+
+		fetchProducts();
 
 		return view;
 	}
@@ -93,7 +109,7 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 		CartItem cartItem = new CartItem(
 				product.getName(),
 				product.getBrand(),
-				product.getWeight(),
+				product.getSize(),
 				R.drawable.product_img,
 				product.getQuantity()
 		);
@@ -110,4 +126,32 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 				.addToBackStack(null)
 				.commit();
 	}
+
+
+	private void fetchProducts() {
+		ApiService apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
+		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		String token = prefs.getString("jwt_token", null);
+
+		apiService.fetchAllShopItems("Bearer " + token).enqueue(new Callback<List<Product>>() {
+			@Override
+			public void onResponse(@NonNull Call<List<Product>> call, @NonNull Response<List<Product>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					productList.clear();
+					productList.addAll(response.body());
+					recommendAdapter.notifyDataSetChanged();
+				} else {
+					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
+					Toast.makeText(getContext(), "Failed to fetch products", Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onFailure(@NonNull Call<List<Product>> call, @NonNull Throwable t) {
+				Log.e("API Error fetch product", t.getMessage());
+				Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
 }

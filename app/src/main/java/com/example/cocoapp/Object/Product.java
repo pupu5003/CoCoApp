@@ -1,74 +1,116 @@
 package com.example.cocoapp.Object;
 
-import android.widget.ImageView;
+import android.content.Context;
 
 import java.io.Serializable;
 
-public class Product implements Serializable
-{
-
-	private String discount;
-	private ImageView productImage;
-	private String price;
+public class Product implements Serializable {
+	private Size size;
+	private String id;
+	private int discount;
+	private String imageUrl; // Change this to String
+	private float price;
 	private String name;
-	private String weight;
+	private String size1;
 	private String brand;
-	private int quantity;
+	private int quantitySold;
+	private int stock;
+	private String description;
 
-	public Product(String discount, ImageView productImage, String price, String name, String weight, String brand)
-	{
+	public Product(int discount, String productImageUrl, float price, String name, String weight, String brand, int stock) {
 		this.discount = discount;
-		this.productImage = productImage;
+		this.imageUrl = productImageUrl;
 		this.price = price;
 		this.name = name;
-		this.weight = weight;
+		this.size1 = weight;
 		this.brand = brand;
-		this.quantity = 0;
+		this.quantitySold = 0;
+		this.stock = stock;
 	}
 
-	public Product(String discount, ImageView productImage, String price, String name, String weight, String brand, int quantity)
-	{
-		this.discount = discount;
-		this.productImage = productImage;
-		this.price = price;
-		this.name = name;
-		this.weight = weight;
-		this.brand = brand;
-		this.quantity = quantity;
+	public Product() {
+
 	}
 
-	public String getDiscount() { return discount; }
+	public int getDiscount() { return discount; }
 
-	public void setDiscount(String discount) { this.discount = discount; }
+	public String getProductImageUrl() { return imageUrl; }
 
-	public ImageView getProductImage() { return productImage; }
-
-	public void setProductImage(ImageView productImage) { this.productImage = productImage; }
-
-	public String getPrice() { return price; }
-
-	public void setPrice(String price) { this.price = price; }
+	public float getPrice() { return price; }
 
 	public String getName() { return name; }
 
-	public void setName(String name) { this.name = name; }
-
-	public String getWeight() { return weight; }
-
-	public void setWeight(String weight) { this.weight = weight; }
+	public String getSize() {
+		return size1;
+	}
 
 	public String getBrand() { return brand; }
 
-	public void setBrand(String brand) { this.brand = brand; }
+	public int getQuantity() { return quantitySold; }
 
-	public int getQuantity() { return quantity; }
+	public void incrementQuantity() { this.quantitySold++; }
 
-	public void setQuantity(int quantity) { this.quantity = quantity; }
+	public void decrementQuantity() {
+		if (this.quantitySold > 1) { this.quantitySold--; }
+	}
 
-	public void incrementQuantity() { this.quantity++; }
+	public int getStock(){
+		return stock;
+	}
 
-	public void decrementQuantity()
-	{
-		if (this.quantity > 1) { this.quantity--; }
+	public  void setStock(int stock){
+		this.stock = stock;
+	}
+
+	public void setId(String id){
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public void setPrice(float price) {
+	}
+
+	public void setDescription(String description) {
+	}
+
+	public void setQuantitySold(int quantitySold) {
+		this.quantitySold = quantitySold;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public void setWeight(String size) {
+		this.size1 = size;
+	}
+
+//	public void setSizeFromApi(Size size) {
+//		if (size != null) {
+//			this.size1 = size.getValue() + " " + size.getUnit();
+//		} else {
+//			this.size1 = "";
+//		}
+//	}
+
+	public Size getSizeObject() {
+		return size;
+	}
+
+	public void setSizeObject(Size size) {
+		this.size = size;
+	}
+
+	public void setSize(String size) {
+		this.size1 = size;
 	}
 }
+

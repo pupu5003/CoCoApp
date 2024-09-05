@@ -8,6 +8,7 @@ import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -22,11 +23,11 @@ public class ApiClient
 
 	public static Retrofit getClient(Context context, boolean useBasicAuth)
 	{
-			retrofit = new Retrofit.Builder()
-					.baseUrl(BASE_URL)
-					.addConverterFactory(GsonConverterFactory.create())
-					.client(getOkHttpClient(context, useBasicAuth))
-					.build();
+		retrofit = new Retrofit.Builder()
+				.baseUrl(BASE_URL)
+				.addConverterFactory(GsonConverterFactory.create())
+				.client(getOkHttpClient(context, useBasicAuth))
+				.build();
 
 		return retrofit;
 	}
@@ -67,4 +68,31 @@ public class ApiClient
 				.writeTimeout(30, TimeUnit.SECONDS)
 				.build();
 	}
+
+	// Create a method in ApiClient to get OkHttpClient instance
+	public static OkHttpClient getOkHttpClient(Context context) {
+		return new OkHttpClient.Builder()
+				.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+				.addInterceptor(new Interceptor() {
+					@Override
+					public Response intercept(Chain chain) throws IOException {
+						Request originalRequest = chain.request();
+						Request.Builder requestBuilder = originalRequest.newBuilder();
+						SharedPreferences prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+						String token = prefs.getString("jwt_token", null);
+						if (token != null) {
+							requestBuilder.header("Authorization", "Bearer " + token);
+						}
+						Request authenticatedRequest = requestBuilder.build();
+						return chain.proceed(authenticatedRequest);
+					}
+				})
+				.connectTimeout(30, TimeUnit.SECONDS)
+				.readTimeout(30, TimeUnit.SECONDS)
+				.writeTimeout(30, TimeUnit.SECONDS)
+				.build();
+	}
+
+
 }
+

@@ -1,6 +1,8 @@
 package com.example.cocoapp.Adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +15,31 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.cocoapp.Api.ApiClient;
+import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.R;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
 	private Context context;
 	private List<Product> productList;
 	private OnAddToCartListener onAddToCartListener;
+	ApiService apiService;
+	SharedPreferences prefs;
+	String token;
 
 	private boolean showAll;
 
@@ -38,6 +54,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 	@Override
 	public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		View view = LayoutInflater.from(context).inflate(R.layout.product_item, parent, false);
+//		apiService = ApiClient.getClient(view.getContext(), false).create(ApiService.class);
+//		prefs = view.getContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+//		token = prefs.getString("jwt_token", null);
 		return new ProductViewHolder(view);
 	}
 
@@ -45,18 +64,79 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 	public void onBindViewHolder(ProductViewHolder holder, int position) {
 		Product product = productList.get(position);
 		holder.productNameTextView.setText(product.getName());
-		holder.priceTextView.setText(product.getPrice());
-		if (Objects.equals(product.getDiscount(), "")) holder.discountTextView.setVisibility(View.GONE);
+		String price = String.valueOf(product.getPrice()) + "$";
+		holder.priceTextView.setText(price);
+		if (product.getDiscount() == 0) holder.discountTextView.setVisibility(View.GONE);
 		else {
 			holder.discountTextView.setVisibility(View.VISIBLE);
-			holder.discountTextView.setText(product.getDiscount());}
-		holder.discountTextView.setText(product.getDiscount());
-		holder.productImageView.setImageDrawable(product.getProductImage().getDrawable());
+			holder.discountTextView.setText(String.valueOf(product.getDiscount()) + "%");}
+		holder.discountTextView.setText(String.valueOf(product.getDiscount()) + "%");
+
+		String baseUrl = "http://172.28.102.169:8080";
+		String fileName = product.getProductImageUrl();
+		String basePath = "/file/";
+		fileName = fileName.substring(basePath.length());
+
+		apiService = ApiClient.getClient(context, false).create(ApiService.class);
+		SharedPreferences prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		String token = prefs.getString("jwt_token", null);
+
+		OkHttpClient okHttpClient = new OkHttpClient.Builder()
+				.addInterceptor(new Interceptor() {
+					@Override
+					public okhttp3.Response intercept(Chain chain) throws IOException {
+						Request request = chain.request().newBuilder()
+								.addHeader("Authorization", "Bearer " + token)
+								.build();
+						return chain.proceed(request);
+					}
+				})
+				.build();
+
+		apiService.fetchImageFile("Bearer " + token, fileName).enqueue(new Callback<Void>() {
+			@Override
+			public void onResponse(Call<Void> call, Response<Void> response) {
+				if (response.isSuccessful()) {
+					// Load image with Glide
+					String fileName = product.getProductImageUrl();
+//					Glide.with(context)
+//							.load(baseUrl+fileName)  // Construct full URL for Glide
+//							.error(R.drawable.vet1)  // Error image if loading fails
+//							.into(holder.productImageView);
+					Glide.with(context)
+							.load(baseUrl+fileName)
+							.apply(new RequestOptions()
+									.error(R.drawable.vet1))  // Optional
+							.into(holder.productImageView);
+
+
+					Log.e("Full Image URL", baseUrl + fileName);
+				} else {
+					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
+					Toast.makeText(context, "Failed to access image", Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<Void> call, Throwable t) {
+				Log.e("API Error", "Error accessing image: " + t.getMessage());
+				Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
+
+
+
+
 		if (product.getQuantity()>0) {
 			int quantity = Integer.parseInt(holder.quantityTextView.getText().toString());
 			holder.quantityTextView.setText(String.valueOf(quantity));
 		}
 		else holder.quantityTextView.setText("1");
+
+		if (product.getSizeObject() != null) {
+			String weight = String.valueOf(product.getSizeObject().getValue()) + " " + product.getSizeObject().getUnit();
+			holder.weightTextView.setText(weight);
+		}
 
 		holder.addToCartButton.setOnClickListener(v -> {
 			holder.addToCartButton.setVisibility(View.GONE);
@@ -95,7 +175,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 	}
 
 	public static class ProductViewHolder extends RecyclerView.ViewHolder {
-		TextView productNameTextView, priceTextView, discountTextView, quantityTextView;
+		TextView productNameTextView, priceTextView, discountTextView, quantityTextView, weightTextView;
 		ImageView productImageView;
 		Button addToCartButton;
 		LinearLayout quantityLayout;
@@ -114,6 +194,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 			quantityTextView = itemView.findViewById(R.id.quantityTextView);
 			incrementButton = itemView.findViewById(R.id.incrementButton);
 			decrementButton = itemView.findViewById(R.id.decrementButton);
+			weightTextView = itemView.findViewById(R.id.productWeightTextView);
 		}
 	}
 

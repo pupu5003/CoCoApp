@@ -10,19 +10,20 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:src="@drawable/dog_loading"
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintHorizontal_bias="1.0"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintBottom_toBottomOf="parent"/>
+		app:layout_constraintTop_toTopOf="parent" />
 
 	<ImageView
 		android:id="@+id/loading"
 		android:layout_width="match_parent"
 		android:layout_height="300dp"
 		android:src="@drawable/loading"
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintBottom_toBottomOf="parent"/>
+		app:layout_constraintTop_toBottomOf="@+id/dog_loading" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

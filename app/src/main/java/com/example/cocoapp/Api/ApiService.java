@@ -9,6 +9,10 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import com.example.cocoapp.Object.Product;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -16,6 +20,8 @@ import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface ApiService
 {
@@ -35,4 +41,12 @@ public interface ApiService
 	);
 	@GET("api/v1/user/getPets")
 	Call<List<Pet>> fetchPets(@Header("Authorization") String token);
+
+	//Shop item
+	@GET("/api/v1/shopItem/getAll")
+	Call<List<Product>> fetchAllShopItems(@Header("Authorization") String authHeader);
+
+	@GET("/file/{fileName}")
+	Call<Void> fetchImageFile(@Header("Authorization") String authHeader, @Path("fileName") String fileName);
+
 }
