@@ -184,7 +184,7 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 						petDashboardAdapter.notifyDataSetChanged();
 						// Process the list of pets
 					} else {
-						Toast.makeText(getContext(), "Failed to fetch pets", Toast.LENGTH_SHORT).show();
+						//Toast.makeText(getContext(), "Failed to fetch pets", Toast.LENGTH_SHORT).show();
 						// Handle unsuccessful response
 					}
 				}
