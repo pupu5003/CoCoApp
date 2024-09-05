@@ -1,9 +1,12 @@
 package com.example.cocoapp.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +32,8 @@ import com.example.cocoapp.Adapter.PetDashboardAdapter;
 import com.example.cocoapp.Adapter.PetStatusAdapter;
 import com.example.cocoapp.Adapter.ProductDashboardAdapter;
 import com.example.cocoapp.Adapter.VeterinarianDashboardAdapter;
+import com.example.cocoapp.Api.ApiClient;
+import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.CartItem;
 import com.example.cocoapp.Object.CartManager;
 import com.example.cocoapp.R;
@@ -51,6 +56,10 @@ import java.util.Date;
 import java.util.List;
 import android.os.CountDownTimer;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDashboardAdapter.OnAddToCartListener {
 
@@ -71,12 +80,20 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 	private ImageView checksPet;
 	private MapView mapView;
 	private GoogleMap googleMap;
+	private String token;
+	private ApiService apiService;
+
 
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
+		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		token = prefs.getString("jwt_token", null);
+
+
 
 		recyclerViewPetStatus = view.findViewById(R.id.petStatus_recycle_view);
 		recyclerViewProduct = view.findViewById(R.id.product_recycle_view);
@@ -104,27 +121,6 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 		productList = new ArrayList<>();
 		veterinarianList = new ArrayList<>();
 
-		String imageUrl1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.dog1;
-		String imageUrl2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.dog2;
-
-//		petList.add(new Pet("Buddy", imageUrl1, "Golden Retriever", 5, "Male", "Golden", 60.0f, 30.0f, 75, 50, 80));
-//		petList.add(new Pet("Lucy", imageUrl2, "Labrador", 4, "Female", "Black", 55.0f, 25.0f, 60, 40, 70));
-
-
-		// Add sample data for products
-		String imageView3 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
-		String imageView4 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
-
-		productList.add(new Product(0, imageView3, 20.7F, "Dog Food", "900g", "Brand A", 100));
-		productList.add(new Product(0, imageView4, 16.9F, "Cat Food", "500g", "Brand B", 100));
-
-		String pic1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet1;
-		String pic2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet2;
-
-		veterinarianList.add(new Veterinarian("Dr. Brown", "Bachelor of Veterinary Science", 4.8f, 120, 12, "1.8 km", "$110", "Mon-Sat 8 AM - 4 PM", pic1, "2024-08-15"));
-		veterinarianList.add(new Veterinarian("Dr. Johnson", "Doctor of Veterinary Medicine", 4.6f, 90, 9, "2.0 km", "$115", "Mon-Fri 10 AM - 6 PM", pic2, "2024-07-20"));
-		veterinarianList.add(new Veterinarian("Dr. Brown", "Bachelor of Veterinary Science", 4.8f, 120, 12, "1.8 km", "$110", "Mon-Sat 8 AM - 4 PM", pic1, "2024-08-15"));
-		veterinarianList.add(new Veterinarian("Dr. Johnson", "Doctor of Veterinary Medicine", 4.6f, 90, 9, "2.0 km", "$115", "Mon-Fri 10 AM - 6 PM", pic2, "2024-07-20"));
 
 		petStatusAdapter = new PetStatusAdapter(getContext(), petList);
 		productDashboardAdapter = new ProductDashboardAdapter(getContext(), productList, false, this);
@@ -135,6 +131,7 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 		recyclerViewProduct.setAdapter(productDashboardAdapter);
 		recyclerViewPet.setAdapter(petDashboardAdapter);
 		recyclerViewVeterinarian.setAdapter(veterinarianDashboardAdapter);
+		fetchPets(token);
 
 		seeAllVet.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -174,6 +171,32 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 
 		return view;
 	}
+
+	public void fetchPets(String token) {
+		Call<List<Pet>> call = apiService.fetchPets("Bearer " + token);
+			call.enqueue(new Callback<List<Pet>>() {
+				@Override
+				public void onResponse(Call<List<Pet>> call, Response<List<Pet>> response) {
+					if (response.isSuccessful() && response.body() != null) {
+						List<Pet> pets = response.body();
+						petList.clear();
+						petList.addAll(pets);
+						petDashboardAdapter.notifyDataSetChanged();
+						// Process the list of pets
+					} else {
+						//Toast.makeText(getContext(), "Failed to fetch pets", Toast.LENGTH_SHORT).show();
+						// Handle unsuccessful response
+					}
+				}
+
+				@Override
+				public void onFailure(Call<List<Pet>> call, Throwable t) {
+					// Handle failure
+				}
+
+			});
+	}
+
 
 	@Override
 	public void onMapReady(@NonNull GoogleMap googleMap) {

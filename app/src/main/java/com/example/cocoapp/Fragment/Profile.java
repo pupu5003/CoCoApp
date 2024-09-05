@@ -48,7 +48,7 @@ public class Profile extends Fragment {
     private static final String KEY_AUTH_TOKEN = "auth_token";
 
     private ImageView ava;
-    private TextView ownerName, ownerEmail, ownerPhone;
+    private TextView ownerName, ownerEmail, ownerPhone, addPetbtn;
     private EditText ownerNameEdit, ownerEmailEdit, ownerPhoneEdit;
     private View editFrame, informationFrame;
     private Uri selectedImageUri;
@@ -67,6 +67,10 @@ public class Profile extends Fragment {
         initializeViews(view);
         loadProfileData();
         setupButtons(view);
+        addPetbtn.setOnClickListener(v ->{
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new AddPet()).addToBackStack(null).commit();
+        });
         return view;
     }
 
@@ -109,6 +113,7 @@ public class Profile extends Fragment {
         ownerPhoneEdit = view.findViewById(R.id.owner_phone_edit);
         editFrame = view.findViewById(R.id.information_frame_edit);
         informationFrame = view.findViewById(R.id.information_frame);
+        addPetbtn = view.findViewById(R.id.add_pet_text);
     }
 
     private void setupButtons(View view) {
