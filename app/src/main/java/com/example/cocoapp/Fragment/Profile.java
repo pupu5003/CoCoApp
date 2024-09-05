@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.ProfileData;
@@ -52,6 +54,7 @@ public class Profile extends Fragment {
     private EditText ownerNameEdit, ownerEmailEdit, ownerPhoneEdit;
     private View editFrame, informationFrame;
     private Uri selectedImageUri;
+    private ProgressBar progressBar;
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private ActivityResultLauncher<Intent> pickImageLauncher;
 
@@ -67,7 +70,7 @@ public class Profile extends Fragment {
         initializeViews(view);
         loadProfileData();
         setupButtons(view);
-        addPetbtn.setOnClickListener(v ->{
+        addPetbtn.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new AddPet()).addToBackStack(null).commit();
         });
@@ -114,6 +117,16 @@ public class Profile extends Fragment {
         editFrame = view.findViewById(R.id.information_frame_edit);
         informationFrame = view.findViewById(R.id.information_frame);
         addPetbtn = view.findViewById(R.id.add_pet_text);
+        progressBar = view.findViewById(R.id.progressBar);
+
+        loadCachedProfileData();
+    }
+
+    private void loadCachedProfileData() {
+        SharedPreferences prefs = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        ownerName.setText(prefs.getString("name", "Loading..."));
+        ownerEmail.setText(prefs.getString("email", "Loading..."));
+        ownerPhone.setText(prefs.getString("phone", "Loading..."));
     }
 
     private void setupButtons(View view) {
@@ -154,6 +167,8 @@ public class Profile extends Fragment {
     }
 
     private void loadProfileData() {
+        progressBar.setVisibility(View.VISIBLE);
+
         ApiService apiService = ApiClient.getClient(getActivity(), false).create(ApiService.class);
         String token = "Bearer " + getToken();
         Call<ProfileData> call = apiService.fetchProfile(token);
@@ -161,11 +176,24 @@ public class Profile extends Fragment {
         call.enqueue(new Callback<ProfileData>() {
             @Override
             public void onResponse(Call<ProfileData> call, Response<ProfileData> response) {
+                progressBar.setVisibility(View.GONE);
+
                 if (response.isSuccessful() && response.body() != null) {
                     ProfileData profile = response.body();
+
                     ownerName.setText(profile.getName());
                     ownerEmail.setText(profile.getEmail());
                     ownerPhone.setText(profile.getPhone());
+
+                    cacheProfileData(profile);
+
+                    if (!TextUtils.isEmpty(profile.getImageUrl())) {
+                        String baseUrl = "http://172.28.102.169:8080";
+                        Glide.with(requireContext())
+                                .load(baseUrl + profile.getImageUrl())
+                                .error(R.drawable.ava)
+                                .into(ava);
+                    }
                 } else {
                     Toast.makeText(getActivity(), "Failed to load profile data", Toast.LENGTH_SHORT).show();
                 }
@@ -173,9 +201,19 @@ public class Profile extends Fragment {
 
             @Override
             public void onFailure(Call<ProfileData> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void cacheProfileData(ProfileData profile) {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("name", profile.getName());
+        editor.putString("email", profile.getEmail());
+        editor.putString("phone", profile.getPhone());
+        editor.apply();
     }
 
     private void updateProfileData() {
