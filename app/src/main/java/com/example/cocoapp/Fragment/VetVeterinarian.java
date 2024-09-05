@@ -1,24 +1,35 @@
 package com.example.cocoapp.Fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cocoapp.Adapter.VeterinarianAdapter;
+import com.example.cocoapp.Api.ApiClient;
+import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Veterinarian;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,6 +37,13 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class VetVeterinarian extends Fragment {
+    private String token;
+    private ApiService apiService;
+    List<Veterinarian> nearbyVets;
+    List<Veterinarian> recommendedVets;
+    List<Veterinarian> allVets;
+    VeterinarianAdapter nearbyAdapter;
+    VeterinarianAdapter recommendedAdapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -70,17 +88,17 @@ public class VetVeterinarian extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_vet, container, false);
+        apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
+        SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+        token = prefs.getString("jwt_token", null);
+
         ImageButton btnVeterinary = view.findViewById(R.id.btn_veterinary);
         btnVeterinary.setSelected(true);
         ImageButton btnGrooming = view.findViewById(R.id.btn_grooming);
         ImageButton btnBoarding = view.findViewById(R.id.btn_boarding);
         TextView seeAll1 = view.findViewById(R.id.see_all);
         TextView seeAll2 = view.findViewById(R.id.see_all_recommended);
-
-        String pic1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet1;
-        String pic2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.vet2;
 
         btnGrooming.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,26 +142,53 @@ public class VetVeterinarian extends Fragment {
         recommendedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
 
-        List<Veterinarian> nearbyVets = new ArrayList<>();
-        nearbyVets.add(new Veterinarian("Dr. Smith", "Bachelor of Veterinary Science", 4.5f, 100, 10, "2.5 km", "$100", "Mon-Fri 8 AM - 5 PM",pic1, "2024-08-15"));
-        nearbyVets.add(new Veterinarian("Dr. Jones", "Doctor of Veterinary Medicine", 4.2f, 80, 8, "3.0 km", "$120", "Mon-Fri 9 AM - 6 PM",pic2, "2024-07-20"));
-        nearbyVets.add(new Veterinarian("Dr. Smith", "Bachelor of Veterinary Science", 4.5f, 100, 10, "2.5 km", "$100", "Mon-Fri 8 AM - 5 PM",pic1, "2024-08-15"));
-        nearbyVets.add(new Veterinarian("Dr. Jones", "Doctor of Veterinary Medicine", 4.2f, 80, 8, "3.0 km", "$120", "Mon-Fri 9 AM - 6 PM",pic2, "2024-07-20"));
+        nearbyVets = new ArrayList<>();
+        recommendedVets = new ArrayList<>();
+        allVets = new ArrayList<>();
 
-        List<Veterinarian> recommendedVets = new ArrayList<>();
-        // Add sample data
-        recommendedVets.add(new Veterinarian("Dr. Brown", "Bachelor of Veterinary Science", 4.8f, 120, 12, "1.8 km", "$110", "Mon-Sat 8 AM - 4 PM", pic1, "2024-08-15"));
-        recommendedVets.add(new Veterinarian("Dr. Johnson", "Doctor of Veterinary Medicine", 4.6f, 90, 9, "2.0 km", "$115", "Mon-Fri 10 AM - 6 PM", pic2, "2024-07-20"));
-        recommendedVets.add(new Veterinarian("Dr. Smith", "Bachelor of Veterinary Science", 4.5f, 100, 10, "2.5 km", "$100", "Mon-Fri 8 AM - 5 PM",pic1, "2024-08-15"));
-        recommendedVets.add(new Veterinarian("Dr. Jones", "Doctor of Veterinary Medicine", 4.2f, 80, 8, "3.0 km", "$120", "Mon-Fri 9 AM - 6 PM",pic2, "2024-07-20"));
-
-        // Create the adapter and set it to the RecyclerView
-        VeterinarianAdapter nearbyAdapter = new VeterinarianAdapter(getContext(), nearbyVets,false);
-        VeterinarianAdapter recommendedAdapter = new VeterinarianAdapter(getContext(), recommendedVets,false);
+        nearbyAdapter = new VeterinarianAdapter(getContext(), nearbyVets,false);
+        recommendedAdapter = new VeterinarianAdapter(getContext(), allVets,false);
 
         nearbyRecyclerView.setAdapter(nearbyAdapter);
         recommendedRecyclerView.setAdapter(recommendedAdapter);
+        fetchVets();
 
         return view;
     }
+
+    private void fetchVets() {
+        apiService.fetchVets("Bearer " + token).enqueue(new Callback<List<Veterinarian>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Veterinarian>> call, Response<List<Veterinarian>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Veterinarian> Vets = response.body();
+                    List<Veterinarian> filteredVets = new ArrayList<>();
+                    for (Veterinarian vet : Vets) {
+                        if (vet.getLocation().getType() == null) {
+                            filteredVets.add(vet);
+                        }
+                    }
+                    allVets.clear();
+                    allVets.addAll(filteredVets);
+
+                    nearbyAdapter.notifyDataSetChanged();
+                    recommendedAdapter.notifyDataSetChanged();
+                } else {
+                    Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
+                    if (getContext()!= null) {
+                        Toast.makeText(getContext(), "Failed to fetch vets", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Veterinarian>> call, @NonNull Throwable t) {
+                Log.e("API Error fetch vets", t.getMessage());
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 }

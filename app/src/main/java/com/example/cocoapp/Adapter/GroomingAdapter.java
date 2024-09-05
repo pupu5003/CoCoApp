@@ -95,9 +95,9 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
             reviewText.setText(String.format("%.1f (%d reviews)", grooming.getRating(), grooming.getReviews()));
             boolean isOpen = grooming.isOpen();
             isOpenText.setText(isOpen ? "Open" : "Closed");
-            distanceText.setText(grooming.getDistance());
-            priceText.setText(grooming.getPrice());
-            availabilityText.setText(grooming.getAvailability());
+            distanceText.setText(String.valueOf(grooming.getDistance()));
+            priceText.setText(String.valueOf(grooming.getPrice()));
+            availabilityText.setText(grooming.getWorkTime());
 
             // Load image using Glide
             Glide.with(profileImage.getContext())

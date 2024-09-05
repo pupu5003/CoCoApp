@@ -1,37 +1,37 @@
 package com.example.cocoapp.Object;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Grooming implements Serializable {
-
+    private String id;
     private String name;
+    private float price;
+    private String workTime;
     private float rating;
-    private int reviews;
+    private float votes;
+    private float distance;
+    private String type; // "Grooming" or "Boarding" (if it's veterinarian, it's null)
+    private List<ReviewItem> reviews;
+    private String imageUrl;
+    private float northCoordinate;
+    private float eastCoordinate;
+    private String address;
     private boolean isOpen;
-    private String distance;
-    private String price;
-    private String availability;
-    private String pic;  // Changed from ImageView to String
 
     // Constructor
-    public Grooming(String name, float rating, int reviews, boolean isOpen, String distance, String price, String availability, String pic) {
+    public Grooming(String name, float rating) {
         this.name = name;
         this.rating = rating;
-        this.reviews = reviews;
-        this.isOpen = isOpen;
-        this.distance = distance;
-        this.price = price;
-        this.availability = availability;
-        this.pic = pic;
     }
 
     // Getters and Setters
-    public String getPic() {
-        return pic;
+    public String getId() {
+        return id;
     }
 
-    public void setPic(String pic) {
-        this.pic = pic;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -42,6 +42,22 @@ public class Grooming implements Serializable {
         this.name = name;
     }
 
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public String getWorkTime() {
+        return workTime;
+    }
+
+    public void setWorkTime(String workTime) {
+        this.workTime = workTime;
+    }
+
     public float getRating() {
         return rating;
     }
@@ -50,12 +66,60 @@ public class Grooming implements Serializable {
         this.rating = rating;
     }
 
-    public int getReviews() {
-        return reviews;
+    public float getVotes() {
+        return votes;
     }
 
-    public void setReviews(int reviews) {
-        this.reviews = reviews;
+    public void setVotes(float votes) {
+        this.votes = votes;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getPic() {
+        return imageUrl;
+    }
+
+    public void setPic(String pic) {
+        this.imageUrl = pic;
+    }
+
+    public float getNorthCoordinate() {
+        return northCoordinate;
+    }
+
+    public void setNorthCoordinate(float northCoordinate) {
+        this.northCoordinate = northCoordinate;
+    }
+
+    public float getEastCoordinate() {
+        return eastCoordinate;
+    }
+
+    public void setEastCoordinate(float eastCoordinate) {
+        this.eastCoordinate = eastCoordinate;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public boolean isOpen() {
@@ -66,27 +130,13 @@ public class Grooming implements Serializable {
         isOpen = open;
     }
 
-    public String getDistance() {
-        return distance;
+    public List<ReviewItem> getReviews() {
+        return reviews;
     }
 
-    public void setDistance(String distance) {
-        this.distance = distance;
+    public void setReviews(List<ReviewItem> reviews) {
+        this.reviews = reviews;
     }
 
-    public String getPrice() {
-        return price;
-    }
 
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getAvailability() {
-        return availability;
-    }
-
-    public void setAvailability(String availability) {
-        this.availability = availability;
-    }
 }

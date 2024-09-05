@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,24 +52,26 @@ public class VeterinarianProfile extends Fragment {
 		TextView distance = view.findViewById(R.id.distance);
 		TextView price = view.findViewById(R.id.price);
 		Button bookingAppointment = view.findViewById(R.id.bookAppointment_btn);
+		RatingBar ratingBar = view.findViewById(R.id.rating_layout);
 
 		// Bind the veterinarian data to the UI elements
 		if (veterinarian != null) {
-			tvHeader.setText(veterinarian.getName());
+			tvHeader.setText(veterinarian.getVetName());
 
-			// Load image using Glide
+
 			Glide.with(this)
-					.load(veterinarian.getProfileImage()) // Load from URL or file path
-					.placeholder(R.drawable.vet1) // Optional: placeholder image
-					.error(R.drawable.vet2) // Optional: error image
+					.load(veterinarian.getImageUrl())
+					.placeholder(R.drawable.vet1)
+					.error(R.drawable.vet2)
 					.into(imageDoctor);
 
-			doctorName.setText(veterinarian.getName());
-			doctorQualification.setText(veterinarian.getQualification());
-			ratingText.setText(String.format("%s (%d reviews)", veterinarian.getRating(), veterinarian.getReviews()));
-			time.setText(veterinarian.getAvailability());
-			distance.setText(veterinarian.getDistance());
-			price.setText(veterinarian.getPrice());
+			doctorName.setText(veterinarian.getVetName());
+			doctorQualification.setText(veterinarian.getDegree());
+			ratingText.setText(String.valueOf(veterinarian.getRating()) + "{" +String.valueOf(veterinarian.getReviews() + " reviews}"));
+			time.setText(veterinarian.getWorkTime());
+			distance.setText(String.valueOf(veterinarian.getDistance()) + " km");
+			price.setText(String.valueOf(veterinarian.getPrice()) + " VND");
+			ratingBar.setRating(veterinarian.getRating());
 		}
 
 		// Handle back button click
@@ -77,7 +80,7 @@ public class VeterinarianProfile extends Fragment {
 		// Handle book appointment button click
 		bookingAppointment.setOnClickListener(v ->
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, BookingAppoinment.newInstance(veterinarian.getName()))
+						.replace(R.id.fragment_container, BookingAppoinment.newInstance(veterinarian.getVetId()))
 						.addToBackStack(null)
 						.commit()
 		);
@@ -85,7 +88,7 @@ public class VeterinarianProfile extends Fragment {
 		// Handle rating text click
 		ratingText.setOnClickListener(v ->
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, Review.newInstance(veterinarian.getName()))
+						.replace(R.id.fragment_container, Review.newInstance(veterinarian.getVetId()))
 						.addToBackStack(null)
 						.commit()
 		);

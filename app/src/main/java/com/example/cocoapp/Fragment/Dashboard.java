@@ -204,8 +204,6 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 					productList.clear();
 					productList.addAll(response.body());
 					productDashboardAdapter.notifyDataSetChanged();
-					for (int i=0; i<productList.size(); i++)
-						Log.e("API Product", String.valueOf(productList.get(i).getPrice()));
 				} else {
 					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
 					Toast.makeText(getContext(), "Failed to fetch products", Toast.LENGTH_SHORT).show();

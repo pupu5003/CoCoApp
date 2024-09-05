@@ -47,7 +47,6 @@ public class VeterinarianDashboardAdapter extends RecyclerView.Adapter<Veterinar
 		holder.bind(veterinarian);
 
 		holder.bookAppointment.setOnClickListener(view -> {
-			// Navigate to VeterinarianProfile
 			FragmentActivity activity = (FragmentActivity) context;
 			FragmentManager fragmentManager = activity.getSupportFragmentManager();
 			FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -92,19 +91,21 @@ public class VeterinarianDashboardAdapter extends RecyclerView.Adapter<Veterinar
 		}
 
 		public void bind(Veterinarian veterinarian) {
-			doctorName.setText(veterinarian.getName());
-			doctorQualification.setText(veterinarian.getQualification());
+			doctorName.setText(veterinarian.getVetName());
+			doctorQualification.setText(veterinarian.getDegree());
 			ratingBar.setRating(veterinarian.getRating());
 			reviewText.setText(String.format("%.1f (%d reviews)", veterinarian.getRating(), veterinarian.getReviews()));
-			distanceText.setText(veterinarian.getDistance());
-			priceText.setText(veterinarian.getPrice());
-			lastVisitDate.setText(veterinarian.getLastVisit());
+			distanceText.setText(String.valueOf(veterinarian.getDistance()));
+			priceText.setText(String.valueOf(veterinarian.getPrice()));
+			int size = veterinarian.getReviews().size();
+			String lastAppointment = veterinarian.getReviews().get(size-1).getTime();
+			lastVisitDate.setText(lastAppointment);
 
 			// Load the image using Glide
 			Glide.with(profileImage.getContext())
-					.load(veterinarian.getProfileImage()) // Placeholder image while loading
-					.error(R.drawable.vet1)  // Error image if loading fails
-					.into(profileImage);  // Set the loaded image into the ImageView
+					.load(veterinarian.getImageUrl())
+					.error(R.drawable.vet1)
+					.into(profileImage);
 		}
 	}
 }

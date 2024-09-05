@@ -123,8 +123,6 @@ public class VetBoarding extends Fragment {
 
         // Initialize data
         List<Grooming> groomingList = new ArrayList<>();
-        groomingList.add(new Grooming("Paws & Claws", 4.5f, 120, true, "1.2 km", "$50", "Mon-Sat 9 AM - 6 PM",pic1));
-        groomingList.add(new Grooming("Pet Pamper", 4.3f, 80, false, "2.5 km", "$60", "Mon-Fri 10 AM - 5 PM",pic2));
 
         // Set adapter
         GroomingAdapter NearByAdapter = new GroomingAdapter(groomingList,false, getContext(),false);

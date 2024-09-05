@@ -137,7 +137,7 @@
             android:id="@+id/price_icon"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="10dp"
             android:src="@drawable/coin_ic"
             app:layout_constraintBottom_toBottomOf="@id/experience"
             app:layout_constraintStart_toEndOf="@id/distance"

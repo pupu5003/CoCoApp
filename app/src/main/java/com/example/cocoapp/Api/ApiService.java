@@ -15,6 +15,7 @@ import com.example.cocoapp.Object.Product;
 import java.util.List;
 
 import com.example.cocoapp.Object.ProfileData;
+import com.example.cocoapp.Object.Veterinarian;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -76,4 +77,7 @@ public interface ApiService
 	@GET("/api/v1/shopItem/get/{shopItemId}")
 	Call<Product> fetchProductById(@Header("Authorization") String authHeader, @Path("shopItemId") String productId);
 
+	//Fetch all Vet
+	@GET("/api/v1/vet/getAll")
+	Call<List<Veterinarian>> fetchVets(@Header("Authorization") String token);
 }

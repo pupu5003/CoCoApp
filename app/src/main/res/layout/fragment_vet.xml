@@ -46,7 +46,7 @@
             android:id="@+id/constraint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:paddingVertical="15dp">
 
             <TextView
                 android:id="@+id/header"
@@ -55,6 +55,7 @@
                 android:textSize="20dp"
                 android:fontFamily="@font/fredoka_medium"
                 android:textColor="@color/black"
+                android:paddingStart="16dp"
                 android:text="Hello, How may I help you ?"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -166,6 +167,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/service_buttons">
@@ -198,11 +200,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/nearby_recycler_view"
                 android:layout_width="0dp"
-                android:layout_height="400dp"
+                android:layout_height="350dp"
                 android:orientation="horizontal"
+                android:paddingHorizontal="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/nearby_vet"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/nearby_vet"
                 tools:listitem="@layout/veterinarian_item" />
 
@@ -212,6 +214,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
                 app:layout_constraintEnd_toEndOf="@+id/nearby_recycler_view"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/nearby_recycler_view">
@@ -225,7 +228,7 @@
                     android:textSize="20dp"
                     android:fontFamily="@font/fredoka_medium"
                     android:textColor="@color/black"
-                    android:text="Recommended Veterinarian"
+                    android:text="All Veterinarian"
                      />
 
                 <!-- See All Button -->
@@ -243,11 +246,12 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recommend_recycler_view"
                 android:layout_width="0dp"
-                android:layout_height="400dp"
+                android:layout_height="350dp"
                 android:orientation="horizontal"
+                android:paddingHorizontal="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/recommended_vet"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recommended_vet"
                 tools:listitem="@layout/veterinarian_item" />
 
