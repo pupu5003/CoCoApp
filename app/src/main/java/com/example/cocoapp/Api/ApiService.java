@@ -76,4 +76,8 @@ public interface ApiService
 	@GET("/api/v1/shopItem/get/{shopItemId}")
 	Call<Product> fetchProductById(@Header("Authorization") String authHeader, @Path("shopItemId") String productId);
 
+
+	@GET("/get/{petId}")
+	Call<Pet> getPet(@Header("Authorization") String authHeader,@Path("petId") String petId);
+
 }

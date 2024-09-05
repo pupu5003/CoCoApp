@@ -29,7 +29,7 @@
 			android:layout_width="60dp"
 			android:layout_height="60dp"
 			android:src="@drawable/dog1"
-			android:scaleType="centerInside"/>
+			android:scaleType="centerCrop"/>
 	</com.google.android.material.card.MaterialCardView>
 
 	<TextView

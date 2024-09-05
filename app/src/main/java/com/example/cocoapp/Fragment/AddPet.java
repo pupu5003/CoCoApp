@@ -154,6 +154,7 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 		EditText color = view.findViewById(R.id.pet_colour);
 		EditText weight = view.findViewById(R.id.pet_weight);
 		EditText height = view.findViewById(R.id.pet_height);
+
 		petList = new ArrayList<>();
 
 		backButton.setOnClickListener(view1 -> {

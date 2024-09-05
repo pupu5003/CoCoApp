@@ -155,8 +155,15 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 		tracksPet.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				ArrayList<LatLng> coordinate = new ArrayList<LatLng>();
+				for (int i = 0; i < petList.size(); i++){
+					LatLng latLng = new LatLng(petList.get(i).getNorthCoordinate(), petList.get(i).getEastCoordinate());
+					coordinate.add(latLng);
+				}
+
+
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, new MapsFragment()).addToBackStack(null).commit();
+						.replace(R.id.fragment_container,MapsFragment.newInstance(coordinate)).addToBackStack(null).commit();
 			}
 		});
 

@@ -13,6 +13,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,15 +34,25 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Vector;
 
 public class MapsFragment extends Fragment {
 	private GoogleMap mMap;
-	
+	private List<LatLng> coordinates;
 	FusedLocationProviderClient mFusedLocationClient;
 	private LatLng currentLocationLatLng;
 	private final static int LOCATION_PERMISSION_REQUEST_CODE = 100;
+
+	public static MapsFragment newInstance(ArrayList<LatLng> coordinates) {
+		MapsFragment fragment = new MapsFragment();
+		Bundle args = new Bundle();
+		args.putParcelableArrayList("coordinates", coordinates);  // Store the vector in the bundle
+		fragment.setArguments(args);
+		return fragment;
+	}
 	private OnMapReadyCallback callback = new OnMapReadyCallback() {
 		@Override
 		public void onMapReady(GoogleMap googleMap) {
@@ -60,11 +71,13 @@ public class MapsFragment extends Fragment {
 			}
 			mMap.getUiSettings().setZoomControlsEnabled(true); // Adds zoom controls (+/- buttons)
 			mMap.getUiSettings().setZoomGesturesEnabled(true); // Enables pinch-to-zoom gestures
-
-			if (currentLocationLatLng != null) {
+			int num = 0;
+			for (LatLng coordinate : coordinates) {
+				num++;
+				Log.d("Coordinate", coordinate.toString());
 				// Add a marker at the current location and move the camera
-				mMap.addMarker(new MarkerOptions().position(currentLocationLatLng).title("You are here"));
-				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocationLatLng, 150));
+				mMap.addMarker(new MarkerOptions().position(coordinate).title("Dog " + num));
+				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 15));
 			}
 		}
 	};
@@ -82,6 +95,9 @@ public class MapsFragment extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		if (getArguments() != null) {
+			coordinates = getArguments().getParcelableArrayList("coordinates"); // Retrieve the ArrayList of LatLng
+		}
 		SupportMapFragment mapFragment =
 				(SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
 		if (mapFragment != null) {
@@ -89,7 +105,7 @@ public class MapsFragment extends Fragment {
 		}
 		Log.d("Location","Location");
 		mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-		getLastLocation();
+		//getLastLocation();
 
 		ImageButton backButton = view.findViewById(R.id.back_button);
 		backButton.setOnClickListener(v -> {
@@ -148,7 +164,7 @@ public class MapsFragment extends Fragment {
 		if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
 			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				// Permission granted, proceed with location operations
-				getLastLocation();
+				//getLastLocation();
 			} else {
 				Log.d("Permission","Denied");
 			}
