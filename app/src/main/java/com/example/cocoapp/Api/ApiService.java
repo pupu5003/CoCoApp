@@ -3,6 +3,7 @@ package com.example.cocoapp.Api;
 import com.example.cocoapp.Api.Auth.LoginRequest;
 import com.example.cocoapp.Api.Auth.RegisterRequest;
 import com.example.cocoapp.Api.Auth.AuthResponse;
+import com.example.cocoapp.Fragment.Profile;
 import com.example.cocoapp.Object.Pet;
 
 import java.util.List;
@@ -13,6 +14,8 @@ import com.example.cocoapp.Object.Product;
 
 import java.util.List;
 
+import com.example.cocoapp.Object.ProfileData;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -20,7 +23,6 @@ import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface ApiService
@@ -49,4 +51,24 @@ public interface ApiService
 	@GET("/file/{fileName}")
 	Call<Void> fetchImageFile(@Header("Authorization") String authHeader, @Path("fileName") String fileName);
 
+
+	// Update user profile with image upload
+	@Multipart
+	@POST("/api/v1/user/update")
+	Call<ProfileData> updateUserInfo(
+			@Part MultipartBody.Part image,
+			@Part("user") RequestBody user
+	);
+
+	// Fetch user profile information
+	@GET("/api/v1/user/getInfo")
+	Call<ProfileData> fetchProfile(@Header("Authorization") String token);
+
+	// Fetch user reviews
+	// @GET("/api/v1/user/getReviews")
+	// Call<List<ReviewDto>> fetchReviews(@Header("Authorization") String token);
+
+	// Fetch user appointments
+	// @GET("/api/v1/user/getAppointments")
+	// Call<List<Appointment>> fetchAppointments(@Header("Authorization") String token);
 }

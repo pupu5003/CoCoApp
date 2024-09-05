@@ -1,12 +1,23 @@
 package com.example.cocoapp.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -14,56 +25,52 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
+import com.example.cocoapp.Api.ApiClient;
+import com.example.cocoapp.Api.ApiService;
+import com.example.cocoapp.Object.ProfileData;
 import com.example.cocoapp.R;
+import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class Profile extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-    private String mParam1;
-    private String mParam2;
+public class Profile extends Fragment {
+
+    private static final String PREF_NAME = "user_prefs";
+    private static final String KEY_AUTH_TOKEN = "auth_token";
 
     private ImageView ava;
-
-    // ActivityResultLaunchers for handling permission requests and image picking
+    private TextView ownerName, ownerEmail, ownerPhone;
+    private EditText ownerNameEdit, ownerEmailEdit, ownerPhoneEdit;
+    private View editFrame, informationFrame;
+    private Uri selectedImageUri;
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private ActivityResultLauncher<Intent> pickImageLauncher;
-
-
-    public Profile() {
-        // Required empty public constructor
-    }
-
-    public static Profile newInstance(String param1, String param2) {
-        Profile fragment = new Profile();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        setupPermissionLaunchers();
+    }
 
-        // Registering for permission result callback
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        initializeViews(view);
+        loadProfileData();
+        setupButtons(view);
+        return view;
+    }
+
+    private void setupPermissionLaunchers() {
         requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if (isGranted) {
                 openGallery();
@@ -71,16 +78,14 @@ public class Profile extends Fragment {
                 Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
             }
         });
+
         pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
-                Uri imageUri = result.getData().getData();
-                if (imageUri != null) {
+                selectedImageUri = result.getData().getData();
+                if (selectedImageUri != null) {
                     try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
                         ava.setImageBitmap(bitmap);
-
-                        // Store the URI as a tag in the ImageView
-                        ava.setTag(imageUri.toString());
                     } catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();
@@ -92,74 +97,42 @@ public class Profile extends Fragment {
                 Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
             }
         });
-
-//        // Registering for image picking result callback
-//        pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-//            if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
-//                Uri imageUri = result.getData().getData();
-//                if (imageUri != null) {
-//                    try {
-//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
-//                        ava.setImageBitmap(bitmap);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                        Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            } else {
-//                Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+    private void initializeViews(View view) {
+        ava = view.findViewById(R.id.imageOwner);
+        ownerName = view.findViewById(R.id.owner_name);
+        ownerEmail = view.findViewById(R.id.owner_email);
+        ownerPhone = view.findViewById(R.id.owner_phone);
+        ownerNameEdit = view.findViewById(R.id.owner_name_edit);
+        ownerEmailEdit = view.findViewById(R.id.owner_email_edit);
+        ownerPhoneEdit = view.findViewById(R.id.owner_phone_edit);
+        editFrame = view.findViewById(R.id.information_frame_edit);
+        informationFrame = view.findViewById(R.id.information_frame);
+    }
 
-        TextView addPetbtn = view.findViewById(R.id.add_pet_text);
+    private void setupButtons(View view) {
         ImageButton editButton = view.findViewById(R.id.edit_btn);
         ImageButton doneButton = view.findViewById(R.id.done_btn);
         ImageButton imageButton = view.findViewById(R.id.camera_btn);
-        ava = view.findViewById(R.id.imageOwner);
-
-        TextView ownerName = view.findViewById(R.id.owner_name);
-        TextView ownerEmail = view.findViewById(R.id.owner_email);
-        TextView ownerPhone = view.findViewById(R.id.owner_phone);
-
-        View editFrame = view.findViewById(R.id.information_frame_edit);
-        View informationFrame = view.findViewById(R.id.information_frame);
 
         editButton.setOnClickListener(v -> {
             informationFrame.setVisibility(View.GONE);
             editFrame.setVisibility(View.VISIBLE);
-
         });
 
         doneButton.setOnClickListener(v -> {
+            if (!validateInputs()) {
+                Toast.makeText(getActivity(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
             editFrame.setVisibility(View.GONE);
             informationFrame.setVisibility(View.VISIBLE);
-            TextView ownerNameEdit = view.findViewById(R.id.owner_name_edit);
-            TextView ownerEmailEdit = view.findViewById(R.id.owner_email_edit);
-            TextView ownerPhoneEdit = view.findViewById(R.id.owner_phone_edit);
-            if (!TextUtils.isEmpty(ownerNameEdit.getText())) {
-                ownerName.setText(ownerName.getText().toString());
-            }
-            if (!TextUtils.isEmpty(ownerEmailEdit.getText())) {
-                ownerEmail.setText(ownerEmailEdit.getText().toString());
-            }
-            if (!TextUtils.isEmpty(ownerPhoneEdit.getText())) {
-                ownerPhone.setText(ownerPhoneEdit.getText().toString());
-            }
-
-        });
-
-        addPetbtn.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new AddPet()).addToBackStack(null).commit();
+            updateProfileData();
         });
 
         imageButton.setOnClickListener(v -> {
-            String permission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ?
+            String permission = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU ?
                     "android.permission.READ_MEDIA_IMAGES" : "android.permission.READ_EXTERNAL_STORAGE";
             if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissionLauncher.launch(permission);
@@ -167,8 +140,97 @@ public class Profile extends Fragment {
                 openGallery();
             }
         });
+    }
 
-        return view;
+    private boolean validateInputs() {
+        return !TextUtils.isEmpty(ownerNameEdit.getText()) &&
+                !TextUtils.isEmpty(ownerEmailEdit.getText()) &&
+                !TextUtils.isEmpty(ownerPhoneEdit.getText());
+    }
+
+    private void loadProfileData() {
+        ApiService apiService = ApiClient.getClient(getActivity(), false).create(ApiService.class);
+        String token = "Bearer " + getToken();
+        Call<ProfileData> call = apiService.fetchProfile(token);
+
+        call.enqueue(new Callback<ProfileData>() {
+            @Override
+            public void onResponse(Call<ProfileData> call, Response<ProfileData> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ProfileData profile = response.body();
+                    ownerName.setText(profile.getName());
+                    ownerEmail.setText(profile.getEmail());
+                    ownerPhone.setText(profile.getPhone());
+                } else {
+                    Toast.makeText(getActivity(), "Failed to load profile data", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProfileData> call, Throwable t) {
+                Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateProfileData() {
+        ProfileData profileData = new ProfileData();
+        profileData.setName(ownerNameEdit.getText().toString().trim());
+        profileData.setEmail(ownerEmailEdit.getText().toString().trim());
+        profileData.setPhone(ownerPhoneEdit.getText().toString().trim());
+
+        MultipartBody.Part imagePart = null;
+        if (selectedImageUri != null) {
+            File imageFile = getImageFileFromImageView(ava);
+            imagePart = createMultipartBodyPartFromFile(imageFile);
+        }
+
+        RequestBody profilePart = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(profileData));
+
+        ApiService apiService = ApiClient.getClient(getActivity(), false).create(ApiService.class);
+        String token = "Bearer " + getToken();
+        Call<ProfileData> call = apiService.updateUserInfo(imagePart, profilePart);
+
+        call.enqueue(new Callback<ProfileData>() {
+            @Override
+            public void onResponse(Call<ProfileData> call, Response<ProfileData> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getActivity(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                    loadProfileData();
+                } else {
+                    Toast.makeText(getActivity(), "Failed to update profile", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProfileData> call, Throwable t) {
+                Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private String getToken() {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(KEY_AUTH_TOKEN, "");
+    }
+
+    private File getImageFileFromImageView(ImageView imageView) {
+        imageView.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(imageView.getDrawingCache());
+        imageView.setDrawingCacheEnabled(false);
+
+        File file = new File(getContext().getCacheDir(), "profile_image.png");
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
+    private MultipartBody.Part createMultipartBodyPartFromFile(File file) {
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+        return MultipartBody.Part.createFormData("image", file.getName(), requestFile);
     }
 
     private void openGallery() {
