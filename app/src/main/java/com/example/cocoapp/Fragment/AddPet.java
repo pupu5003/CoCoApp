@@ -198,9 +198,6 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 			File file = getImageFileFromImageView(imageView);
 			// Create MultipartBody.Part from File
 			MultipartBody.Part body = createMultipartBodyPartFromFile(file);
-
-
-
 			Call<Pet> call = apiService.addPet(body, petRequestBody,"Bearer " + token);
 			call.enqueue(new Callback<Pet>() {
 				@Override

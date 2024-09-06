@@ -41,11 +41,17 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,11 +64,16 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 
 	private ActivityResultLauncher<Intent> pickImageLauncher;
 	private ActivityResultLauncher<String> requestPermissionLauncher;
-	private ImageView petImageView;
+	private ImageView petImageView,petgenderImageView;
 
 	private ApiService apiService;
 	private SharedPreferences prefs;
 	private String token;
+	ImageButton backButton,editButton,imageButton;
+	TextView petNameTextView, petBreedTextView, petage, petweight, petcolor, petheight,petLocation,header,name2,name3;
+
+	View editFrame,informationFrame;
+	Button doneButton ;
 	public PetProfile() {
 		// Required empty public constructor
 	}
@@ -128,27 +139,7 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-
-		ImageButton backButton = view.findViewById(R.id.back_button);
-		TextView petNameTextView = view.findViewById(R.id.pet_name);
-		TextView petBreedTextView = view.findViewById(R.id.type);
-		ImageView petgenderImageView = view.findViewById(R.id.gender);
-		petImageView = view.findViewById(R.id.imageDog);
-		TextView petage = view.findViewById(R.id.age);
-		TextView petweight = view.findViewById(R.id.weight);
-		TextView petcolor = view.findViewById(R.id.color);
-		TextView petheight = view.findViewById(R.id.height);
-		TextView petLocation = view.findViewById(R.id.location);
-		TextView header = view.findViewById(R.id.tvHeader);
-		TextView name2 = view.findViewById(R.id.name2);
-		TextView name3 = view.findViewById(R.id.name3);
-
-
-		ImageButton editButton = view.findViewById(R.id.edit_btn);
-		View editFrame = view.findViewById(R.id.edit_frame);
-		View informationFrame = view.findViewById(R.id.information_frame);
-		Button doneButton = view.findViewById(R.id.done_btn);
-		ImageButton imageButton = view.findViewById(R.id.camera_btn);
+		init(view);
 
 
 		if (pet != null) {
@@ -181,10 +172,14 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 		});
 
 		doneButton.setOnClickListener(v -> {
+			// Hide the edit frame and show information frame
 			editFrame.setVisibility(View.GONE);
 			informationFrame.setVisibility(View.VISIBLE);
 			editButton.setVisibility(View.VISIBLE);
+
 			Toast.makeText(getActivity(), "Profile updated", Toast.LENGTH_SHORT).show();
+
+			// Get references to the EditText fields
 			EditText petNameEditText = view.findViewById(R.id.pet_name_edit);
 			EditText petBreedEditText = view.findViewById(R.id.pet_breed_name);
 			EditText petAgeEditText = view.findViewById(R.id.pet_age);
@@ -192,34 +187,55 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 			EditText petColorEditText = view.findViewById(R.id.pet_colour);
 			EditText petHeightEditText = view.findViewById(R.id.pet_height);
 			EditText petLocationEditText = view.findViewById(R.id.pet_location);
-			name2.setText(pet.getPetName());
-			name3.setText(pet.getPetName());
-			header.setText(pet.getPetName());
-			if (pet.getGender().equals("M")) {
+			EditText genderEditText = view.findViewById(R.id.pet_gender);
+
+			// Update the pet object with the new values from EditText
+			if (!TextUtils.isEmpty(genderEditText.getText())) {
+				pet.setGender(genderEditText.getText().charAt(0));
+			}
+			if (!TextUtils.isEmpty(petNameEditText.getText())) {
+				pet.setPetName(petNameEditText.getText().toString());
+			}
+			if (!TextUtils.isEmpty(petBreedEditText.getText())) {
+				pet.setBreedName(petBreedEditText.getText().toString());
+			}
+			if (!TextUtils.isEmpty(petAgeEditText.getText())) {
+				pet.setAge(Integer.parseInt(petAgeEditText.getText().toString()));
+			}
+			if (!TextUtils.isEmpty(petWeightEditText.getText())) {
+				pet.setWeight(Float.parseFloat(petWeightEditText.getText().toString()));
+			}
+			if (!TextUtils.isEmpty(petColorEditText.getText())) {
+				pet.setColor(petColorEditText.getText().toString());
+			}
+			if (!TextUtils.isEmpty(petHeightEditText.getText())) {
+				pet.setHeight(Float.parseFloat(petHeightEditText.getText().toString()));
+			}
+			if (!TextUtils.isEmpty(petLocationEditText.getText())) {
+				pet.setLocation(petLocationEditText.getText().toString());
+			}
+
+			// Set gender image based on updated pet object
+			if (pet.getGender().equals('M')) {
 				petgenderImageView.setImageResource(R.drawable.male);
 			} else {
 				petgenderImageView.setImageResource(R.drawable.female);
 			}
 
-			if (!TextUtils.isEmpty(petNameEditText.getText())) {
-				petNameTextView.setText(petNameEditText.getText().toString());
-			}
-			if (!TextUtils.isEmpty(petBreedEditText.getText()))
-				petBreedTextView.setText(petBreedEditText.getText().toString());
-			if (!TextUtils.isEmpty(petAgeEditText.getText()))
-				petage.setText(petAgeEditText.getText().toString());
-			if (!TextUtils.isEmpty(petWeightEditText.getText()))
-				petweight.setText(petWeightEditText.getText().toString());
-			if (!TextUtils.isEmpty(petColorEditText.getText()))
-				petcolor.setText(petColorEditText.getText().toString());
-			if (!TextUtils.isEmpty(petHeightEditText.getText()))
-				petheight.setText(petHeightEditText.getText().toString());
-			if (!TextUtils.isEmpty(petLocationEditText.getText())) {
-				if (convertLocationToCoordinates(petLocationEditText.getText().toString()))
-					petLocationEditText.setText(petLocationEditText.getText().toString());
-			}
+			// Update UI fields with new pet values
+			name2.setText(pet.getPetName());
+			name3.setText(pet.getPetName());
+			header.setText(pet.getPetName());
+			petNameTextView.setText(pet.getPetName());
+			petBreedTextView.setText(pet.getBreedName());
+			petage.setText(String.valueOf(pet.getAge()));
+			petweight.setText(String.valueOf(pet.getWeight()));
+			petcolor.setText(pet.getColor());
+			petheight.setText(String.valueOf(pet.getHeight()));
+			petLocationEditText.setText(pet.getLocation());
 
-
+			// Call the method to update the pet in the backend
+			updatePet(token);
 		});
 
 		backButton.setOnClickListener(v ->
@@ -311,6 +327,82 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 			Toast.makeText(getContext(), "Unable to get location", Toast.LENGTH_SHORT).show();
 		}
 		return true;
+	}
+	private void init(View view){
+		backButton = view.findViewById(R.id.back_button);
+		petNameTextView = view.findViewById(R.id.pet_name);
+		petBreedTextView = view.findViewById(R.id.type);
+		petgenderImageView = view.findViewById(R.id.gender);
+		petImageView = view.findViewById(R.id.imageDog);
+		petage = view.findViewById(R.id.age);
+		petweight = view.findViewById(R.id.weight);
+		petcolor = view.findViewById(R.id.color);
+		petheight = view.findViewById(R.id.height);
+		petLocation = view.findViewById(R.id.location);
+		header = view.findViewById(R.id.tvHeader);
+		name2 = view.findViewById(R.id.name2);
+		name3 = view.findViewById(R.id.name3);
+		editButton = view.findViewById(R.id.edit_btn);
+	    editFrame = view.findViewById(R.id.edit_frame);
+		informationFrame = view.findViewById(R.id.information_frame);
+		doneButton = view.findViewById(R.id.done_btn);
+		imageButton = view.findViewById(R.id.camera_btn);
+
+	}
+	private File getImageFileFromImageView(ImageView imageView) {
+		// Enable drawing cache
+		imageView.setDrawingCacheEnabled(true);
+		Bitmap bitmap = Bitmap.createBitmap(imageView.getDrawingCache());
+		imageView.setDrawingCacheEnabled(false);
+
+		// Create a file in cache directory
+		File file = new File(getContext().getCacheDir(), "image.png");
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos); // Save the bitmap to file
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return file;
+	}
+	private MultipartBody.Part createMultipartBodyPartFromFile(File file) {
+		RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+		return MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+	}
+
+	private void updatePet(String token){
+		// Convert the Pet object to JSON
+		Gson gson = new Gson();
+		String petJson = gson.toJson(pet);
+
+		// Create RequestBody for the pet object
+		RequestBody petRequestBody = RequestBody.create(MediaType.parse("application/json"), petJson);
+
+		// Convert ImageView to File
+		File file = getImageFileFromImageView(petImageView);
+		// Create MultipartBody.Part from File
+		MultipartBody.Part body = createMultipartBodyPartFromFile(file);
+		ApiService apiService = ApiClient.getClient(getActivity(), true).create(ApiService.class);
+
+		Call<Pet> call = apiService.updatePet(body, petRequestBody,"Bearer " + token);
+		call.enqueue(new Callback<Pet>() {
+			@Override
+			public void onResponse(Call<Pet> call, Response<Pet> response) {
+				if (response.isSuccessful()) {
+					// Handle successful response
+					Toast.makeText(getActivity(), "Pet updated successfully", Toast.LENGTH_SHORT).show();
+				} else {
+					// Handle failure
+					Toast.makeText(getActivity(), "Failed to update pet", Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<Pet> call, Throwable t) {
+				// Handle error
+				Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
+
 	}
 
 

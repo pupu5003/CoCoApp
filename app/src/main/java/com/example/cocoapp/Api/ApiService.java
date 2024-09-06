@@ -81,7 +81,13 @@ public interface ApiService
 	@GET("/api/v1/vet/getAll")
 	Call<List<Veterinarian>> fetchVets(@Header("Authorization") String token);
 
-	@GET("/get/{petId}")
-	Call<Pet> getPet(@Header("Authorization") String authHeader,@Path("petId") String petId);
+
+	@Multipart
+	@POST("/api/v1/pet/update")
+	Call<Pet> updatePet(
+			@Part MultipartBody.Part image,
+			@Part("pet") RequestBody Pet,
+			@Header("Authorization") String authHeader
+	);
 
 }
