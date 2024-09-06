@@ -93,6 +93,9 @@ public class Profile extends Fragment {
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
                         ava.setImageBitmap(bitmap);
+
+                        uploadImage();
+
                     } catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();
@@ -146,7 +149,7 @@ public class Profile extends Fragment {
             }
             editFrame.setVisibility(View.GONE);
             informationFrame.setVisibility(View.VISIBLE);
-            updateProfileData();
+            uploadImage();
         });
 
         imageButton.setOnClickListener(v -> {
@@ -210,17 +213,19 @@ public class Profile extends Fragment {
     private void cacheProfileData(ProfileData profile) {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("user_id", profile.getUserId());
         editor.putString("name", profile.getName());
         editor.putString("email", profile.getEmail());
         editor.putString("phone", profile.getPhone());
         editor.apply();
     }
 
-    private void updateProfileData() {
+    private void uploadImage() {
         ProfileData profileData = new ProfileData();
-        profileData.setName(ownerNameEdit.getText().toString().trim());
-        profileData.setEmail(ownerEmailEdit.getText().toString().trim());
-        profileData.setPhone(ownerPhoneEdit.getText().toString().trim());
+        profileData.setUserId(getUserId());
+        profileData.setName(ownerName.getText().toString().trim());
+        profileData.setEmail(ownerEmail.getText().toString().trim());
+        profileData.setPhone(ownerPhone.getText().toString().trim());
 
         MultipartBody.Part imagePart = null;
         if (selectedImageUri != null) {
@@ -238,10 +243,10 @@ public class Profile extends Fragment {
             @Override
             public void onResponse(Call<ProfileData> call, Response<ProfileData> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(getActivity(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Profile image updated successfully", Toast.LENGTH_SHORT).show();
                     loadProfileData();
                 } else {
-                    Toast.makeText(getActivity(), "Failed to update profile", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Failed to update profile: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -252,10 +257,19 @@ public class Profile extends Fragment {
         });
     }
 
+    private String getUserId() {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString("user_id", "");
+    }
+
     private String getToken() {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(KEY_AUTH_TOKEN, "");
+        String token = sharedPreferences.getString(KEY_AUTH_TOKEN, "");
+        Log.d("Token", "Token retrieved: " + token);
+        return token;
     }
+
+
 
     private File getImageFileFromImageView(ImageView imageView) {
         imageView.setDrawingCacheEnabled(true);
