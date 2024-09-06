@@ -54,9 +54,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 	@Override
 	public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		View view = LayoutInflater.from(context).inflate(R.layout.product_item, parent, false);
-//		apiService = ApiClient.getClient(view.getContext(), false).create(ApiService.class);
-//		prefs = view.getContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
-//		token = prefs.getString("jwt_token", null);
 		return new ProductViewHolder(view);
 	}
 

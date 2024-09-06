@@ -5,6 +5,7 @@ import com.example.cocoapp.Api.Auth.RegisterRequest;
 import com.example.cocoapp.Api.Auth.AuthResponse;
 import com.example.cocoapp.Fragment.Profile;
 import com.example.cocoapp.Object.Appointment;
+import com.example.cocoapp.Object.Grooming;
 import com.example.cocoapp.Object.Pet;
 
 import java.util.List;
@@ -97,6 +98,9 @@ public interface ApiService
 	@Multipart
 	@POST("/api/v1/vet/addAppointment")
 	Call<String> addAppointment(@Header("Authorization") String authToken, @Part("appointment") Appointment appointment);
+
+	@GET("/api/v1/location/getAll")
+	Call<List<Grooming>> fetchAllGrooming(@Header("Authorization") String token);
 
 }
 

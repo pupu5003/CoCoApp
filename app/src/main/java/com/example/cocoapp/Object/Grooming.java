@@ -13,6 +13,15 @@ public class Grooming implements Serializable {
     private float distance;
     private String type; // "Grooming" or "Boarding" (if it's veterinarian, it's null)
     private List<ReviewItem> reviews;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     private String imageUrl;
     private float northCoordinate;
     private float eastCoordinate;
