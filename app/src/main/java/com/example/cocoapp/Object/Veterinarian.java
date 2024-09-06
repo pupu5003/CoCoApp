@@ -1,6 +1,9 @@
 package com.example.cocoapp.Object;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Veterinarian implements Serializable {
@@ -31,6 +34,14 @@ public class Veterinarian implements Serializable {
         this.price = Float.parseFloat(price);
         this.workTime = availability;
         this.imageUrl = pic;
+    }
+    public static void sortByDistance(List<Veterinarian> allVets) {
+        Collections.sort(allVets, new Comparator<Veterinarian>() {
+            @Override
+            public int compare(Veterinarian v1, Veterinarian v2) {
+                return Float.compare(v1.getDistance(), v2.getDistance());
+            }
+        });
     }
 
     // Getters and Setters

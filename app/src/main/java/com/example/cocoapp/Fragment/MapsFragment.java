@@ -42,7 +42,7 @@ import java.util.Vector;
 public class MapsFragment extends Fragment {
 	private GoogleMap mMap;
 	private List<LatLng> coordinates;
-	FusedLocationProviderClient mFusedLocationClient;
+	private FusedLocationProviderClient mFusedLocationClient;
 	private LatLng currentLocationLatLng;
 	private final static int LOCATION_PERMISSION_REQUEST_CODE = 100;
 
@@ -104,7 +104,7 @@ public class MapsFragment extends Fragment {
 			mapFragment.getMapAsync(callback);
 		}
 		Log.d("Location","Location");
-		mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+		//mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 		//getLastLocation();
 
 		ImageButton backButton = view.findViewById(R.id.back_button);
@@ -113,51 +113,51 @@ public class MapsFragment extends Fragment {
 		});
 	}
 
-	private void getLastLocation() {
-		if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-			mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-				@Override
-				public void onSuccess(Location location) {
-					if (location != null){
-						Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
-						List<Address> addressList= null;
-						try {
-							addressList = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
-							double latitude = addressList.get(0).getLatitude();
-							double longitude = addressList.get(0).getLongitude();
-							Log.d("getLatitude",String.valueOf(addressList.get(0).getLatitude()));
-							Log.d("getLongitude",String.valueOf(addressList.get(0).getLongitude()));
-							Log.d("getAddressLine",String.valueOf(addressList.get(0).getAddressLine(0)));
-							Log.d("getLocality",String.valueOf(addressList.get(0).getLocality()));
-							Log.d("getPostalCode",String.valueOf(addressList.get(0).getPostalCode()));
-							currentLocationLatLng = new LatLng(latitude, longitude);
+//	private void getLastLocation() {
+//		if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//			mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+//				@Override
+//				public void onSuccess(Location location) {
+//					if (location != null){
+//						Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
+//						List<Address> addressList= null;
+//						try {
+//							addressList = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
+//							double latitude = addressList.get(0).getLatitude();
+//							double longitude = addressList.get(0).getLongitude();
+//							Log.d("getLatitude",String.valueOf(addressList.get(0).getLatitude()));
+//							Log.d("getLongitude",String.valueOf(addressList.get(0).getLongitude()));
+//							Log.d("getAddressLine",String.valueOf(addressList.get(0).getAddressLine(0)));
+//							Log.d("getLocality",String.valueOf(addressList.get(0).getLocality()));
+//							Log.d("getPostalCode",String.valueOf(addressList.get(0).getPostalCode()));
+//							currentLocationLatLng = new LatLng(latitude, longitude);
+//
+//							// Check if the map is ready and update the UI
+////							if (mMap != null) {
+////								mMap.addMarker(new MarkerOptions().position(currentLocationLatLng).title("You are here"));
+////								mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocationLatLng, 15));
+////							}
+//						} catch (IOException e) {
+//							Log.d("Exception","Ngu");
+//							throw new RuntimeException(e);
+//						}
+//
+//					}
+//
+//				}
+//			});
+//		} else {
+//			askPermission();
+//		}
+//	}
 
-							// Check if the map is ready and update the UI
-							if (mMap != null) {
-								mMap.addMarker(new MarkerOptions().position(currentLocationLatLng).title("You are here"));
-								mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocationLatLng, 15));
-							}
-						} catch (IOException e) {
-							Log.d("Exception","Ngu");
-							throw new RuntimeException(e);
-						}
-
-					}
-
-				}
-			});
-		} else {
-			askPermission();
-		}
-	}
-
-	private void askPermission() {
-		if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-				!= PackageManager.PERMISSION_GRANTED) {
-			// Request the permission
-			requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-		}
-	}
+//	private void askPermission() {
+//		if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+//				!= PackageManager.PERMISSION_GRANTED) {
+//			// Request the permission
+//			requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+//		}
+//	}
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);

@@ -58,14 +58,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddPet extends Fragment implements OnMapReadyCallback {
+public class AddPet extends Fragment{
 	private static final String ARG_PARAM1 = "param1";
 	private static final String ARG_PARAM2 = "param2";
 	private String mParam1;
 	private ActivityResultLauncher<Intent> resultLauncher;
 	private ActivityResultLauncher<String> requestPermissionLauncher;
 	private ImageView imageView;
-	private GoogleMap mMap;
+
 	private EditText locationEditText;
 	private List<Pet> petList;
 	private PetAddPetAdapter petAddPetAdapter;
@@ -161,11 +161,7 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 			getActivity().getSupportFragmentManager().popBackStack();
 		});
 
-		// Initialize the map
-		SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-		if (mapFragment != null) {
-			mapFragment.getMapAsync(this); // Pass 'this' since this class implements OnMapReadyCallback
-		}
+
 
 		// Set a listener for the Button
 		addButton.setOnClickListener(v -> {
@@ -177,13 +173,9 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 			pet = new Pet(name.getText().toString(),url,breed.getText().toString(),Integer.parseInt(age.getText().toString()),genderChar,color.getText().toString(),
 					Float.parseFloat(height.getText().toString()),Float.parseFloat(weight.getText().toString()));
 			if (!TextUtils.isEmpty(location)) {
-				if (mMap != null) {
-					convertLocationToCoordinates(location);
-					pet.setLocation(location);
-				} else {
-					Toast.makeText(getContext(), "Map is not ready yet", Toast.LENGTH_SHORT).show();
-				}
-			} else {
+				convertLocationToCoordinates(location);
+				pet.setLocation(location);
+			}else{
 				Toast.makeText(getContext(), "Please enter a location", Toast.LENGTH_SHORT).show();
 			}
 
@@ -274,14 +266,7 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 		resultLauncher.launch(intent);
 	}
 
-	@Override
-	public void onMapReady(GoogleMap googleMap) {
-		mMap = googleMap;
-		Log.d("MapFragment", "onMapReady called");
-		// Set a default location (e.g., Sydney) until the user enters a location
-		LatLng defaultLocation = new LatLng(-34, 151);
-		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
-	}
+
 
 	private void convertLocationToCoordinates(String location) {
 		Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
@@ -289,13 +274,6 @@ public class AddPet extends Fragment implements OnMapReadyCallback {
 			List<Address> addresses = geocoder.getFromLocationName(location, 1);
 			if (addresses != null && !addresses.isEmpty()) {
 				Address address = addresses.get(0);
-				LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-
-				// Move the camera to the searched location
-				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-
-				// Place a marker at the searched location
-				mMap.addMarker(new MarkerOptions().position(latLng).title(address.getAddressLine(0)));
 
 				// Show the coordinates in a Toast
 				//Toast.makeText(getContext(), "Location: " + address.getLatitude() + ", " + address.getLongitude(), Toast.LENGTH_LONG).show();

@@ -56,10 +56,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PetProfile extends Fragment implements OnMapReadyCallback {
+public class PetProfile extends Fragment {
 
 	private static final String ARG_PET = "PET";
-	private GoogleMap mMap;
+
 	private Pet pet;
 
 	private ActivityResultLauncher<Intent> pickImageLauncher;
@@ -252,10 +252,10 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 				openGallery();
 			}
 		});
-		SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-		if (mapFragment != null) {
-			mapFragment.getMapAsync(this); // Pass 'this' since this class implements OnMapReadyCallback
-		}
+//		SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+//		if (mapFragment != null) {
+//			mapFragment.getMapAsync(this); // Pass 'this' since this class implements OnMapReadyCallback
+//		}
 
 	}
 
@@ -291,14 +291,14 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 		pickImageLauncher.launch(intent);
 	}
 
-	@Override
-	public void onMapReady(GoogleMap googleMap) {
-		mMap = googleMap;
-		Log.d("MapFragment", "onMapReady called");
-		// Set a default location (e.g., Sydney) until the user enters a location
-		LatLng defaultLocation = new LatLng(-34, 151);
-		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
-	}
+//	@Override
+//	public void onMapReady(GoogleMap googleMap) {
+//		mMap = googleMap;
+//		Log.d("MapFragment", "onMapReady called");
+//		// Set a default location (e.g., Sydney) until the user enters a location
+//		LatLng defaultLocation = new LatLng(-34, 151);
+//		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
+//	}
 
 	private boolean convertLocationToCoordinates(String location) {
 		Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
@@ -309,10 +309,10 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 				LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
 
 				// Move the camera to the searched location
-				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-
-				// Place a marker at the searched location
-				mMap.addMarker(new MarkerOptions().position(latLng).title(address.getAddressLine(0)));
+//				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+//
+//				// Place a marker at the searched location
+//				mMap.addMarker(new MarkerOptions().position(latLng).title(address.getAddressLine(0)));
 
 				// Show the coordinates in a Toast
 				Toast.makeText(getContext(), "Location: " + address.getLatitude() + ", " + address.getLongitude(), Toast.LENGTH_LONG).show();

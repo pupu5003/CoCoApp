@@ -19,6 +19,8 @@ import com.example.cocoapp.Adapter.VeterinarianAdapter;
 import com.example.cocoapp.Object.Grooming;
 import com.example.cocoapp.Object.Veterinarian;
 import com.example.cocoapp.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +38,12 @@ public class ViewAll extends Fragment {
 	private static final String ARG_PARAM1 = "param1";
 	private static final String ARG_PARAM2 = "param2";
 
+
+
 	// TODO: Rename and change types of parameters
 	private String mParam1;
 	private String mParam2;
+	private VeterinarianAdapter adapter;
 
 	public ViewAll() {
 		// Required empty public constructor
@@ -53,6 +58,9 @@ public class ViewAll extends Fragment {
 		args.putString(ARG_PARAM2, param2);
 		fragment.setArguments(args);
 		return fragment;
+	}
+	public void setVeterinarianAdapter(VeterinarianAdapter adapter) {
+		this.adapter = adapter;
 	}
 
 	@Override
@@ -73,29 +81,13 @@ public class ViewAll extends Fragment {
 		TextView text = view.findViewById(R.id.tvHeader);
 		Log.d("key 2 " , mParam2);
 		Log.d("key 1" , mParam1);
-		if (Objects.equals(mParam1, "1") && Objects.equals(mParam2,"1")) {
+
+		if (Objects.equals(mParam1, "1") && Objects.equals(mParam2,"1") || Objects.equals(mParam1, "1") && Objects.equals(mParam2,"2")) {
 			RecyclerView nearbyRecyclerView = view.findViewById(R.id.recyclerView);
-			text.setText("Nearby Veterinarians");
-
-
-			// Set up LayoutManager for the RecyclerView
+			if (Objects.equals(mParam1, "1") && Objects.equals(mParam2,"1")) text.setText("Nearby Veterinarians");
+			else text.setText("All Veterinarians");
 			nearbyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-			//recommendedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-
-			List<Veterinarian> nearbyVets = new ArrayList<>();
-			VeterinarianAdapter nearbyAdapter = new VeterinarianAdapter(getContext(), nearbyVets,true);
-			//VeterinarianAdapter recommendedAdapter = new VeterinarianAdapter(getContext(), recommendedVets);
-
-			nearbyRecyclerView.setAdapter(nearbyAdapter);
-			//recommendedRecyclerView.setAdapter(recommendedAdapter);
-		}
-		if (Objects.equals(mParam1, "1") && Objects.equals(mParam2,"2")){
-			text.setText("Veterinarians");
-			RecyclerView nearbyRecyclerView = view.findViewById(R.id.recyclerView);
-			nearbyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-			List<Veterinarian> recommendedVets = new ArrayList<>();
-			VeterinarianAdapter recommendedAdapter = new VeterinarianAdapter(getContext(), recommendedVets,true);
-			nearbyRecyclerView.setAdapter(recommendedAdapter);
+			nearbyRecyclerView.setAdapter(adapter);
 		}
 		if (Objects.equals(mParam1, "2") && Objects.equals(mParam2,"1")){
 			text.setText("Nearby Grooming");
