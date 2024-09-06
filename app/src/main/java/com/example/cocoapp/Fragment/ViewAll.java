@@ -44,6 +44,7 @@ public class ViewAll extends Fragment {
 	private String mParam1;
 	private String mParam2;
 	private VeterinarianAdapter adapter;
+	private GroomingAdapter groomingAdapter;
 
 	public ViewAll() {
 		// Required empty public constructor
@@ -61,6 +62,9 @@ public class ViewAll extends Fragment {
 	}
 	public void setVeterinarianAdapter(VeterinarianAdapter adapter) {
 		this.adapter = adapter;
+	}
+	public void setGroomingAdapter(GroomingAdapter adapter) {
+		this.groomingAdapter = adapter;
 	}
 
 	@Override
@@ -89,55 +93,22 @@ public class ViewAll extends Fragment {
 			nearbyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 			nearbyRecyclerView.setAdapter(adapter);
 		}
-		if (Objects.equals(mParam1, "2") && Objects.equals(mParam2,"1")){
-			text.setText("Nearby Grooming");
+		if (Objects.equals(mParam1, "2") && Objects.equals(mParam2,"1") || Objects.equals(mParam1, "2") && Objects.equals(mParam2,"2")){
+			if (Objects.equals(mParam1, "2") && Objects.equals(mParam2,"1")) text.setText("Nearby Groomings");
+			else text.setText("All Groomings");
 			// Initialize RecyclerView
 			RecyclerView nearbyGrooming = view.findViewById(R.id.recyclerView);
-
 			nearbyGrooming.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-			// Initialize data
-			List<Grooming> groomingList = new ArrayList<>();
-//			groomingList.add(new Grooming("Paws & Claws", 4.5f, 120, true, "1.2 km", "$50", "Mon-Sat 9 AM - 6 PM",pic1));
-//			groomingList.add(new Grooming("Pet Pamper", 4.3f, 80, false, "2.5 km", "$60", "Mon-Fri 10 AM - 5 PM",pic2));
-			// Set adapter
-			GroomingAdapter NearByAdapter = new GroomingAdapter(groomingList,true, getContext(),true);
-			nearbyGrooming.setAdapter(NearByAdapter);
+			nearbyGrooming.setAdapter(groomingAdapter);
 		}
-		if (Objects.equals(mParam1, "2") && Objects.equals(mParam2,"2")){
-			text.setText("Grooming");
-			// Initialize RecyclerView
-			RecyclerView recommendedGrooming = view.findViewById(R.id.recyclerView);
 
-			recommendedGrooming.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-			// Initialize data
-			List<Grooming> groomingList = new ArrayList<>();
-			// Set adapter
-			GroomingAdapter recommendedAdapter = new GroomingAdapter(groomingList,true, getContext(),true);
-			recommendedGrooming.setAdapter(recommendedAdapter);
-		}
-		if (Objects.equals(mParam1, "3") && Objects.equals(mParam2,"1")){
-			text.setText("Nearby Boarding");
+		if (Objects.equals(mParam1, "3") && Objects.equals(mParam2,"1") || Objects.equals(mParam1, "3") && Objects.equals(mParam2,"2")){
+			if (Objects.equals(mParam1, "3") && Objects.equals(mParam2,"1")) text.setText("Nearby Boardings");
+			else text.setText("All Boarding");
 			// Initialize RecyclerView
 			RecyclerView nearbyGrooming = view.findViewById(R.id.recyclerView);
-
 			nearbyGrooming.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-			// Initialize data
-			List<Grooming> groomingList = new ArrayList<>();
-			// Set adapter
-			GroomingAdapter NearByAdapter = new GroomingAdapter(groomingList,true, getContext(),false);
-			nearbyGrooming.setAdapter(NearByAdapter);
-		}
-		if (Objects.equals(mParam1, "3") && Objects.equals(mParam2,"2")){
-			text.setText("Boarding");
-			// Initialize RecyclerView
-			RecyclerView recommendedGrooming = view.findViewById(R.id.recyclerView);
-
-			recommendedGrooming.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-			// Initialize data
-			List<Grooming> groomingList = new ArrayList<>();
-			// Set adapter
-			GroomingAdapter recommendedAdapter = new GroomingAdapter(groomingList,true, getContext(),false);
-			recommendedGrooming.setAdapter(recommendedAdapter);
+			nearbyGrooming.setAdapter(groomingAdapter);
 		}
 
 		ImageButton backButton = view.findViewById(R.id.back_button);

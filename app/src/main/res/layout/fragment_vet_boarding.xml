@@ -201,7 +201,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/nearby_recycler_view"
                 android:layout_width="0dp"
-                android:layout_height="350dp"
+                android:layout_height="wrap_content"
+                tools:itemCount="2"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -244,7 +245,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recommend_recycler_view"
                 android:layout_width="0dp"
-                android:layout_height="350dp"
+                android:layout_height="wrap_content"
+                tools:itemCount="2"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

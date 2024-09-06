@@ -1,6 +1,8 @@
 package com.example.cocoapp.Object;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Grooming implements Serializable {
@@ -27,6 +29,14 @@ public class Grooming implements Serializable {
     private float eastCoordinate;
     private String address;
     private boolean isOpen;
+    public static void sortByDistance(List<Grooming> allVets) {
+        Collections.sort(allVets, new Comparator<Grooming>() {
+            @Override
+            public int compare(Grooming v1, Grooming v2) {
+                return Float.compare(v1.getDistance(), v2.getDistance());
+            }
+        });
+    }
 
     // Constructor
     public Grooming(String name, float rating) {

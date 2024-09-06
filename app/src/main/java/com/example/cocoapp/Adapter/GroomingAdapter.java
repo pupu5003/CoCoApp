@@ -2,7 +2,10 @@ package com.example.cocoapp.Adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +28,9 @@ import com.example.cocoapp.Fragment.VeterinarianProfile;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Grooming;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,14 +40,20 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
 
     private List<Grooming> groomingList;
     private boolean showAll;
+    private float lat, lont;
     private static Context context;
     private boolean isGrooming;
 
-    public GroomingAdapter(List<Grooming> groomingList, boolean showAll, Context context, boolean isGrooming) {
+    public GroomingAdapter(List<Grooming> groomingList, boolean showAll, Context context, boolean isGrooming,Float lat,Float lont) {
         this.groomingList = groomingList;
         this.showAll = showAll;
         this.context = context;
         this.isGrooming = isGrooming;
+        this.lat = lat;
+        this.lont = lont;
+    }
+    public void setShowAll(boolean showAll) {
+        this.showAll = showAll;
     }
 
     @NonNull
@@ -55,6 +66,9 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
     @Override
     public void onBindViewHolder(@NonNull GroomingViewHolder holder, int position) {
         Grooming grooming = groomingList.get(position);
+        Pair<Float, Float> coordinates = convertLocationToCoordinates(grooming.getAddress());
+        grooming.setDistance(calculateDistance(lat, lont, coordinates.first, coordinates.second));
+        holder.bind(grooming);
         holder.bind(grooming);
 
         holder.itemView.setOnClickListener(view -> {
@@ -74,8 +88,47 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
 
     @Override
     public int getItemCount() {
-        return showAll ? groomingList.size() : Math.min(groomingList.size(), 5);
+        return showAll ? groomingList.size() : Math.min(groomingList.size(), 2);
     }
+    private float calculateDistance(float lat1, float lon1, float lat2, float lon2) {
+        final int R = 6371; // Radius of the Earth in kilometers
+
+        // Convert latitude and longitude from degrees to radians
+        float latDistance = (float) Math.toRadians(lat2 - lat1);
+        float lonDistance = (float) Math.toRadians(lon2 - lon1);
+
+        // Apply the Haversine formula
+        float a = (float) (Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2));
+        float c = (float) (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+
+        return R * c; // Distance in kilometers
+    }
+
+    private Pair<Float, Float> convertLocationToCoordinates(String location) {
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        Float latitude = null;
+        Float longitude = null;
+
+        try {
+            List<Address> addresses = geocoder.getFromLocationName(location, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                latitude = (float) address.getLatitude();
+                longitude = (float) address.getLongitude();
+            } else {
+                Log.d("Location", location);
+                Toast.makeText(context, "Location not found", Toast.LENGTH_SHORT).show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Unable to get location", Toast.LENGTH_SHORT).show();
+        }
+
+        return new Pair<>(latitude, longitude);
+    }
+
 
     public void setGroomingList(List<Grooming> filteredGroomings) {
         this.groomingList.clear();

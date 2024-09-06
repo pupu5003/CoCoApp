@@ -86,6 +86,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginTop="28dp"
             android:text="Closed"
+            android:visibility="gone"
             android:fontFamily="@font/fredoka_regular"
             android:textColor="@android:color/black"
             android:textSize="14sp"

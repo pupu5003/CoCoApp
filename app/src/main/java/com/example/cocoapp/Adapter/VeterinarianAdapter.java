@@ -42,6 +42,7 @@ import retrofit2.Response;
 
 public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapter.VeterinarianViewHolder> {
 
+
     private List<Veterinarian> veterinarianList;
     private Context context;
     private boolean showAll;
