@@ -142,8 +142,6 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
                     Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
-
-
         }
     }
 }

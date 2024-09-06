@@ -4,6 +4,7 @@ import com.example.cocoapp.Api.Auth.LoginRequest;
 import com.example.cocoapp.Api.Auth.RegisterRequest;
 import com.example.cocoapp.Api.Auth.AuthResponse;
 import com.example.cocoapp.Fragment.Profile;
+import com.example.cocoapp.Object.Appointment;
 import com.example.cocoapp.Object.Pet;
 
 import java.util.List;
@@ -70,8 +71,8 @@ public interface ApiService
 	// Call<List<ReviewDto>> fetchReviews(@Header("Authorization") String token);
 
 	// Fetch user appointments
-	// @GET("/api/v1/user/getAppointments")
-	// Call<List<Appointment>> fetchAppointments(@Header("Authorization") String token);
+	 @GET("/api/v1/user/getAppointments")
+	 Call<List<Appointment>> fetchAppointments(@Header("Authorization") String token);
 
 	// Fetch product by ID
 	@GET("/api/v1/shopItem/get/{shopItemId}")
@@ -90,4 +91,12 @@ public interface ApiService
 			@Header("Authorization") String authHeader
 	);
 
+	@GET("api/v1/vet/get/{vetId}")
+	Call<Veterinarian> fetchVetById(@Header("Authorization") String token, @Path("vetId") String vetId);
+
+	@Multipart
+	@POST("/api/v1/vet/addAppointment")
+	Call<String> addAppointment(@Header("Authorization") String authToken, @Part("appointment") Appointment appointment);
+
 }
+

@@ -80,7 +80,7 @@ public class VeterinarianProfile extends Fragment {
 		// Handle book appointment button click
 		bookingAppointment.setOnClickListener(v ->
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, BookingAppoinment.newInstance(veterinarian.getVetId()))
+						.replace(R.id.fragment_container, BookingAppoinment.newInstance(veterinarian))
 						.addToBackStack(null)
 						.commit()
 		);

@@ -1,12 +1,16 @@
 package com.example.cocoapp.Fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +22,8 @@ import com.example.cocoapp.ActivityPage.Bottom_Navigation;
 import com.example.cocoapp.Adapter.AllergyAdapter;
 import com.example.cocoapp.Adapter.AppointmentAdapter;
 import com.example.cocoapp.Adapter.VaccinationAdapter;
+import com.example.cocoapp.Api.ApiClient;
+import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.Allergy;
 import com.example.cocoapp.Object.Appointment;
 import com.example.cocoapp.Object.Vaccination;
@@ -26,6 +32,9 @@ import com.example.cocoapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class Wellness extends Fragment{
@@ -42,6 +51,8 @@ public class Wellness extends Fragment{
 	private TextView seeAllVaccination;
 	private TextView seeAllTreatment;
 	private Button startButton;
+	private ApiService apiService;
+	private String token;
 
 	@Nullable
 	@Override
@@ -73,6 +84,12 @@ public class Wellness extends Fragment{
 		appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 		appointmentRecyclerView.setAdapter(appointmentAdapter);
 
+		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
+		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		token = prefs.getString("jwt_token", null);
+
+		fetchAppointments();
+
 		loadExampleData();
 
 		seeAllVaccination.setOnClickListener(v -> {
@@ -91,9 +108,31 @@ public class Wellness extends Fragment{
 			((Bottom_Navigation) getActivity()).setSelectedTab(2);
 		});
 
-
-
 		return view;
+	}
+
+	private void fetchAppointments() {
+		apiService.fetchAppointments("Bearer " + token).enqueue(new Callback<List<Appointment>>() {
+			@Override
+			public void onResponse(@NonNull Call<List<Appointment>> call, Response<List<Appointment>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					appointmentList.clear();
+					appointmentList.addAll(response.body());
+					appointmentAdapter.notifyDataSetChanged();
+				} else {
+					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
+					if (getContext()!= null)
+						Toast.makeText(getContext(), "Failed to fetch appointments", Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onFailure(@NonNull Call<List<Appointment>> call, @NonNull Throwable t) {
+				Log.e("API Error", t.getMessage());
+				if (getContext()!= null)
+					Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 	private void loadExampleData() {
@@ -106,11 +145,10 @@ public class Wellness extends Fragment{
 		allergiesList.add(new Allergy("Pollen", "abc", "Dr. White"));
 		allergiesList.add(new Allergy("Peanuts", "abc", "Dr. Black"));
 		allergyAdapter.notifyDataSetChanged();
-
-		appointmentList.add(new Appointment("Dr. Green", "2024-09-01", "11:30"));
-		appointmentList.add(new Appointment("Dr. Blue", "2024-09-15", "09:30"));
-		appointmentList.add(new Appointment("Dr. Red", "2024-10-01", "10:30"));
-		appointmentAdapter.notifyDataSetChanged();
 	}
+
+
+
+
 
 }

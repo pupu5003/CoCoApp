@@ -1,42 +1,38 @@
 package com.example.cocoapp.Object;
 
 public class Appointment {
-
-	private String veterinarian;
-	private String date;
-	private String hour;
+	private long time;
+	private String vetId;
+	private String catergory;
 
 	// Constructor
-	public Appointment(String veterinarian, String date, String hour) {
-		this.veterinarian = veterinarian;
-		this.date = date;
-		this.hour = hour;
+	public Appointment(long time, String vetId, String catergory) {
+		this.time = time;
+		this.vetId = vetId;
+		this.catergory = catergory;
 	}
 
-	// Getter and Setter for veterinarian
-	public String getVeterinarian() {
-		return veterinarian;
+	public long getTime() {
+		return time;
 	}
 
-	public void setVeterinarian(String veterinarian) {
-		this.veterinarian = veterinarian;
+	public void setTime(Integer time) {
+		this.time = time;
 	}
 
-	// Getter and Setter for date
-	public String getDate() {
-		return date;
+	public String getVetId() {
+		return vetId;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setVetId(String vetId) {
+		this.vetId = vetId;
 	}
 
-
-	public String getHour() {
-		return hour;
+	public String getCatergory() {
+		return catergory;
 	}
 
-	public void setHour(String hour) {
-		this.hour = hour;
+	public void setCatergory(String catergory) {
+		this.catergory = catergory;
 	}
 }
