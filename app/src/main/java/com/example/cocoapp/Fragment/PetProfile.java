@@ -139,6 +139,9 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
+		prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		token = prefs.getString("jwt_token", null);
 		init(view);
 
 
@@ -260,9 +263,6 @@ public class PetProfile extends Fragment implements OnMapReadyCallback {
 		String baseUrl = "http://172.28.102.169:8080";
 		String basePath = "/file/";
 		String fileName = image.substring(basePath.length());
-		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
-		prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
-		token = prefs.getString("jwt_token", null);
 		apiService.fetchImageFile("Bearer " + token, fileName).enqueue(new Callback<Void>() {
 			@Override
 			public void onResponse(Call<Void> call, Response<Void> response) {
