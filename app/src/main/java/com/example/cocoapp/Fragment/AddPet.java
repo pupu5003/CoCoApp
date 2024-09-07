@@ -198,8 +198,7 @@ public class AddPet extends Fragment{
 						Toast.makeText(getContext(),
 								"Pet added successfully",
 								Toast.LENGTH_SHORT).show();
-						petList.add(pet);
-						petAddPetAdapter.notifyDataSetChanged();
+						fetchPets(token);
 					} else {
 						Toast.makeText(getContext(), "Failed to add pet", Toast.LENGTH_SHORT).show();
 					}
