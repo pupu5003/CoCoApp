@@ -21,6 +21,10 @@ public class Pet implements Serializable {
 
 	private String address;
 
+	public Pet() {
+		// Default constructor
+	}
+
 	// Constructor
 	public Pet(String petName, String imageUrl, String breedName, int age, Character gender, String color,
 	           float height, float weight) {
@@ -90,6 +94,30 @@ public class Pet implements Serializable {
 	public int getMoodValue() { return moodValue; }
 	public void setMoodValue(int moodValue) { this.moodValue = moodValue; }
 
+	public String getImageUrl() { return imageUrl; }
 
+	public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+	@Override
+	public String toString() {
+		return "Pet{" +
+				"id='" + id + '\'' +
+				", petName='" + petName + '\'' +
+				", breedName='" + breedName + '\'' +
+				", gender=" + gender +
+				", age=" + age +
+				", color='" + color + '\'' +
+				", height=" + height +
+				", weight=" + weight +
+				", imageUrl='" + imageUrl + '\'' +
+				", ownerId='" + ownerId + '\'' +
+				", northCoordinate=" + northCoordinate +
+				", eastCoordinate=" + eastCoordinate +
+				", healthValue=" + healthValue +
+				", foodValue=" + foodValue +
+				", moodValue=" + moodValue +
+				", address='" + address + '\'' +
+				'}';
+	}
 
 }

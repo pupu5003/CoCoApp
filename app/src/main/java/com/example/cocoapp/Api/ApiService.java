@@ -3,6 +3,7 @@ package com.example.cocoapp.Api;
 import com.example.cocoapp.Api.Auth.LoginRequest;
 import com.example.cocoapp.Api.Auth.RegisterRequest;
 import com.example.cocoapp.Api.Auth.AuthResponse;
+import com.example.cocoapp.Fragment.PetProfile;
 import com.example.cocoapp.Fragment.Profile;
 import com.example.cocoapp.Object.Appointment;
 import com.example.cocoapp.Object.Grooming;
@@ -87,7 +88,7 @@ public interface ApiService
 
 	@Multipart
 	@POST("/api/v1/pet/update")
-	Call<Pet> updatePet(
+	Call<Pet> updatePetInfo(
 			@Part MultipartBody.Part image,
 			@Part("pet") RequestBody Pet,
 			@Header("Authorization") String authHeader
@@ -105,6 +106,9 @@ public interface ApiService
 
 	@GET("/api/v1/showcase/getAll")
 	Call<List<ShowcaseDto>> getAllShowcases(@Header("Authorization") String token);
+
+	@GET("/api/v1/pet/get/{petId}")
+	Call<PetProfile> fetchPetProfile(@Header("Authorization") String authToken, @Path("petId") String petId);
 
 }
 

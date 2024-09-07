@@ -59,23 +59,27 @@ import retrofit2.Response;
 public class PetProfile extends Fragment {
 
 	private static final String ARG_PET = "PET";
+	private static final String PREF_NAME = "user_prefs";
+	private static final String KEY_AUTH_TOKEN = "auth_token";
 
 	private Pet pet;
+	private Uri selectedImageUri;
 
 	private ActivityResultLauncher<Intent> pickImageLauncher;
 	private ActivityResultLauncher<String> requestPermissionLauncher;
 	private ImageView petImageView,petgenderImageView;
 
+	// private ProgressBar progressBar;
+
 	private ApiService apiService;
 	private SharedPreferences prefs;
-	private String token;
 	ImageButton backButton,editButton,imageButton;
 	TextView petNameTextView, petBreedTextView, petage, petweight, petcolor, petheight,petLocation,header,name2,name3;
 
 	View editFrame,informationFrame;
 	Button doneButton ;
 	public PetProfile() {
-		// Required empty public constructor
+		// Default constructor
 	}
 
 	public static PetProfile newInstance(Pet pet) {
@@ -92,13 +96,36 @@ public class PetProfile extends Fragment {
 		if (getArguments() != null) {
 			pet = (Pet) getArguments().getSerializable(ARG_PET);  // Retrieve the Pet object
 		}
+		setupPermissionLaunchers();
+	}
+
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_profile, container, false);
+		initializeViews(view);
+		loadPetProfile();
+		setupButtons(view);
+		return view;
+	}
+
+	private void setupPermissionLaunchers() {
+		requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+			if (isGranted) {
+				openGallery();
+			} else {
+				Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
+			}
+		});
 		pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 			if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
-				Uri imageUri = result.getData().getData();
-				if (imageUri != null) {
+				selectedImageUri = result.getData().getData();
+				if (selectedImageUri != null) {
 					try {
-						Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+						Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
 						petImageView.setImageBitmap(bitmap);
+
+						uploadPetImage();
+
 					} catch (IOException e) {
 						e.printStackTrace();
 						Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();
@@ -110,63 +137,84 @@ public class PetProfile extends Fragment {
 				Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
 			}
 		});
-
-		// Handle permissions based on Android version
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-			requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-				if (isGranted) {
-					openGallery();
-				} else {
-					Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
-				}
-			});
-		} else {
-			requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-				if (isGranted) {
-					openGallery();
-				} else {
-					Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
-				}
-			});
-		}
 	}
+//	@Override
+//	public void onMapReady(GoogleMap googleMap) {
+//		mMap = googleMap;
+//		Log.d("MapFragment", "onMapReady called");
+//		// Set a default location (e.g., Sydney) until the user enters a location
+//		LatLng defaultLocation = new LatLng(-34, 151);
+//		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
+//	}
 
-	@Override
-	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_pet_profile, container, false);
-	}
+	private boolean convertLocationToCoordinates(String location) {
+		Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+		try {
+			List<Address> addresses = geocoder.getFromLocationName(location, 1);
+			if (addresses != null && !addresses.isEmpty()) {
+				Address address = addresses.get(0);
+				LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
 
-	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
-		prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
-		token = prefs.getString("jwt_token", null);
-		init(view);
+				// Move the camera to the searched location
+//				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+//
+//				// Place a marker at the searched location
+//				mMap.addMarker(new MarkerOptions().position(latLng).title(address.getAddressLine(0)));
 
-
-		if (pet != null) {
-			name2.setText(pet.getPetName());
-			name3.setText(pet.getPetName());
-			header.setText(pet.getPetName());
-			petBreedTextView.setText(pet.getBreedName());
-			petage.setText(String.valueOf(pet.getAge()));
-			petNameTextView.setText(pet.getPetName());
-			petheight.setText((String.valueOf(pet.getHeight())) + "cm");
-			petcolor.setText(pet.getColor());
-			petweight.setText((String.valueOf(pet.getWeight())) + "kg");
-			petLocation.setText(pet.getLocation());
-			fetchPNG(pet.getImage());
-			petLocation.setText(pet.getLocation());
-			if (pet.getGender().equals("M")) {
-				petgenderImageView.setImageResource(R.drawable.male);
+				// Show the coordinates in a Toast
+				Toast.makeText(getContext(), "Location: " + address.getLatitude() + ", " + address.getLongitude(), Toast.LENGTH_LONG).show();
+				Log.d("Location", "Location: " + address.getLatitude() + ", " + address.getLongitude());
+				return true;
 			} else {
-				petgenderImageView.setImageResource(R.drawable.female);
+				Toast.makeText(getContext(), "Location not found", Toast.LENGTH_SHORT).show();
+				return false;
 			}
-		}else{
-			petNameTextView.setText("No pet found");
+		} catch (IOException e) {
+			e.printStackTrace();
+			Toast.makeText(getContext(), "Unable to get location", Toast.LENGTH_SHORT).show();
 		}
+		return true;
+	}
 
+
+	private void initializeViews(View view){
+		petNameTextView = view.findViewById(R.id.pet_name);
+		petBreedTextView = view.findViewById(R.id.type);
+		petgenderImageView = view.findViewById(R.id.gender);
+		petImageView = view.findViewById(R.id.imageDog);
+		petage = view.findViewById(R.id.age);
+		petweight = view.findViewById(R.id.weight);
+		petcolor = view.findViewById(R.id.color);
+		petheight = view.findViewById(R.id.height);
+		petLocation = view.findViewById(R.id.location);
+		header = view.findViewById(R.id.tvHeader);
+		name2 = view.findViewById(R.id.name2);
+		name3 = view.findViewById(R.id.name3);
+		editFrame = view.findViewById(R.id.edit_frame);
+		informationFrame = view.findViewById(R.id.information_frame);
+		// progressBar = view.findViewById(R.id.progressBar);
+
+		loadCachedPetProfile();
+	}
+
+	private void loadCachedPetProfile() {
+		SharedPreferences prefs = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+
+		String petName = prefs.getString("pet_name", "Loading...");
+		String breedName = prefs.getString("breed_name", "Loading...");
+		int age = prefs.getInt("age", 0); // default is 0 if not found
+		float weight = prefs.getFloat("weight", 0.0f); // default is 0.0 if not found
+		String color = prefs.getString("color", "Unknown");
+		float height = prefs.getFloat("height", 0.0f); // default is 0.0 if not found
+		String gender = prefs.getString("gender", "U"); // default is 'U' for unspecified
+		String imageUrl = prefs.getString("image_url", "");
+	}
+
+	private void setupButtons(View view) {
+		editButton = view.findViewById(R.id.edit_btn);
+		doneButton = view.findViewById(R.id.done_btn);
+		imageButton = view.findViewById(R.id.camera_btn);
+		backButton = view.findViewById(R.id.back_button);
 
 		editButton.setOnClickListener(v -> {
 			informationFrame.setVisibility(View.GONE);
@@ -238,172 +286,174 @@ public class PetProfile extends Fragment {
 			petLocationEditText.setText(pet.getLocation());
 
 			// Call the method to update the pet in the backend
-			updatePet(token);
+			uploadPetImage();
 		});
 
 		backButton.setOnClickListener(v ->
 				getActivity().getSupportFragmentManager().popBackStack());
 
 		imageButton.setOnClickListener(v -> {
-			String permission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ? "android.permission.READ_MEDIA_IMAGES" : "android.permission.READ_EXTERNAL_STORAGE";
+			String permission = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ? "android.permission.READ_MEDIA_IMAGES" : "android.permission.READ_EXTERNAL_STORAGE";
 			if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
 				requestPermissionLauncher.launch(permission);
 			} else {
 				openGallery();
 			}
 		});
-//		SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-//		if (mapFragment != null) {
-//			mapFragment.getMapAsync(this); // Pass 'this' since this class implements OnMapReadyCallback
-//		}
-
 	}
 
-	private void fetchPNG(String image) {
-		String baseUrl = "http://172.28.102.169:8080";
-		String basePath = "/file/";
-		String fileName = image.substring(basePath.length());
-		apiService.fetchImageFile("Bearer " + token, fileName).enqueue(new Callback<Void>() {
-			@Override
-			public void onResponse(Call<Void> call, Response<Void> response) {
-				if (response.isSuccessful()) {
-					// Load image with Glide
-					String fileName = pet.getImage();
-					Glide.with(requireActivity())
-							.load(baseUrl+fileName)
-							.error(R.drawable.dog1)
-							.into(petImageView);
-				} else {
-					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
+	private void loadPetProfile() {
+		// progressBar.setVisibility(View.VISIBLE);
 
+		ApiService apiService = ApiClient.getClient(getActivity(), false).create(ApiService.class);
+		String token = "Bearer " + getToken();
+		Call<PetProfile> call = apiService.fetchPetProfile(token, pet.getId());
+
+		call.enqueue(new Callback<PetProfile>() {
+			@Override
+			public void onResponse(Call<PetProfile> call, Response<PetProfile> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					PetProfile profile = response.body();
+
+
+					name2.setText(pet.getPetName());
+					name3.setText(pet.getPetName());
+					header.setText(pet.getPetName());
+					petNameTextView.setText(pet.getPetName());
+					petBreedTextView.setText(pet.getBreedName());
+					petImageView.setImageResource(R.drawable.dog1);
+					petage.setText(String.valueOf(pet.getAge()));
+					petheight.setText(String.valueOf(pet.getHeight()) + " cm");
+					petweight.setText(String.valueOf(pet.getWeight()) + " kg");
+					petcolor.setText(pet.getColor());
+					petLocation.setText(pet.getLocation());
+					if (pet.getGender().equals("M")) {
+						petgenderImageView.setImageResource(R.drawable.male);
+					} else {
+						petgenderImageView.setImageResource(R.drawable.female);
+					}
+
+					cachePetProfile(pet);
+
+					if (!TextUtils.isEmpty(pet.getImageUrl())) {
+						String baseUrl = "http://172.28.102.169:8080";
+						Glide.with(requireContext())
+								.load(baseUrl + pet.getImageUrl())
+								.error(R.drawable.dog1)
+								.into(petImageView);
+					}
+				} else {
+					Toast.makeText(getActivity(), "Failed to load pet profile data", Toast.LENGTH_SHORT).show();
 				}
 			}
 
 			@Override
-			public void onFailure(Call<Void> call, Throwable t) {
-				Log.e("API Error", "Error accessing image: " + t.getMessage());
+			public void onFailure(Call<PetProfile> call, Throwable t) {
+				// progressBar.setVisibility(View.GONE);
+				Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 			}
 		});
+	}
+
+	private void cachePetProfile(Pet pet) {
+		SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+
+		// Save pet details into SharedPreferences
+		editor.putString("pet_id", pet.getId());  // Assuming the Pet object has an ID
+		editor.putString("pet_name", pet.getPetName());
+		editor.putString("breed_name", pet.getBreedName());
+		editor.putInt("age", pet.getAge());
+		editor.putFloat("weight", pet.getWeight());
+		editor.putString("color", pet.getColor());
+		editor.putFloat("height", pet.getHeight());
+		editor.putString("gender", String.valueOf(pet.getGender()));
+		editor.putString("image_url", pet.getImageUrl());
+		editor.putString("address", pet.getLocation()); // Save address if available
+
+		editor.apply(); // Commit the changes
+	}
+
+	private void uploadPetImage() {
+		Pet petData = new Pet();
+		petData.setId(pet.getId());
+		petData.setPetName(petNameTextView.getText().toString().trim());
+		petData.setBreedName(petBreedTextView.getText().toString().trim());
+		petData.setAge(Integer.parseInt(petage.getText().toString().trim()));
+		petData.setWeight(Float.parseFloat(petweight.getText().toString().trim()));
+		petData.setColor(petcolor.getText().toString().trim());
+		petData.setHeight(Float.parseFloat(petheight.getText().toString().trim()));
+		petData.setGender(pet.getGender());
+		petData.setLocation(petLocation.getText().toString().trim());
+
+		MultipartBody.Part imagePart = null;
+		if (selectedImageUri != null) {
+			// Convert the selected image to a file and create a multipart body part
+			File imageFile = getImageFileFromImageView(petImageView);
+			imagePart = createMultipartBodyPartFromFile(imageFile);
+		}
+
+		// Convert the Pet object to JSON and create a request body
+		RequestBody petPart = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(petData));
+
+		// Setup the API call
+		ApiService apiService = ApiClient.getClient(getActivity(), false).create(ApiService.class);
+		String token = "Bearer " + getToken(); // Get the JWT token for authorization
+		Call<Pet> call = apiService.updatePetInfo(imagePart, petPart, token);
+
+		call.enqueue(new Callback<Pet>() {
+			@Override
+			public void onResponse(Call<Pet> call, Response<Pet> response) {
+				if (response.isSuccessful()) {
+					Toast.makeText(getActivity(), "Pet image updated successfully", Toast.LENGTH_SHORT).show();
+					loadPetProfile(); // Reload the pet profile to reflect updated data
+				} else {
+					Toast.makeText(getActivity(), "Failed to update pet: " + response.message(), Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<Pet> call, Throwable t) {
+				Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
+
+
+	private String getPetId() {
+		SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+		return sharedPreferences.getString("pet_id", "");
+	}
+
+	private String getToken() {
+		SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+		String token = sharedPreferences.getString(KEY_AUTH_TOKEN, "");
+		Log.d("Token", "Token retrieved: " + token);
+		return token;
+	}
+
+	private File getImageFileFromImageView(ImageView imageView) {
+		imageView.setDrawingCacheEnabled(true);
+		Bitmap bitmap = Bitmap.createBitmap(imageView.getDrawingCache());
+		imageView.setDrawingCacheEnabled(false);
+
+		File file = new File(getContext().getCacheDir(), "pet_image.png");
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return file;
+	}
+
+	private MultipartBody.Part createMultipartBodyPartFromFile(File file) {
+		RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+		return MultipartBody.Part.createFormData("image", file.getName(), requestFile);
 	}
 
 	private void openGallery() {
 		Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		pickImageLauncher.launch(intent);
 	}
-
-//	@Override
-//	public void onMapReady(GoogleMap googleMap) {
-//		mMap = googleMap;
-//		Log.d("MapFragment", "onMapReady called");
-//		// Set a default location (e.g., Sydney) until the user enters a location
-//		LatLng defaultLocation = new LatLng(-34, 151);
-//		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
-//	}
-
-	private boolean convertLocationToCoordinates(String location) {
-		Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-		try {
-			List<Address> addresses = geocoder.getFromLocationName(location, 1);
-			if (addresses != null && !addresses.isEmpty()) {
-				Address address = addresses.get(0);
-				LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-
-				// Move the camera to the searched location
-//				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-//
-//				// Place a marker at the searched location
-//				mMap.addMarker(new MarkerOptions().position(latLng).title(address.getAddressLine(0)));
-
-				// Show the coordinates in a Toast
-				Toast.makeText(getContext(), "Location: " + address.getLatitude() + ", " + address.getLongitude(), Toast.LENGTH_LONG).show();
-				Log.d("Location", "Location: " + address.getLatitude() + ", " + address.getLongitude());
-				return true;
-			} else {
-				Toast.makeText(getContext(), "Location not found", Toast.LENGTH_SHORT).show();
-				return false;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			Toast.makeText(getContext(), "Unable to get location", Toast.LENGTH_SHORT).show();
-		}
-		return true;
-	}
-	private void init(View view){
-		backButton = view.findViewById(R.id.back_button);
-		petNameTextView = view.findViewById(R.id.pet_name);
-		petBreedTextView = view.findViewById(R.id.type);
-		petgenderImageView = view.findViewById(R.id.gender);
-		petImageView = view.findViewById(R.id.imageDog);
-		petage = view.findViewById(R.id.age);
-		petweight = view.findViewById(R.id.weight);
-		petcolor = view.findViewById(R.id.color);
-		petheight = view.findViewById(R.id.height);
-		petLocation = view.findViewById(R.id.location);
-		header = view.findViewById(R.id.tvHeader);
-		name2 = view.findViewById(R.id.name2);
-		name3 = view.findViewById(R.id.name3);
-		editButton = view.findViewById(R.id.edit_btn);
-	    editFrame = view.findViewById(R.id.edit_frame);
-		informationFrame = view.findViewById(R.id.information_frame);
-		doneButton = view.findViewById(R.id.done_btn);
-		imageButton = view.findViewById(R.id.camera_btn);
-
-	}
-	private File getImageFileFromImageView(ImageView imageView) {
-		// Enable drawing cache
-		imageView.setDrawingCacheEnabled(true);
-		Bitmap bitmap = Bitmap.createBitmap(imageView.getDrawingCache());
-		imageView.setDrawingCacheEnabled(false);
-
-		// Create a file in cache directory
-		File file = new File(getContext().getCacheDir(), "image.png");
-		try (FileOutputStream fos = new FileOutputStream(file)) {
-			bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos); // Save the bitmap to file
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return file;
-	}
-	private MultipartBody.Part createMultipartBodyPartFromFile(File file) {
-		RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-		return MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-	}
-
-	private void updatePet(String token){
-		// Convert the Pet object to JSON
-		Gson gson = new Gson();
-		String petJson = gson.toJson(pet);
-
-		// Create RequestBody for the pet object
-		RequestBody petRequestBody = RequestBody.create(MediaType.parse("application/json"), petJson);
-
-		// Convert ImageView to File
-		File file = getImageFileFromImageView(petImageView);
-		// Create MultipartBody.Part from File
-		MultipartBody.Part body = createMultipartBodyPartFromFile(file);
-		ApiService apiService = ApiClient.getClient(getActivity(), true).create(ApiService.class);
-
-		Call<Pet> call = apiService.updatePet(body, petRequestBody,"Bearer " + token);
-		call.enqueue(new Callback<Pet>() {
-			@Override
-			public void onResponse(Call<Pet> call, Response<Pet> response) {
-				if (response.isSuccessful()) {
-					// Handle successful response
-					Toast.makeText(getActivity(), "Pet updated successfully", Toast.LENGTH_SHORT).show();
-				} else {
-					// Handle failure
-					Toast.makeText(getActivity(), "Failed to update pet", Toast.LENGTH_SHORT).show();
-				}
-			}
-
-			@Override
-			public void onFailure(Call<Pet> call, Throwable t) {
-				// Handle error
-				Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-			}
-		});
-
-	}
-
-
 }
