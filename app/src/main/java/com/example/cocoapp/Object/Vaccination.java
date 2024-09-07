@@ -13,6 +13,11 @@ public class Vaccination {
 		this.date = date;
 		this.veterinarian = veterinarian;
 	}
+	public Vaccination(String name,  String veterinarian) {
+		this.name = name;
+		this.veterinarian = veterinarian;
+	}
+
 
 	// Getters and Setters
 	public String getName() {

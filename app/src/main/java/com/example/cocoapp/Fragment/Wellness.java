@@ -26,6 +26,7 @@ import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.Allergy;
 import com.example.cocoapp.Object.Appointment;
+import com.example.cocoapp.Object.ShowcaseDto;
 import com.example.cocoapp.Object.Vaccination;
 import com.example.cocoapp.R;
 
@@ -89,8 +90,9 @@ public class Wellness extends Fragment{
 		token = prefs.getString("jwt_token", null);
 
 		fetchAppointments();
+		fetchShowcaseData();
 
-		loadExampleData();
+
 
 		seeAllVaccination.setOnClickListener(v -> {
 			requireActivity().getSupportFragmentManager().beginTransaction()
@@ -109,6 +111,40 @@ public class Wellness extends Fragment{
 		});
 
 		return view;
+	}
+
+	private void fetchShowcaseData() {
+		Call<List<ShowcaseDto>> call = apiService.getAllShowcases(token);
+		call.enqueue(new Callback<List<ShowcaseDto>>() {
+			@Override
+			public void onResponse(Call<List<ShowcaseDto>> call, Response<List<ShowcaseDto>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					List<ShowcaseDto> showcaseList = response.body();
+					allergiesList.clear();
+					vaccinationsList.clear();
+
+					for (ShowcaseDto showcase : showcaseList) {
+						if (showcase.getCategory().equals("Vaccinations")){
+							Vaccination tmp = new Vaccination(showcase.getType(),showcase.getName());
+							vaccinationsList.add(tmp);
+						}else{
+							Allergy tmp = new Allergy(showcase.getType(),showcase.getDescription(),showcase.getName());
+							allergiesList.add(tmp);
+						}
+					}
+					vaccinationAdapter.notifyDataSetChanged();
+					allergyAdapter.notifyDataSetChanged();
+				} else {
+					Toast.makeText(getContext(), "Failed to retrieve data", Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<ShowcaseDto>> call, Throwable t) {
+				Toast.makeText(getContext(), "API call failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+				Log.e("API Error", t.getMessage(), t);
+			}
+		});
 	}
 
 	private void fetchAppointments() {
@@ -135,17 +171,7 @@ public class Wellness extends Fragment{
 		});
 	}
 
-	private void loadExampleData() {
-		// Add example data for vaccinations
-		vaccinationsList.add(new Vaccination("Rabies Vaccination", "2024-08-15", "Dr. Smith"));
-		vaccinationsList.add(new Vaccination("Parvovirus Vaccination", "2024-05-20", "Dr. Brown"));
-		vaccinationAdapter.notifyDataSetChanged();
 
-		// Add example data for allergies
-		allergiesList.add(new Allergy("Pollen", "abc", "Dr. White"));
-		allergiesList.add(new Allergy("Peanuts", "abc", "Dr. Black"));
-		allergyAdapter.notifyDataSetChanged();
-	}
 
 
 

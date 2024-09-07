@@ -17,6 +17,7 @@ import com.example.cocoapp.Object.Product;
 import java.util.List;
 
 import com.example.cocoapp.Object.ProfileData;
+import com.example.cocoapp.Object.ShowcaseDto;
 import com.example.cocoapp.Object.Veterinarian;
 
 import retrofit2.Call;
@@ -101,6 +102,9 @@ public interface ApiService
 
 	@GET("/api/v1/location/getAll")
 	Call<List<Grooming>> fetchAllGrooming(@Header("Authorization") String token);
+
+	@GET("/api/v1/showcase/getAll")
+	Call<List<ShowcaseDto>> getAllShowcases(@Header("Authorization") String token);
 
 }
 
