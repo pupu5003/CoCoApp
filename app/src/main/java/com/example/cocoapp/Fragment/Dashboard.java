@@ -49,6 +49,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,6 +59,8 @@ import java.util.Date;
 import java.util.List;
 import android.os.CountDownTimer;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -202,6 +207,7 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 
 		});
 	}
+
 
 	private void fetchProducts() {
 		apiService.fetchAllShopItems("Bearer " + token).enqueue(new Callback<List<Product>>() {

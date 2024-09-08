@@ -43,9 +43,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -99,6 +101,8 @@ public class PetProfile extends Fragment {
 					try {
 						Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
 						petImageView.setImageBitmap(bitmap);
+						//Glide.with(this).clear(petImageView);
+						updatePet(token);
 					} catch (IOException e) {
 						e.printStackTrace();
 						Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();
@@ -156,7 +160,13 @@ public class PetProfile extends Fragment {
 			petcolor.setText(pet.getColor());
 			petweight.setText((String.valueOf(pet.getWeight())) + "kg");
 			petLocation.setText(pet.getLocation());
-			fetchPNG(pet.getImage());
+
+			String baseUrl = "http://172.28.102.169:8080";
+			Glide.with(requireActivity())
+					.load(baseUrl+pet.getImage())
+					.error(R.drawable.dog1)
+					.into(petImageView);
+			//fetchPNG(pet.getImage());
 			petLocation.setText(pet.getLocation());
 			if (pet.getGender().equals("M")) {
 				petgenderImageView.setImageResource(R.drawable.male);
@@ -236,6 +246,7 @@ public class PetProfile extends Fragment {
 			petcolor.setText(pet.getColor());
 			petheight.setText(String.valueOf(pet.getHeight()));
 			petLocationEditText.setText(pet.getLocation());
+			//Glide.with(this).clear(petImageView);
 
 			// Call the method to update the pet in the backend
 			updatePet(token);
@@ -255,34 +266,6 @@ public class PetProfile extends Fragment {
 
 
 	}
-
-	private void fetchPNG(String image) {
-		String baseUrl = "http://172.28.102.169:8080";
-		String basePath = "/file/";
-		String fileName = image.substring(basePath.length());
-		apiService.fetchImageFile("Bearer " + token, fileName).enqueue(new Callback<Void>() {
-			@Override
-			public void onResponse(Call<Void> call, Response<Void> response) {
-				if (response.isSuccessful()) {
-					// Load image with Glide
-					String fileName = pet.getImage();
-					Glide.with(requireActivity())
-							.load(baseUrl+fileName)
-							.error(R.drawable.dog1)
-							.into(petImageView);
-				} else {
-					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
-
-				}
-			}
-
-			@Override
-			public void onFailure(Call<Void> call, Throwable t) {
-				Log.e("API Error", "Error accessing image: " + t.getMessage());
-			}
-		});
-	}
-
 	private void openGallery() {
 		Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		pickImageLauncher.launch(intent);
@@ -352,9 +335,11 @@ public class PetProfile extends Fragment {
 	}
 
 	private void updatePet(String token){
+		Log.d("Pet", "Updating pet: " + pet.getPetName());
 		// Convert the Pet object to JSON
 		Gson gson = new Gson();
 		String petJson = gson.toJson(pet);
+		Log.d("Pet", "Pet JSON: " + petJson);
 
 		// Create RequestBody for the pet object
 		RequestBody petRequestBody = RequestBody.create(MediaType.parse("application/json"), petJson);
@@ -363,12 +348,13 @@ public class PetProfile extends Fragment {
 		File file = getImageFileFromImageView(petImageView);
 		// Create MultipartBody.Part from File
 		MultipartBody.Part body = createMultipartBodyPartFromFile(file);
+
+
 		Call<Pet> call = apiService.updatePet(body, petRequestBody,"Bearer " + token);
 		call.enqueue(new Callback<Pet>() {
 			@Override
 			public void onResponse(Call<Pet> call, Response<Pet> response) {
 				if (response.isSuccessful()) {
-					// Handle successful response
 					Toast.makeText(getActivity(), "Pet updated successfully", Toast.LENGTH_SHORT).show();
 				} else {
 					// Handle failure

@@ -4,14 +4,14 @@ public class ProfileData {
 	private String userId;
 	private String name;
 	private String email;
-	private String phone;
+	private String phoneNumber;
 	private String imageUrl;
 
 	public ProfileData() {
 		this.userId = userId;
 		this.name = name;
 		this.email = email;
-		this.phone = phone;
+		this.phoneNumber = phoneNumber;
 		this.imageUrl = imageUrl;
 	}
 
@@ -27,9 +27,9 @@ public class ProfileData {
 
 	public void setEmail(String email) { this.email = email; }
 
-	public String getPhone() { return phone; }
+	public String getPhone() { return phoneNumber; }
 
-	public void setPhone(String phone) { this.phone = phone; }
+	public void setPhone(String phone) { this.phoneNumber = phone; }
 
 	public String getImageUrl() { return imageUrl; }
 
@@ -40,7 +40,7 @@ public class ProfileData {
 		return "ProfileData{" +
 				"name='" + name + '\'' +
 				", email='" + email + '\'' +
-				", phone='" + phone + '\'' +
+				", phone='" + phoneNumber + '\'' +
 				'}';
 	}
 }

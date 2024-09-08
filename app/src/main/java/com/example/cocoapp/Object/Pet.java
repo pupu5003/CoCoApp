@@ -1,6 +1,10 @@
 package com.example.cocoapp.Object;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class Pet implements Serializable {
 	private String id;
@@ -21,6 +25,8 @@ public class Pet implements Serializable {
 
 	private String address;
 
+	private byte[] byteArray;
+
 	// Constructor
 	public Pet(String petName, String imageUrl, String breedName, int age, Character gender, String color,
 	           float height, float weight) {
@@ -32,6 +38,15 @@ public class Pet implements Serializable {
 		this.color = color;
 		this.height = height;
 		this.weight = weight;
+	}
+
+
+	public byte[] getByteArray() {
+		return byteArray;
+	}
+
+	public void setByteArray(byte[] byteArray) {
+		this.byteArray = byteArray;
 	}
 
 	public String getLocation() {

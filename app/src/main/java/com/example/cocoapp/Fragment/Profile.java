@@ -123,6 +123,7 @@ public class Profile extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
 
         loadCachedProfileData();
+        loadProfileData();
     }
 
     private void loadCachedProfileData() {
@@ -140,6 +141,9 @@ public class Profile extends Fragment {
         editButton.setOnClickListener(v -> {
             informationFrame.setVisibility(View.GONE);
             editFrame.setVisibility(View.VISIBLE);
+            ownerNameEdit.setText(ownerName.getText());
+            ownerEmailEdit.setText(ownerEmail.getText());
+            ownerPhoneEdit.setText(ownerPhone.getText());
         });
 
         doneButton.setOnClickListener(v -> {
@@ -188,8 +192,6 @@ public class Profile extends Fragment {
                     ownerEmail.setText(profile.getEmail());
                     ownerPhone.setText(profile.getPhone());
 
-                    cacheProfileData(profile);
-
                     if (!TextUtils.isEmpty(profile.getImageUrl())) {
                         String baseUrl = "http://172.28.102.169:8080";
                         Glide.with(requireContext())
@@ -210,41 +212,35 @@ public class Profile extends Fragment {
         });
     }
 
-    private void cacheProfileData(ProfileData profile) {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("user_id", profile.getUserId());
-        editor.putString("name", profile.getName());
-        editor.putString("email", profile.getEmail());
-        editor.putString("phone", profile.getPhone());
-        editor.apply();
-    }
+
 
     private void uploadImage() {
         ProfileData profileData = new ProfileData();
         profileData.setUserId(getUserId());
-        profileData.setName(ownerName.getText().toString().trim());
-        profileData.setEmail(ownerEmail.getText().toString().trim());
-        profileData.setPhone(ownerPhone.getText().toString().trim());
+        profileData.setName(ownerNameEdit.getText().toString().trim());
+        profileData.setEmail(ownerEmailEdit.getText().toString().trim());
+        profileData.setPhone(ownerPhoneEdit.getText().toString().trim());
+        ownerName.setText(profileData.getName());
+        ownerEmail.setText(profileData.getEmail());
+        ownerPhone.setText(profileData.getPhone());
 
-        MultipartBody.Part imagePart = null;
-        if (selectedImageUri != null) {
-            File imageFile = getImageFileFromImageView(ava);
-            imagePart = createMultipartBodyPartFromFile(imageFile);
-        }
+        // Convert ImageView to File
+        File file = getImageFileFromImageView(ava);
+        // Create MultipartBody.Part from File
+        MultipartBody.Part body = createMultipartBodyPartFromFile(file);
 
         RequestBody profilePart = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(profileData));
 
         ApiService apiService = ApiClient.getClient(getActivity(), false).create(ApiService.class);
         String token = "Bearer " + getToken();
-        Call<ProfileData> call = apiService.updateUserInfo(imagePart, profilePart);
+        Call<ProfileData> call = apiService.updateUserInfo(body, profilePart);
 
         call.enqueue(new Callback<ProfileData>() {
             @Override
             public void onResponse(Call<ProfileData> call, Response<ProfileData> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(getActivity(), "Profile image updated successfully", Toast.LENGTH_SHORT).show();
-                    loadProfileData();
+                    //loadProfileData();
                 } else {
                     Toast.makeText(getActivity(), "Failed to update profile: " + response.message(), Toast.LENGTH_SHORT).show();
                 }

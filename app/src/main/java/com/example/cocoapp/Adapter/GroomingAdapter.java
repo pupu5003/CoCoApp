@@ -160,7 +160,8 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
         public void bind(Grooming grooming) {
             groomingName.setText(grooming.getName());
             ratingBar.setRating(grooming.getRating());
-            reviewText.setText(String.valueOf(grooming.getRating()) + " {" +String.valueOf(grooming.getReviews().size() + " reviews}"));
+            reviewText.setText(String.format("%.2f", grooming.getRating())
+                    + " {" + grooming.getReviews().size() + " reviews}");
             boolean isOpen = grooming.isOpen();
             isOpenText.setText(isOpen ? "Open" : "Closed");
             distanceText.setText(String.valueOf(grooming.getDistance()) + " km");

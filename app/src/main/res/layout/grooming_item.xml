@@ -56,20 +56,19 @@
             app:layout_constraintStart_toEndOf="@+id/profile_image"
             app:layout_constraintTop_toBottomOf="@+id/grooming_name" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="5.0 {100 reviews}"
-            android:fontFamily="@font/fredoka_medium"
-            android:textColor="@android:color/black"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/rating_layout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.134"
-            app:layout_constraintStart_toEndOf="@+id/rating_layout"
-            app:layout_constraintTop_toTopOf="@+id/rating_layout"
-            app:layout_constraintVertical_bias="0.0" />
+	    <TextView
+		    android:id="@+id/textView"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginStart="5dp"
+		    android:fontFamily="@font/fredoka_medium"
+		    android:text="5.0 {100 reviews}"
+		    android:textColor="@android:color/black"
+		    android:textSize="14sp"
+		    app:layout_constraintBottom_toBottomOf="@+id/rating_layout"
+		    app:layout_constraintStart_toEndOf="@+id/rating_layout"
+		    app:layout_constraintTop_toTopOf="@+id/rating_layout"
+		    app:layout_constraintVertical_bias="0.0" />
 
         <!-- Distance -->
 
@@ -93,59 +92,50 @@
             app:layout_constraintStart_toStartOf="@+id/profile_image"
             app:layout_constraintTop_toBottomOf="@id/rating_layout" />
 
-        <ImageView
-            android:id="@+id/distance_icon"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginStart="92dp"
-            android:src="@drawable/place_ic"
-            app:layout_constraintBottom_toBottomOf="@id/open_close"
-            app:layout_constraintStart_toEndOf="@id/open_close"
-            app:layout_constraintTop_toTopOf="@id/open_close"
-            app:layout_constraintVertical_bias="0.444" />
+	    <ImageView
+		    android:id="@+id/distance_icon"
+		    android:layout_width="15dp"
+		    android:layout_height="15dp"
+		    android:src="@drawable/place_ic"
+		    app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+		    app:layout_constraintStart_toStartOf="@+id/rating_layout" />
 
-        <TextView
-            android:id="@+id/distance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="2.5 km"
-            android:fontFamily="@font/fredoka_regular"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@id/open_close"
-            app:layout_constraintStart_toEndOf="@id/distance_icon"
-            app:layout_constraintTop_toTopOf="@id/open_close"
-            app:layout_constraintVertical_bias="0.0" />
+	    <TextView
+		    android:id="@+id/distance"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginStart="3dp"
+		    android:fontFamily="@font/fredoka_regular"
+		    android:text="2.5 km"
+		    android:textColor="@android:color/darker_gray"
+		    android:textSize="14sp"
+		    app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+		    app:layout_constraintStart_toEndOf="@+id/distance_icon" />
 
-        <ImageView
-            android:id="@+id/price_icon"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginStart="20dp"
-            android:src="@drawable/coin_ic"
-            app:layout_constraintBottom_toBottomOf="@id/open_close"
-            app:layout_constraintStart_toEndOf="@id/distance"
-            app:layout_constraintTop_toTopOf="@id/open_close"
-            app:layout_constraintVertical_bias="0.571" />
+	    <ImageView
+		    android:id="@+id/price_icon"
+		    android:layout_width="15dp"
+		    android:layout_height="15dp"
+		    android:layout_marginStart="20dp"
+		    android:src="@drawable/coin_ic"
+		    app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+		    app:layout_constraintStart_toEndOf="@id/distance" />
 
-        <TextView
-            android:id="@+id/price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="100$"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="14sp"
-            android:layout_marginStart="5dp"
-            android:fontFamily="@font/fredoka_regular"
-            app:layout_constraintBottom_toBottomOf="@id/open_close"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/price_icon"
-            app:layout_constraintTop_toTopOf="@id/open_close"
-            app:layout_constraintVertical_bias="0.0" />
+	    <TextView
+		    android:id="@+id/price"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginStart="3dp"
+		    android:fontFamily="@font/fredoka_regular"
+		    android:text="100$"
+		    android:textColor="@android:color/darker_gray"
+		    android:textSize="14sp"
+		    app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+		    app:layout_constraintEnd_toEndOf="parent"
+		    app:layout_constraintHorizontal_bias="0.021"
+		    app:layout_constraintStart_toEndOf="@+id/price_icon" />
 
-        <ImageView
+	    <ImageView
             android:id="@+id/clock_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
