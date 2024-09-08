@@ -161,6 +161,36 @@
 						app:layout_constraintStart_toStartOf="@+id/brand"
 						app:layout_constraintTop_toTopOf="@+id/brand"
 						app:layout_constraintVertical_bias="0.44" />
+					<TextView
+						android:id="@+id/rating_text"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="12dp"
+						android:layout_marginTop="10dp"
+						android:fontFamily="@font/fredoka_medium"
+						android:text="5.0"
+						android:textColor="@android:color/black"
+						android:textSize="12.5sp"
+						app:layout_constraintBottom_toBottomOf="parent"
+						app:layout_constraintStart_toStartOf="parent"
+						app:layout_constraintTop_toBottomOf="@+id/brand"
+						app:layout_constraintVertical_bias="0.0" />
+
+					<RatingBar
+						android:id="@+id/rating_layout"
+						style="@style/Widget.AppCompat.RatingBar.Small"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="28dp"
+						android:layout_marginTop="2dp"
+						android:isIndicator="true"
+						android:numStars="5"
+						android:rating="5.0"
+						android:theme="@style/RatingBar"
+						app:layout_constraintBottom_toBottomOf="@+id/rating_text"
+						app:layout_constraintStart_toStartOf="@+id/rating_text"
+						app:layout_constraintTop_toTopOf="@+id/rating_text"
+						app:layout_constraintVertical_bias="1.0" />
 
 
 				</androidx.constraintlayout.widget.ConstraintLayout>

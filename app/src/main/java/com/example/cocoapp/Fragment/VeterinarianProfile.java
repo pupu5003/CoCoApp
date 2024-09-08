@@ -67,7 +67,8 @@ public class VeterinarianProfile extends Fragment {
 
 			doctorName.setText(veterinarian.getVetName());
 			doctorQualification.setText(veterinarian.getDegree());
-			ratingText.setText(String.valueOf(veterinarian.getRating()) + "{" +String.valueOf(veterinarian.getReviews() + " reviews}"));
+			ratingText.setText(String.format("%.2f", veterinarian.getRating())
+					+ " {" + veterinarian.getReviews().size() + " reviews}");
 			time.setText(veterinarian.getWorkTime());
 			distance.setText(String.valueOf(veterinarian.getDistance()) + " km");
 			price.setText(String.valueOf(veterinarian.getPrice()) + " VND");
