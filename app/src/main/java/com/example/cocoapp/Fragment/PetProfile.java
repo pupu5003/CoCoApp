@@ -252,10 +252,7 @@ public class PetProfile extends Fragment {
 				openGallery();
 			}
 		});
-//		SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-//		if (mapFragment != null) {
-//			mapFragment.getMapAsync(this); // Pass 'this' since this class implements OnMapReadyCallback
-//		}
+
 
 	}
 
@@ -291,14 +288,6 @@ public class PetProfile extends Fragment {
 		pickImageLauncher.launch(intent);
 	}
 
-//	@Override
-//	public void onMapReady(GoogleMap googleMap) {
-//		mMap = googleMap;
-//		Log.d("MapFragment", "onMapReady called");
-//		// Set a default location (e.g., Sydney) until the user enters a location
-//		LatLng defaultLocation = new LatLng(-34, 151);
-//		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
-//	}
 
 	private boolean convertLocationToCoordinates(String location) {
 		Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
@@ -307,13 +296,6 @@ public class PetProfile extends Fragment {
 			if (addresses != null && !addresses.isEmpty()) {
 				Address address = addresses.get(0);
 				LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-
-				// Move the camera to the searched location
-//				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-//
-//				// Place a marker at the searched location
-//				mMap.addMarker(new MarkerOptions().position(latLng).title(address.getAddressLine(0)));
-
 				// Show the coordinates in a Toast
 				Toast.makeText(getContext(), "Location: " + address.getLatitude() + ", " + address.getLongitude(), Toast.LENGTH_LONG).show();
 				Log.d("Location", "Location: " + address.getLatitude() + ", " + address.getLongitude());
@@ -381,8 +363,6 @@ public class PetProfile extends Fragment {
 		File file = getImageFileFromImageView(petImageView);
 		// Create MultipartBody.Part from File
 		MultipartBody.Part body = createMultipartBodyPartFromFile(file);
-		ApiService apiService = ApiClient.getClient(getActivity(), true).create(ApiService.class);
-
 		Call<Pet> call = apiService.updatePet(body, petRequestBody,"Bearer " + token);
 		call.enqueue(new Callback<Pet>() {
 			@Override

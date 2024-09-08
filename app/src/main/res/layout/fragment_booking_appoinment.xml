@@ -88,6 +88,7 @@
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						app:background="@color/white"
+						app:layout_constraintBottom_toBottomOf="parent"
 						app:layout_constraintEnd_toEndOf="parent"
 						app:layout_constraintHorizontal_bias="0.0"
 						app:layout_constraintStart_toStartOf="parent"
@@ -266,6 +267,36 @@
 					android:text="Disease" />
 
 			</RadioGroup>
+
+			<TextView
+				android:id="@+id/tvEnterName"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="20dp"
+				android:fontFamily="@font/fredoka_medium"
+				android:text="Type Name"
+				android:textSize="24sp"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/radioGroupSort"
+				/>
+			<EditText
+				android:id="@+id/etEnterName"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				app:layout_constraintTop_toBottomOf="@id/tvEnterName"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintBottom_toTopOf="@id/btn_book_appointment"
+				android:layout_marginStart="20dp"
+				android:layout_marginEnd="20dp"
+				android:layout_marginTop="8dp"
+				android:layout_marginBottom="8dp"
+				android:hint="Enter your name"
+				android:textColor="@android:color/black"
+				android:padding="12dp"
+				/>
+
+
 
 			<Button
 				android:id="@+id/btn_book_appointment"
