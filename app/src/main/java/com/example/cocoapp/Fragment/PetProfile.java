@@ -73,11 +73,9 @@ public class PetProfile extends Fragment {
 
 	private ApiService apiService;
 	private SharedPreferences prefs;
-	ImageButton backButton,editButton,imageButton;
 	TextView petNameTextView, petBreedTextView, petage, petweight, petcolor, petheight,petLocation,header,name2,name3;
 
 	View editFrame,informationFrame;
-	Button doneButton ;
 	public PetProfile() {
 		// Default constructor
 	}
@@ -101,7 +99,7 @@ public class PetProfile extends Fragment {
 
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_profile, container, false);
+		View view = inflater.inflate(R.layout.fragment_pet_profile, container, false);
 		initializeViews(view);
 		loadPetProfile();
 		setupButtons(view);
@@ -178,22 +176,24 @@ public class PetProfile extends Fragment {
 
 
 	private void initializeViews(View view){
-		petNameTextView = view.findViewById(R.id.pet_name);
-		petBreedTextView = view.findViewById(R.id.type);
-		petgenderImageView = view.findViewById(R.id.gender);
-		petImageView = view.findViewById(R.id.imageDog);
-		petage = view.findViewById(R.id.age);
-		petweight = view.findViewById(R.id.weight);
-		petcolor = view.findViewById(R.id.color);
-		petheight = view.findViewById(R.id.height);
-		petLocation = view.findViewById(R.id.location);
-		header = view.findViewById(R.id.tvHeader);
-		name2 = view.findViewById(R.id.name2);
-		name3 = view.findViewById(R.id.name3);
-		editFrame = view.findViewById(R.id.edit_frame);
-		informationFrame = view.findViewById(R.id.information_frame);
-		// progressBar = view.findViewById(R.id.progressBar);
+		petNameTextView = view.findViewById(R.id.pet_name); // TextView
+		petBreedTextView = view.findViewById(R.id.type); // TextView
+		petgenderImageView = view.findViewById(R.id.gender); // ImageView
+		petImageView = view.findViewById(R.id.imageDog); // ImageView
+		petage = view.findViewById(R.id.age); // TextView
+		petweight = view.findViewById(R.id.weight); // TextView
+		petcolor = view.findViewById(R.id.color); // TextView
+		petheight = view.findViewById(R.id.height); // TextView
+		petLocation = view.findViewById(R.id.location); // TextView
+		header = view.findViewById(R.id.tvHeader); // TextView
+		name2 = view.findViewById(R.id.name2); // TextView
+		name3 = view.findViewById(R.id.name3); // TextView
+		editFrame = view.findViewById(R.id.edit_frame); // View or appropriate layout type
+		informationFrame = view.findViewById(R.id.information_frame); // View or appropriate layout type
 
+		// Correct type casting for ImageButton
+
+		// progressBar = view.findViewById(R.id.progressBar);
 		loadCachedPetProfile();
 	}
 
@@ -211,10 +211,10 @@ public class PetProfile extends Fragment {
 	}
 
 	private void setupButtons(View view) {
-		editButton = view.findViewById(R.id.edit_btn);
-		doneButton = view.findViewById(R.id.done_btn);
-		imageButton = view.findViewById(R.id.camera_btn);
-		backButton = view.findViewById(R.id.back_button);
+		ImageButton backButton = (ImageButton) view.findViewById(R.id.back_button); // ImageButton
+		ImageButton editButton = (ImageButton) view.findViewById(R.id.edit_btn);    // ImageButton
+		ImageButton imageButton = (ImageButton) view.findViewById(R.id.camera_btn); // ImageButton
+		Button doneButton = (Button) view.findViewById(R.id.done_btn);         // Button
 
 		editButton.setOnClickListener(v -> {
 			informationFrame.setVisibility(View.GONE);
@@ -227,9 +227,7 @@ public class PetProfile extends Fragment {
 			editFrame.setVisibility(View.GONE);
 			informationFrame.setVisibility(View.VISIBLE);
 			editButton.setVisibility(View.VISIBLE);
-
 			Toast.makeText(getActivity(), "Profile updated", Toast.LENGTH_SHORT).show();
-
 			// Get references to the EditText fields
 			EditText petNameEditText = view.findViewById(R.id.pet_name_edit);
 			EditText petBreedEditText = view.findViewById(R.id.pet_breed_name);
@@ -239,7 +237,6 @@ public class PetProfile extends Fragment {
 			EditText petHeightEditText = view.findViewById(R.id.pet_height);
 			EditText petLocationEditText = view.findViewById(R.id.pet_location);
 			EditText genderEditText = view.findViewById(R.id.pet_gender);
-
 			// Update the pet object with the new values from EditText
 			if (!TextUtils.isEmpty(genderEditText.getText())) {
 				pet.setGender(genderEditText.getText().charAt(0));
@@ -265,14 +262,12 @@ public class PetProfile extends Fragment {
 			if (!TextUtils.isEmpty(petLocationEditText.getText())) {
 				pet.setLocation(petLocationEditText.getText().toString());
 			}
-
 			// Set gender image based on updated pet object
 			if (pet.getGender().equals('M')) {
 				petgenderImageView.setImageResource(R.drawable.male);
 			} else {
 				petgenderImageView.setImageResource(R.drawable.female);
 			}
-
 			// Update UI fields with new pet values
 			name2.setText(pet.getPetName());
 			name3.setText(pet.getPetName());
@@ -284,7 +279,6 @@ public class PetProfile extends Fragment {
 			petcolor.setText(pet.getColor());
 			petheight.setText(String.valueOf(pet.getHeight()));
 			petLocationEditText.setText(pet.getLocation());
-
 			// Call the method to update the pet in the backend
 			uploadPetImage();
 		});
@@ -293,6 +287,9 @@ public class PetProfile extends Fragment {
 				getActivity().getSupportFragmentManager().popBackStack());
 
 		imageButton.setOnClickListener(v -> {
+			requireActivity().getSupportFragmentManager().beginTransaction()
+					.replace(R.id.fragment_container, PetProfile.newInstance(pet))
+					.commit();
 			String permission = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ? "android.permission.READ_MEDIA_IMAGES" : "android.permission.READ_EXTERNAL_STORAGE";
 			if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
 				requestPermissionLauncher.launch(permission);
@@ -315,7 +312,7 @@ public class PetProfile extends Fragment {
 				if (response.isSuccessful() && response.body() != null) {
 					PetProfile profile = response.body();
 
-
+					// Correct usage: accessing the methods from the 'pet' object
 					name2.setText(pet.getPetName());
 					name3.setText(pet.getPetName());
 					header.setText(pet.getPetName());
@@ -327,22 +324,27 @@ public class PetProfile extends Fragment {
 					petweight.setText(String.valueOf(pet.getWeight()) + " kg");
 					petcolor.setText(pet.getColor());
 					petLocation.setText(pet.getLocation());
+
 					if (pet.getGender().equals("M")) {
 						petgenderImageView.setImageResource(R.drawable.male);
 					} else {
 						petgenderImageView.setImageResource(R.drawable.female);
 					}
 
+					// Cache the pet profile
 					cachePetProfile(pet);
 
+					// Load the pet image using Glide if the URL is not empty
 					if (!TextUtils.isEmpty(pet.getImageUrl())) {
 						String baseUrl = "http://172.28.102.169:8080";
+						Glide.with(requireContext()).clear(petImageView);
 						Glide.with(requireContext())
 								.load(baseUrl + pet.getImageUrl())
-								.error(R.drawable.dog1)
+								.error(R.drawable.dog1)  // Fallback image if loading fails
 								.into(petImageView);
 					}
 				} else {
+					Log.e("PetProfile", "Failed to load pet profile data: " + response.message());
 					Toast.makeText(getActivity(), "Failed to load pet profile data", Toast.LENGTH_SHORT).show();
 				}
 			}
@@ -350,6 +352,7 @@ public class PetProfile extends Fragment {
 			@Override
 			public void onFailure(Call<PetProfile> call, Throwable t) {
 				// progressBar.setVisibility(View.GONE);
+				Log.e("PetProfile", "Error loading profile: " + t.getMessage());
 				Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -387,11 +390,20 @@ public class PetProfile extends Fragment {
 		petData.setLocation(petLocation.getText().toString().trim());
 
 		MultipartBody.Part imagePart = null;
+		if (selectedImageUri == null) {
+			Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		File imageFile = getImageFileFromImageView(petImageView);
+		if (imageFile == null) {
+			Toast.makeText(getActivity(), "Failed to convert image", Toast.LENGTH_SHORT).show();
+			return;
+		}
 		if (selectedImageUri != null) {
 			// Convert the selected image to a file and create a multipart body part
-			File imageFile = getImageFileFromImageView(petImageView);
 			imagePart = createMultipartBodyPartFromFile(imageFile);
 		}
+
 
 		// Convert the Pet object to JSON and create a request body
 		RequestBody petPart = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(petData));
@@ -406,8 +418,9 @@ public class PetProfile extends Fragment {
 			public void onResponse(Call<Pet> call, Response<Pet> response) {
 				if (response.isSuccessful()) {
 					Toast.makeText(getActivity(), "Pet image updated successfully", Toast.LENGTH_SHORT).show();
-					loadPetProfile(); // Reload the pet profile to reflect updated data
+					loadPetProfile();
 				} else {
+					Log.e("PetProfile", "Failed to update pet profile data: " + response.message());
 					Toast.makeText(getActivity(), "Failed to update pet: " + response.message(), Toast.LENGTH_SHORT).show();
 				}
 			}
