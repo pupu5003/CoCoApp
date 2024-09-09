@@ -158,14 +158,17 @@ public class Review extends Fragment {
 						rating += review.getRating();
 					}
 				}
-				avrate.setText(String.format("%.1f",rating/cnt));
+				if(cnt != 0) {
+					avrate.setText(String.format("%.1f",rating/cnt));
+					ratingBar.setRating(rating/cnt);
+					p1.setProgress(cnt_1*100/cnt);
+					p2.setProgress(cnt_2*100/cnt);
+					p3.setProgress(cnt_3*100/cnt);
+					p4.setProgress(cnt_4*100/cnt);
+					p5.setProgress(cnt_5*100/cnt);
+				}
 				numberView.setText("Based on "+ String.valueOf(cnt)+" reviews");
-				ratingBar.setRating(rating/cnt);
-				p1.setProgress(cnt_1*100/cnt);
-				p2.setProgress(cnt_2*100/cnt);
-				p3.setProgress(cnt_3*100/cnt);
-				p4.setProgress(cnt_4*100/cnt);
-				p5.setProgress(cnt_5*100/cnt);
+
 
 				reviewList.clear();
 				reviewList.addAll(filteredReviews);

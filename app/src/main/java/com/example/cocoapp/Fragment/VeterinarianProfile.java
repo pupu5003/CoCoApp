@@ -1,6 +1,7 @@
 package com.example.cocoapp.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,12 +88,17 @@ public class VeterinarianProfile extends Fragment {
 		);
 
 		// Handle rating text click
-		ratingText.setOnClickListener(v ->
-				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, Review.newInstance(veterinarian.getVetId(),"location"))
-						.addToBackStack(null)
-						.commit()
-		);
+		ratingText.setOnClickListener(new View.OnClickListener() {
+			                              @Override
+			                              public void onClick(View v) {
+				                              //Log.d("RatingText", veterinarian.getVetId());
+				                              requireActivity().getSupportFragmentManager().beginTransaction()
+						                              .replace(R.id.fragment_container, Review.newInstance(veterinarian.getLocation().getId(), "location"))
+						                              .addToBackStack(null)
+						                              .commit();
+			                              }
+		                              });
+
 
 		return view;
 	}

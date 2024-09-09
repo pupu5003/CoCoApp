@@ -116,6 +116,11 @@ public interface ApiService
 			@Header("Authorization") String token,  // Pass the auth token
 			@Part("reviewDto") RequestBody reviewDto  // Send the review DTO as a part
 	);
+	@GET("api/v1/user/getInfoId/{userId}")
+	Call<ProfileData> fetchUserInfoId(
+			@Path("userId") String userId,
+			@Header("Authorization") String authToken
+	);
 
 }
 

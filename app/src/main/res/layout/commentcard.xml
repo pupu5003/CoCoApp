@@ -21,6 +21,7 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/iv_ava"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
@@ -51,7 +52,8 @@
                     android:text="Just now"
                     android:fontFamily="@font/poppins_regular"
                     android:textColor="@android:color/darker_gray"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:visibility="gone"/>
             </LinearLayout>
         </LinearLayout>
 
