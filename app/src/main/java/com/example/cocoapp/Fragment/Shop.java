@@ -33,6 +33,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -49,7 +51,8 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 	private RecyclerView recyclerViewTopSelling;
 	private ProductAdapter recommendAdapter;
 	private ProductDashboardAdapter topSellingAdapter;
-	private List<Product> productList;
+	private List<Product> productList,topsellingList;
+
 	private List<Product> cartList;
 	private ImageView cartButton;
 
@@ -83,20 +86,11 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 
 		productList = new ArrayList<>();
 		cartList = new ArrayList<>();
+		topsellingList = new ArrayList<>();
 
-//		String imageView3 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
-//		String imageView4 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
-//		String imageView2 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
-//		String imageView1 = "android.resource://" + getContext().getPackageName() + "/" + R.drawable.product_img;
-//
-//
-//		productList.add(new Product(10, imageView1, 20F, "Dog Food", "900g", "Brand A", 100));
-//		productList.add(new Product(20, imageView2, 43F, "Cat Food", "500g", "Brand B", 100));
-//		productList.add(new Product(0, imageView3, 30F, "Bird Food", "1kg", "Brand C", 100));
-//		productList.add(new Product(0, imageView4, 13F, "Fish Food", "300g", "Brand D", 100));
-//
-		recommendAdapter = new ProductAdapter(getContext(), productList, this,true);
-		topSellingAdapter = new ProductDashboardAdapter(getContext(), productList, false, this);
+
+		recommendAdapter = new ProductAdapter(getContext(), productList, this,false);
+		topSellingAdapter = new ProductDashboardAdapter(getContext(), topsellingList, true, this);
 		recyclerViewRecommend.setAdapter(recommendAdapter);
 		recyclerViewTopSelling.setAdapter(topSellingAdapter);
 
@@ -138,8 +132,19 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 			@Override
 			public void onResponse(@NonNull Call<List<Product>> call, @NonNull Response<List<Product>> response) {
 				if (response.isSuccessful() && response.body() != null) {
+					List<Product> tmp = new ArrayList<>();
+					tmp.addAll(response.body());
 					productList.clear();
 					productList.addAll(response.body());
+					Collections.sort(tmp, new Comparator<Product>() {
+						@Override
+						public int compare(Product p1, Product p2) {
+							return Integer.compare(p2.getQuantity(), p1.getQuantity()); // descending order
+						}
+					});
+					for (int i = 0; i < Math.min(4, productList.size()); i++) {
+						topsellingList.add(tmp.get(i));
+					}
 					recommendAdapter.notifyDataSetChanged();
 					topSellingAdapter.notifyDataSetChanged();
 				} else {

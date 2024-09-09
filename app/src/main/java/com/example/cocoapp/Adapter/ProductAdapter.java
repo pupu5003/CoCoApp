@@ -61,47 +61,21 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 	public void onBindViewHolder(ProductViewHolder holder, int position) {
 		Product product = productList.get(position);
 		holder.productNameTextView.setText(product.getName());
-		String price = String.valueOf(product.getPrice()) + "$";
+		String price = String.valueOf(product.getPrice()) + "VND";
 		holder.priceTextView.setText(price);
 		if (product.getDiscount() == 0) holder.discountTextView.setVisibility(View.GONE);
 		else {
 			holder.discountTextView.setVisibility(View.VISIBLE);
-			holder.discountTextView.setText(String.valueOf(product.getDiscount()) + "%");}
+			holder.discountTextView.setText(String.valueOf(product.getDiscount()) + "%");
+		}
 		holder.discountTextView.setText(String.valueOf(product.getDiscount()) + "%");
 
 		String baseUrl = "http://172.28.102.169:8080";
-		String fileName = product.getProductImageUrl();
-		String basePath = "/file/";
-		fileName = fileName.substring(basePath.length());
+		Glide.with(context)
+				.load(baseUrl + product.getProductImageUrl())
+				.error(R.drawable.dog1)
+				.into(holder.productImageView);
 
-		apiService = ApiClient.getClient(context, false).create(ApiService.class);
-		SharedPreferences prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
-		String token = prefs.getString("jwt_token", null);
-
-		apiService.fetchImageFile("Bearer " + token, fileName).enqueue(new Callback<Void>() {
-			@Override
-			public void onResponse(Call<Void> call, Response<Void> response) {
-				if (response.isSuccessful()) {
-					// Load image with Glide
-					String fileName = product.getProductImageUrl();
-					Glide.with(context)
-							.load(baseUrl+fileName)
-							.error(R.drawable.dog1)
-							.into(holder.productImageView);
-
-					Log.e("Full Image URL", baseUrl + fileName);
-				} else {
-					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
-					Toast.makeText(context, "Failed to access image", Toast.LENGTH_SHORT).show();
-				}
-			}
-
-			@Override
-			public void onFailure(Call<Void> call, Throwable t) {
-				Log.e("API Error", "Error accessing image: " + t.getMessage());
-				Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-			}
-		});
 
 
 		if (product.getQuantity()>0) {

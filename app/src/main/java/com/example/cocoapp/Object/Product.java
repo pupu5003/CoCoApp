@@ -15,6 +15,7 @@ public class Product implements Serializable {
 	private String brand;
 	private int quantitySold;
 	private int stock;
+	private float rating;
 	private String description;
 
 	public Product(int discount, String productImageUrl, float price, String name, String weight, String brand, int stock, int quantitySold) {
@@ -30,6 +31,12 @@ public class Product implements Serializable {
 
 	public Product() {
 
+	}
+	public float getRating(){
+		return rating;
+	}
+	public void setRating(float rating){
+		this.rating = rating;
 	}
 
 	public int getDiscount() { return discount; }

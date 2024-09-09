@@ -55,6 +55,7 @@ public class ProductProfile extends Fragment {
 		Button addToCartButton = view.findViewById(R.id.cart_button);
 		ImageButton shoppingCartButton = view.findViewById(R.id.shopping_cart_plus_button);
 
+
 		backButton.setOnClickListener(v ->{
 				getActivity().getSupportFragmentManager().popBackStack();
 			}
@@ -119,6 +120,8 @@ public class ProductProfile extends Fragment {
 		TextView priceTextView = getView().findViewById(R.id.price);
 		TextView descriptionTextView = getView().findViewById(R.id.dogfooddescription);
 		ImageView productImageView = getView().findViewById(R.id.imagedogfood);
+		RatingBar ratingBar = getView().findViewById(R.id.rating_layout);
+		TextView rate = getView().findViewById(R.id.rating_text);
 
 		// Set the product data to views
 		productNameTextView.setText(product.getName());
@@ -127,33 +130,44 @@ public class ProductProfile extends Fragment {
 		descriptionTextView.setText(product.getDescription()); // Assuming getDescription()
 
 		String baseUrl = "http://172.28.102.169:8080";
-		String fileName = product.getProductImageUrl();
-		String basePath = "/file/";
-		fileName = fileName.substring(basePath.length());
-		apiService.fetchImageFile("Bearer " + token, fileName).enqueue(new Callback<Void>() {
-			@Override
-			public void onResponse(Call<Void> call, Response<Void> response) {
-				if (response.isSuccessful()) {
-					// Load image with Glide
-					String fileName = product.getProductImageUrl();
-					Glide.with(getContext())
-							.load(baseUrl+fileName)
+		Glide.with(getContext())
+							.load(baseUrl+product.getProductImageUrl())
 							.error(R.drawable.dog1)
 							.into(productImageView);
+		ratingBar.setRating(product.getRating());
+		rate.setText(String.format("%.2f", product.getRating()));
 
-					Log.e("Full Image URL", baseUrl + fileName);
-				} else {
-					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
-					Toast.makeText(getContext(), "Failed to access image", Toast.LENGTH_SHORT).show();
-				}
-			}
 
-			@Override
-			public void onFailure(Call<Void> call, Throwable t) {
-				Log.e("API Error", "Error accessing image: " + t.getMessage());
-				Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-			}
-		});
+
+//
+//		String baseUrl = "http://172.28.102.169:8080";
+//		String fileName = product.getProductImageUrl();
+//		String basePath = "/file/";
+//		fileName = fileName.substring(basePath.length());
+//		apiService.fetchImageFile("Bearer " + token, fileName).enqueue(new Callback<Void>() {
+//			@Override
+//			public void onResponse(Call<Void> call, Response<Void> response) {
+//				if (response.isSuccessful()) {
+//					// Load image with Glide
+//					String fileName = product.getProductImageUrl();
+//					Glide.with(getContext())
+//							.load(baseUrl+fileName)
+//							.error(R.drawable.dog1)
+//							.into(productImageView);
+//
+//					Log.e("Full Image URL", baseUrl + fileName);
+//				} else {
+//					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
+//					Toast.makeText(getContext(), "Failed to access image", Toast.LENGTH_SHORT).show();
+//				}
+//			}
+//
+//			@Override
+//			public void onFailure(Call<Void> call, Throwable t) {
+//				Log.e("API Error", "Error accessing image: " + t.getMessage());
+//				Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//			}
+//		});
 	}
 
 
