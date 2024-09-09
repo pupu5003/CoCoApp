@@ -1,49 +1,69 @@
 package com.example.cocoapp.Object;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ReviewItem {
-	private String name;
-	private String time;
+
+	@SerializedName("id")
+	private String id;
+
+	@SerializedName("type")
+	private String type;
+
+	@SerializedName("targetId")
+	private String targetId;
+
+	@SerializedName("detail")
+	private String detail;
+
+	@SerializedName("rating")
 	private float rating;
+
+	@SerializedName("userId")
+	private String userId;
+
+	@SerializedName("name")
+	private String name;
+
+	@SerializedName("time")
+	private String time;
+
+	@SerializedName("comment")
 	private String comment;
 
-	// Constructor
-	public ReviewItem(String name, String time, float rating, String comment) {
-		this.name = name;
-		this.time = time;
-		this.rating = rating;
-		this.comment = comment;
-	}
+	public String getId() { return id; }
 
-	// Getters and Setters
-	public String getName() {
-		return name;
-	}
+	public void setId(String id) { this.id = id; }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+	public String getType() { return type; }
 
-	public String getTime() {
-		return time;
-	}
+	public void setType(String type) { this.type = type; }
 
-	public void setTime(String time) {
-		this.time = time;
-	}
+	public String getTargetId() { return targetId; }
 
-	public float getRating() {
-		return rating;
-	}
+	public void setTargetId(String targetId) { this.targetId = targetId; }
 
-	public void setRating(float rating) {
-		this.rating = rating;
-	}
+	public String getDetail() { return detail; }
 
-	public String getComment() {
-		return comment;
-	}
+	public void setDetail(String detail) { this.detail = detail; }
 
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
+	public float getRating() { return rating; }
+
+	public void setRating(float rating) { this.rating = rating; }
+
+	public String getUserId() { return userId; }
+
+	public void setUserId(String userId) { this.userId = userId; }
+
+	public String getName() { return name; }
+
+	public void setName(String name) { this.name = name; }
+
+	public String getTime() { return time; }
+
+	public void setTime(String time) { this.time = time; }
+
+	public String getComment() { return detail; }
+
+	public void setComment(String comment) { this.comment = comment; }
 }

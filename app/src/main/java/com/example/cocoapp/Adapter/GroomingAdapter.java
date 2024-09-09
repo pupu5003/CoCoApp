@@ -75,12 +75,12 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
             if (isGrooming) {
                 FragmentActivity activity = (FragmentActivity) context;
                 activity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, Review.newInstance(grooming.getName(),"1"))
+                        .replace(R.id.fragment_container, Review.newInstance(grooming.getId()))
                         .addToBackStack(null).commit();
             }else{
                 FragmentActivity activity = (FragmentActivity) context;
                 activity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, Review.newInstance(grooming.getName(),"2"))
+                        .replace(R.id.fragment_container, Review.newInstance(grooming.getId()))
                         .addToBackStack(null).commit();
             }
         });

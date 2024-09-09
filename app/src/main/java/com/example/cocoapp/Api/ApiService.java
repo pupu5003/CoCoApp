@@ -17,6 +17,7 @@ import com.example.cocoapp.Object.Product;
 import java.util.List;
 
 import com.example.cocoapp.Object.ProfileData;
+import com.example.cocoapp.Object.ReviewItem;
 import com.example.cocoapp.Object.ShowcaseDto;
 import com.example.cocoapp.Object.Veterinarian;
 
@@ -105,6 +106,9 @@ public interface ApiService
 
 	@GET("/api/v1/showcase/getAll")
 	Call<List<ShowcaseDto>> getAllShowcases(@Header("Authorization") String token);
+
+	@GET("/api/v1/review/getAll")
+	Call<List<ReviewItem>> getAllReviews();
 
 }
 
