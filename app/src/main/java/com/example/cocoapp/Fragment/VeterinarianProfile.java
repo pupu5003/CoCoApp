@@ -89,7 +89,7 @@ public class VeterinarianProfile extends Fragment {
 		// Handle rating text click
 		ratingText.setOnClickListener(v ->
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, Review.newInstance(veterinarian.getVetId()))
+						.replace(R.id.fragment_container, Review.newInstance(veterinarian.getVetId(),"location"))
 						.addToBackStack(null)
 						.commit()
 		);

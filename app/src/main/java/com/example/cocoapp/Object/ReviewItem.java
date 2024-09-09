@@ -65,5 +65,5 @@ public class ReviewItem {
 
 	public String getComment() { return detail; }
 
-	public void setComment(String comment) { this.comment = comment; }
+	public void setComment(String comment) { this.detail = comment; }
 }

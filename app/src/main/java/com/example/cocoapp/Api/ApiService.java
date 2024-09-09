@@ -110,5 +110,12 @@ public interface ApiService
 	@GET("/api/v1/review/getAll")
 	Call<List<ReviewItem>> getAllReviews();
 
+	@Multipart
+	@POST("/api/v1/review/add")
+	Call<ReviewItem> addReview(
+			@Header("Authorization") String token,  // Pass the auth token
+			@Part("reviewDto") RequestBody reviewDto  // Send the review DTO as a part
+	);
+
 }
 

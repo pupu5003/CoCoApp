@@ -67,6 +67,9 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
     public VeterinarianViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.veterinarian_item, parent, false);
+        apiService = ApiClient.getClient(context, false).create(ApiService.class);
+        SharedPreferences prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+        String token = prefs.getString("jwt_token", null);
         return new VeterinarianViewHolder(view);
     }
 
@@ -172,37 +175,10 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
 
             String baseUrl = "http://172.28.102.169:8080";
             String fileName = veterinarian.getImageUrl();
-            String basePath = "/file/";
-            if (fileName != null)
-                fileName = fileName.substring(basePath.length());
-
-            apiService = ApiClient.getClient(context, false).create(ApiService.class);
-            SharedPreferences prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
-            String token = prefs.getString("jwt_token", null);
-
-            apiService.fetchImageFile("Bearer " + token, fileName).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        String fileName = veterinarian.getImageUrl();
-                        Glide.with(context)
-                                .load(baseUrl+fileName)
-                                .error(R.drawable.dog1)
-                                .into(profileImage);
-
-                        Log.e("Full Image URL", baseUrl + fileName);
-                    } else {
-                        Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
-                        Toast.makeText(context, "Failed to access image", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Log.e("API Error", "Error accessing image: " + t.getMessage());
-                    Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+            Glide.with(context)
+                    .load(baseUrl+fileName)
+                    .error(R.drawable.dog1)
+                    .into(profileImage);
         }
 
     }

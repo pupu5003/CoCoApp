@@ -57,6 +57,7 @@
 		app:layout_constraintVertical_bias="0.034">
 
 		<ImageView
+			android:id="@+id/ivAva"
 			android:layout_width="40dp"
 			android:layout_height="40dp"
 			android:layout_marginEnd="8dp"
@@ -68,6 +69,7 @@
 			android:orientation="vertical">
 
 			<TextView
+				android:id="@+id/tvName"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="Haylie Aminoff"
@@ -131,7 +133,7 @@
 		app:layout_constraintTop_toBottomOf="@+id/textView2"
 		app:layout_constraintVertical_bias="0.03" />
 	<Button
-		android:id="@+id/btn_pay_now"
+		android:id="@+id/btn_post"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:text="Post Review"
