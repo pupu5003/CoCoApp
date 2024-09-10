@@ -1,6 +1,8 @@
 package com.example.cocoapp.Fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -13,12 +15,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
 import com.example.cocoapp.Adapter.CartAdapter;
+import com.example.cocoapp.Api.ApiClient;
+import com.example.cocoapp.Api.ApiService;
+import com.example.cocoapp.Object.CartDto;
 import com.example.cocoapp.Object.CartItem;
 import com.example.cocoapp.Object.CartManager;
 import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.R;
+import com.google.gson.Gson;
+
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ViewCart extends Fragment {
 
@@ -41,19 +57,16 @@ public class ViewCart extends Fragment {
 		shoppingButton = view.findViewById(R.id.shoppping_ic);
 		checkoutButton = view.findViewById(R.id.checkout_button);
 
-
-		cartItemList = CartManager.getInstance().getCartItemList();
-
 		Bundle args = getArguments();
 		if (args != null) {
 			List<Product> products = (List<Product>) args.getSerializable("cartList");
 			if (products != null) {
 				for (Product product : products) {
 					cartItemList.add(new CartItem(
+							product.getId(),
 							product.getName(),
 							product.getBrand(),
 							product.getSize(),
-							R.drawable.product_img,
 							product.getQuantity()
 					));
 				}
@@ -65,7 +78,9 @@ public class ViewCart extends Fragment {
 		}
 
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-		cartAdapter = new CartAdapter(cartItemList);
+
+		cartItemList = CartManager.getInstance().getCartItemList();
+		cartAdapter = new CartAdapter(cartItemList, getContext());
 		recyclerView.setAdapter(cartAdapter);
 
 		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -77,6 +92,7 @@ public class ViewCart extends Fragment {
 			@Override
 			public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 				int position = viewHolder.getAdapterPosition();
+				CartItem cartItem = cartItemList.get(position);
 
 				if (direction == ItemTouchHelper.LEFT) {
 					new AlertDialog.Builder(getContext())
@@ -84,6 +100,8 @@ public class ViewCart extends Fragment {
 							.setMessage("Do you want to delete this item?")
 							.setPositiveButton("Yes", (dialog, which) -> {
 								cartItemList.remove(position);
+								cartItem.setQuantity(0);
+								updateCartItem(cartItem, position);
 								cartAdapter.notifyItemRemoved(position);
 							})
 							.setNegativeButton("No", (dialog, which) -> {
@@ -112,10 +130,6 @@ public class ViewCart extends Fragment {
 						.commit();
 			}
 		});
-
-
-
-
 		return view;
 	}
 
@@ -125,6 +139,35 @@ public class ViewCart extends Fragment {
 				.setMessage(message)
 				.setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
 				.show();
+	}
+
+	public void updateCartItem(CartItem cartItem, int position) {
+		ApiService apiService = ApiClient.getClient(requireContext(), false).create(ApiService.class);
+		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		String token = prefs.getString("jwt_token", null);
+
+		String cartItemJson = new Gson().toJson(cartItem);
+		RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), cartItemJson);
+
+		apiService.updateCartItem("Bearer " + token, requestBody).enqueue(new Callback<CartDto>() {
+			@Override
+			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					Toast.makeText(getContext(), "Item updated successfully", Toast.LENGTH_SHORT).show();
+					cartAdapter.notifyItemChanged(position);
+				} else {
+					Toast.makeText(getContext(), "Failed to update item: " + response.message(), Toast.LENGTH_SHORT).show();
+					cartAdapter.notifyItemChanged(position);
+				}
+			}
+
+			@Override
+			public void onFailure(Call<CartDto> call, Throwable t) {
+				Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+				cartAdapter.notifyItemChanged(position);
+			}
+		});
 	}
 
 }

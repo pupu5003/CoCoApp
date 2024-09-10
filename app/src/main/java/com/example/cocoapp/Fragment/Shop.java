@@ -23,6 +23,7 @@ import com.example.cocoapp.Adapter.ProductAdapter;
 import com.example.cocoapp.Adapter.ProductDashboardAdapter;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
+import com.example.cocoapp.Object.CartDto;
 import com.example.cocoapp.Object.CartItem;
 import com.example.cocoapp.Object.CartManager;
 import com.example.cocoapp.Object.Product;
@@ -37,13 +38,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener, ProductDashboardAdapter.OnAddToCartListener {
 
@@ -102,6 +104,7 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 	@Override
 	public void onAddToCart(Product product) {
 		CartItem cartItem = new CartItem(
+				product.getId(),
 				product.getName(),
 				product.getBrand(),
 				product.getSize(),
@@ -109,6 +112,39 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 				product.getQuantity()
 		);
 		CartManager.getInstance().addItem(cartItem);
+		updateCartItem(cartItem);
+		Toast.makeText(getContext(), product.getName() + " added to cart", Toast.LENGTH_SHORT).show();
+	}
+
+	private void updateCartItem(CartItem cartItem) {
+		// API call to update the cart
+		ApiService apiService = ApiClient.getClient(requireContext(), false).create(ApiService.class);
+		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		String token = prefs.getString("jwt_token", null);
+
+		// Convert CartItem to JSON string
+		String cartItemJson = new Gson().toJson(cartItem);
+		// Create RequestBody from the JSON string
+		RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), cartItemJson);
+
+		apiService.updateCartItem("Bearer " + token, requestBody).enqueue(new Callback<CartDto>() {
+			@Override
+			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+				if (response.isSuccessful()) {
+					// Handle success scenario
+					Toast.makeText(getContext(), "Cart updated successfully", Toast.LENGTH_SHORT).show();
+				} else {
+					// Handle error response
+					Toast.makeText(getContext(), "Failed to update cart: " + response.message(), Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<CartDto> call, Throwable t) {
+				// Handle failure
+				Toast.makeText(getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 	private void openCart() {

@@ -1,5 +1,6 @@
 package com.example.cocoapp.Adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,10 +8,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cocoapp.Fragment.ViewCart;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.CartItem;
 
@@ -19,9 +23,11 @@ import java.util.List;
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
 	private final List<CartItem> cartItemList;
+	private final Context context;
 
-	public CartAdapter(List<CartItem> cartItemList) {
+	public CartAdapter(List<CartItem> cartItemList, Context context) {
 		this.cartItemList = cartItemList;
+		this.context = context;
 	}
 
 	@NonNull
@@ -34,7 +40,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 	@Override
 	public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
 		CartItem cartItem = cartItemList.get(position);
-		holder.bind(cartItem);
+		holder.bind(cartItem, position);
 	}
 
 	@Override
@@ -58,10 +64,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 			incrementButton = itemView.findViewById(R.id.incrementButton);
 			decrementButton = itemView.findViewById(R.id.decrementButton);
 			itemContent = itemView.findViewById(R.id.item_content);
-
 		}
 
-		public void bind(CartItem cartItem) {
+		public void bind(CartItem cartItem, int position) {
 			productName.setText(cartItem.getProductName());
 			productBrand.setText(cartItem.getProductBrand());
 			productWeight.setText(cartItem.getProductWeight());
@@ -71,12 +76,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 			incrementButton.setOnClickListener(v -> {
 				cartItem.setQuantity(cartItem.getQuantity() + 1);
 				quantityTextView.setText(String.valueOf(cartItem.getQuantity()));
+				((ViewCart) ((FragmentActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container))
+						.updateCartItem(cartItem, position);
 			});
 
 			decrementButton.setOnClickListener(v -> {
 				if (cartItem.getQuantity() > 1) {
 					cartItem.setQuantity(cartItem.getQuantity() - 1);
 					quantityTextView.setText(String.valueOf(cartItem.getQuantity()));
+					((ViewCart) ((FragmentActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container))
+							.updateCartItem(cartItem, position);
 				}
 			});
 		}

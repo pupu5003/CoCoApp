@@ -5,6 +5,7 @@ import com.example.cocoapp.Api.Auth.RegisterRequest;
 import com.example.cocoapp.Api.Auth.AuthResponse;
 import com.example.cocoapp.Fragment.Profile;
 import com.example.cocoapp.Object.Appointment;
+import com.example.cocoapp.Object.CartDto;
 import com.example.cocoapp.Object.Grooming;
 import com.example.cocoapp.Object.Pet;
 
@@ -122,5 +123,21 @@ public interface ApiService
 			@Header("Authorization") String authToken
 	);
 
+	@GET("/api/v1/cart/get")
+	Call<CartDto> getCart(
+			@Header("Authorization") String token
+	);
+
+	@POST("/api/v1/cart/addItem")
+	Call<CartDto> addCartItem(
+			@Header("Authorization") String token,
+			@Body RequestBody cartItem
+	);
+
+	@POST("/api/v1/cart/updateItem")
+	Call<CartDto> updateCartItem(
+			@Header("Authorization") String token,
+			@Body RequestBody cartItem
+	);
 }
 
