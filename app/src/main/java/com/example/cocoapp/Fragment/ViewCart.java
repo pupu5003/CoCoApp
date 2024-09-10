@@ -110,6 +110,7 @@ public class ViewCart extends Fragment {
 							.setPositiveButton("Yes", (dialog, which) -> {
 								cartItemList.remove(position);
 								cartItem.getItem().setCurrentQuantity(0);
+								cartItem.setQuantity(0);
 								updateCartItem(cartItem, position);
 								cartAdapter.notifyItemRemoved(position);
 							})
@@ -128,7 +129,7 @@ public class ViewCart extends Fragment {
 		itemTouchHelper.attachToRecyclerView(recyclerView);
 
 		shoppingButton.setOnClickListener(v -> {
-			getActivity().getSupportFragmentManager().popBackStack();
+			requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,new Shop()).addToBackStack(null).commit();
 		});
 
 		checkoutButton.setOnClickListener(new View.OnClickListener() {

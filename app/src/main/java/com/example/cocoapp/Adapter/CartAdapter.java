@@ -1,5 +1,6 @@
 package com.example.cocoapp.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,6 +96,23 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 					quantityTextView.setText(String.valueOf(cartItem.getItem().getCurrentQuantity()));
 					((ViewCart) ((FragmentActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container))
 							.updateCartItem(cartItem, position);
+				}
+				else
+				{
+					new AlertDialog.Builder(context)
+							.setTitle("Delete Item")
+							.setMessage("Do you want to delete this item?")
+							.setPositiveButton("Yes", (dialog, which) -> {
+								cartItemList.remove(position);
+								cartItem.getItem().setCurrentQuantity(0);
+								cartItem.setQuantity(0);
+								((ViewCart) ((FragmentActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container))
+										.updateCartItem(cartItem, position);
+								notifyItemRemoved(position);
+							})
+							.setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+							.setCancelable(false)
+							.show();
 				}
 			});
 		}
