@@ -39,13 +39,11 @@ public class ProductDashboardAdapter extends RecyclerView.Adapter<ProductDashboa
 	private Context context;
 	private List<Product> productList;
 	private boolean showAll;
-	private ProductDashboardAdapter.OnAddToCartListener onAddToCartListener;
 
-	public ProductDashboardAdapter(Context context, List<Product> productList, boolean showAll, ProductDashboardAdapter.OnAddToCartListener onAddToCartListener) {
+	public ProductDashboardAdapter(Context context, List<Product> productList, boolean showAll) {
 		this.context = context;
 		this.productList = productList;
 		this.showAll = showAll;
-		this.onAddToCartListener = onAddToCartListener;
 	}
 
 	@NonNull
@@ -125,12 +123,6 @@ public class ProductDashboardAdapter extends RecyclerView.Adapter<ProductDashboa
 		// Handle cart icon click to show quantity layout
 		holder.cartIcon.setOnClickListener(v -> {
 			holder.quantityTextView.setText("1");
-			if (onAddToCartListener != null) {
-				onAddToCartListener.onAddToCart(product);
-				Toast.makeText(context, product.getName() + " added to cart", Toast.LENGTH_SHORT).show();
-			} else {
-				Toast.makeText(context, "Add to cart action not set", Toast.LENGTH_SHORT).show();
-			}
 		});
 
 		// Handle increment button click

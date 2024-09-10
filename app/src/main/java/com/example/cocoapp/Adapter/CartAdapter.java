@@ -8,24 +8,24 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.cocoapp.Fragment.ViewCart;
+import com.example.cocoapp.Object.CartDto;
 import com.example.cocoapp.R;
-import com.example.cocoapp.Object.CartItem;
 
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
-	private final List<CartItem> cartItemList;
+	private final List<CartDto> cartItemList;
 	private final Context context;
 
-	public CartAdapter(List<CartItem> cartItemList, Context context) {
+	public CartAdapter(List<CartDto> cartItemList, Context context) {
 		this.cartItemList = cartItemList;
 		this.context = context;
 	}
@@ -39,7 +39,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
 	@Override
 	public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-		CartItem cartItem = cartItemList.get(position);
+		CartDto cartItem = cartItemList.get(position);
 		holder.bind(cartItem, position);
 	}
 
@@ -66,26 +66,32 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 			itemContent = itemView.findViewById(R.id.item_content);
 		}
 
-		public void bind(CartItem cartItem, int position) {
-			productName.setText(cartItem.getProductName());
-			productBrand.setText(cartItem.getProductBrand());
-			productWeight.setText(cartItem.getProductWeight());
-			productImage.setImageResource(cartItem.getProductImage());
-			quantityTextView.setText(String.valueOf(cartItem.getQuantity()));
+		public void bind(CartDto cartItem, int position) {
+			productName.setText(cartItem.getItems().get(position).getItem().getName());
+			productBrand.setText(cartItem.getItems().get(position).getItem().getBrand());
+			productWeight.setText(cartItem.getItems().get(position).getItem().getSizeObject().getValue() + " " + cartItem.getItems().get(position).getItem().getSizeObject().getUnit());
+			String baseUrl = "http://172.28.102.169:8080";
+			String fileName = cartItem.getItems().get(position).getItem().getImageUrl();
+			Glide.with(context)
+					.load(baseUrl+fileName)
+					.error(R.drawable.dog1)
+					.into(productImage);
+			quantityTextView.setText(String.valueOf(cartItem.getItems().get(position).getQuantity()));
 
 			incrementButton.setOnClickListener(v -> {
-				cartItem.setQuantity(cartItem.getQuantity() + 1);
-				quantityTextView.setText(String.valueOf(cartItem.getQuantity()));
+				cartItem.getItems().get(position).setQuantity(cartItem.getItems().get(position).getQuantity() + 1);
+				quantityTextView.setText(String.valueOf(cartItem.getItems().get(position).getQuantity()));
+
 				((ViewCart) ((FragmentActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container))
-						.updateCartItem(cartItem, position);
+						.updateCartItem(cartItem.getItems().get(position), position);
 			});
 
 			decrementButton.setOnClickListener(v -> {
-				if (cartItem.getQuantity() > 1) {
-					cartItem.setQuantity(cartItem.getQuantity() - 1);
-					quantityTextView.setText(String.valueOf(cartItem.getQuantity()));
+				if (cartItem.getItems().get(position).getQuantity() > 1) {
+					cartItem.getItems().get(position).setQuantity(cartItem.getItems().get(position).getQuantity() - 1);
+					quantityTextView.setText(String.valueOf(cartItem.getItems().get(position).getQuantity()));
 					((ViewCart) ((FragmentActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container))
-							.updateCartItem(cartItem, position);
+							.updateCartItem(cartItem.getItems().get(position), position);
 				}
 			});
 		}

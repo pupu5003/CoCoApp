@@ -18,19 +18,19 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.cocoapp.Adapter.CartAdapter;
+import com.example.cocoapp.Adapter.ProductAdapter;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.CartDto;
-import com.example.cocoapp.Object.CartItem;
-import com.example.cocoapp.Object.CartManager;
+import com.example.cocoapp.Object.CartItemDto;
 import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.R;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,9 +40,13 @@ public class ViewCart extends Fragment {
 
 	private RecyclerView recyclerView;
 	private CartAdapter cartAdapter;
-	private List<CartItem> cartItemList;
+	private List<CartDto> cartItemList;
 	private ImageButton shoppingButton;
 	private Button checkoutButton;
+	private SharedPreferences prefs;
+	private String token;
+	private ApiService apiService;
+
 
 	public ViewCart() {
 	}
@@ -51,36 +55,22 @@ public class ViewCart extends Fragment {
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_view_cart, container, false);
-
+		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
+		prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		token = prefs.getString("jwt_token", null);
 		recyclerView = view.findViewById(R.id.recyclerView);
-		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		shoppingButton = view.findViewById(R.id.shoppping_ic);
 		checkoutButton = view.findViewById(R.id.checkout_button);
 
-		Bundle args = getArguments();
-		if (args != null) {
-			List<Product> products = (List<Product>) args.getSerializable("cartList");
-			if (products != null) {
-				for (Product product : products) {
-					cartItemList.add(new CartItem(
-							product.getId(),
-							product.getName(),
-							product.getBrand(),
-							product.getSize(),
-							product.getQuantity()
-					));
-				}
-			} else {
-				showError("Error: Cart data is missing.");
-			}
-		} else {
-			showError("Error: No data received.");
-		}
+
 
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+		cartAdapter = new CartAdapter(cartItemList,getContext());
+		cartItemList = new ArrayList<>();
+		fetchCart();
+		
 
-		cartItemList = CartManager.getInstance().getCartItemList();
-		cartAdapter = new CartAdapter(cartItemList, getContext());
+
 		recyclerView.setAdapter(cartAdapter);
 
 		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -92,7 +82,7 @@ public class ViewCart extends Fragment {
 			@Override
 			public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 				int position = viewHolder.getAdapterPosition();
-				CartItem cartItem = cartItemList.get(position);
+				CartDto cartItem = cartItemList.get(position);
 
 				if (direction == ItemTouchHelper.LEFT) {
 					new AlertDialog.Builder(getContext())
@@ -100,8 +90,8 @@ public class ViewCart extends Fragment {
 							.setMessage("Do you want to delete this item?")
 							.setPositiveButton("Yes", (dialog, which) -> {
 								cartItemList.remove(position);
-								cartItem.setQuantity(0);
-								updateCartItem(cartItem, position);
+								cartItem.getItems().get(position).getItem().setCurrentQuantity(0);
+								updateCartItem(cartItem.getItems().get(position), position);
 								cartAdapter.notifyItemRemoved(position);
 							})
 							.setNegativeButton("No", (dialog, which) -> {
@@ -133,6 +123,28 @@ public class ViewCart extends Fragment {
 		return view;
 	}
 
+	private void fetchCart() {
+		Call<CartDto> call = apiService.getCart(token);
+		call.enqueue(new Callback<CartDto>() {
+			@Override
+			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+				if (response.isSuccessful()) {
+					// Handle successful response
+					cartItemList.clear();
+					cartItemList.add(response.body());
+					cartAdapter.notifyDataSetChanged();
+				} else {
+					// Handle error response
+				}
+			}
+
+			@Override
+			public void onFailure(Call<CartDto> call, Throwable t) {
+				// Handle failure (e.g., network errors)
+			}
+		});
+	}
+
 	private void showError(String message) {
 		new AlertDialog.Builder(getContext())
 				.setTitle("Error")
@@ -141,17 +153,13 @@ public class ViewCart extends Fragment {
 				.show();
 	}
 
-	public void updateCartItem(CartItem cartItem, int position) {
-		ApiService apiService = ApiClient.getClient(requireContext(), false).create(ApiService.class);
-		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
-		String token = prefs.getString("jwt_token", null);
-
+	public void updateCartItem(CartItemDto cartItem, int position) {
 		String cartItemJson = new Gson().toJson(cartItem);
 		RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), cartItemJson);
 
-		apiService.updateCartItem("Bearer " + token, requestBody).enqueue(new Callback<CartDto>() {
+		apiService.updateCartItem("Bearer " + token, requestBody).enqueue(new Callback<CartItemDto>() {
 			@Override
-			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+			public void onResponse(Call<CartItemDto> call, Response<CartItemDto> response) {
 				if (response.isSuccessful() && response.body() != null) {
 					Toast.makeText(getContext(), "Item updated successfully", Toast.LENGTH_SHORT).show();
 					cartAdapter.notifyItemChanged(position);
@@ -162,12 +170,13 @@ public class ViewCart extends Fragment {
 			}
 
 			@Override
-			public void onFailure(Call<CartDto> call, Throwable t) {
+			public void onFailure(Call<CartItemDto> call, Throwable t) {
 				Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 				Toast.makeText(getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 				cartAdapter.notifyItemChanged(position);
 			}
 		});
 	}
+	
 
 }

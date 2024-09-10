@@ -24,9 +24,6 @@ import com.example.cocoapp.Adapter.ProductDashboardAdapter;
 import com.example.cocoapp.Adapter.VeterinarianDashboardAdapter;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
-import com.example.cocoapp.Object.CartDto;
-import com.example.cocoapp.Object.CartItem;
-import com.example.cocoapp.Object.CartManager;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Pet;
 import com.example.cocoapp.Object.Product;
@@ -48,7 +45,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDashboardAdapter.OnAddToCartListener {
+public class Dashboard extends Fragment implements OnMapReadyCallback {
 
 	private RecyclerView recyclerViewPetStatus;
 	private RecyclerView recyclerViewProduct;
@@ -108,7 +105,7 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 
 
 		petStatusAdapter = new PetStatusAdapter(getContext(), petList);
-		productDashboardAdapter = new ProductDashboardAdapter(getContext(), productList, false, this);
+		productDashboardAdapter = new ProductDashboardAdapter(getContext(), productList, false);
 		petDashboardAdapter = new PetDashboardAdapter(getContext(), petList);
 		veterinarianDashboardAdapter = new VeterinarianDashboardAdapter(getContext(), veterinarianList, false);
 
@@ -257,47 +254,34 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 		}
 	}
 
-	@Override
-	public void onAddToCart(Product product) {
-		CartItem cartItem = new CartItem(
-				product.getId(), // Make sure to pass the product ID
-				product.getName(),
-				product.getBrand(),
-				product.getSize(),
-				R.drawable.product_img,
-				1
-		);
-		CartManager.getInstance().addItem(cartItem);
-		updateCartItem(cartItem);
-		Toast.makeText(getContext(), product.getName() + " added to cart", Toast.LENGTH_SHORT).show();
-	}
 
-	private void updateCartItem(CartItem cartItem) {
-		// API call to update the cart
-		ApiService apiService = ApiClient.getClient(requireContext(), false).create(ApiService.class);
-		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
-		String token = prefs.getString("jwt_token", null);
 
-		String cartItemJson = new Gson().toJson(cartItem);
-		RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), cartItemJson);
-
-		apiService.updateCartItem("Bearer " + token, requestBody).enqueue(new Callback<CartDto>() {
-			@Override
-			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
-				if (response.isSuccessful()) {
-					// Handle success scenario
-					Toast.makeText(getContext(), "Cart updated successfully", Toast.LENGTH_SHORT).show();
-				} else {
-					// Handle error response
-					Toast.makeText(getContext(), "Failed to update cart: " + response.message(), Toast.LENGTH_SHORT).show();
-				}
-			}
-
-			@Override
-			public void onFailure(Call<CartDto> call, Throwable t) {
-				// Handle failure
-				Toast.makeText(getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-			}
-		});
-	}
+//	private void updateCartItem(CartItem cartItem) {
+//		// API call to update the cart
+//		ApiService apiService = ApiClient.getClient(requireContext(), false).create(ApiService.class);
+//		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+//		String token = prefs.getString("jwt_token", null);
+//
+//		String cartItemJson = new Gson().toJson(cartItem);
+//		RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), cartItemJson);
+//
+//		apiService.updateCartItem("Bearer " + token, requestBody).enqueue(new Callback<CartDto>() {
+//			@Override
+//			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+//				if (response.isSuccessful()) {
+//					// Handle success scenario
+//					Toast.makeText(getContext(), "Cart updated successfully", Toast.LENGTH_SHORT).show();
+//				} else {
+//					// Handle error response
+//					Toast.makeText(getContext(), "Failed to update cart: " + response.message(), Toast.LENGTH_SHORT).show();
+//				}
+//			}
+//
+//			@Override
+//			public void onFailure(Call<CartDto> call, Throwable t) {
+//				// Handle failure
+//				Toast.makeText(getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//			}
+//		});
+//	}
 }

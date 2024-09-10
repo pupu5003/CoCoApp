@@ -36,17 +36,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
 	private Context context;
 	private List<Product> productList;
-	private OnAddToCartListener onAddToCartListener;
-	ApiService apiService;
-	SharedPreferences prefs;
-	String token;
+
 
 	private boolean showAll;
 
-	public ProductAdapter(Context context, List<Product> productList, OnAddToCartListener onAddToCartListener, boolean showAll) {
+	public ProductAdapter(Context context, List<Product> productList, boolean showAll) {
 		this.context = context;
 		this.productList = productList;
-		this.onAddToCartListener = onAddToCartListener;
 		this.showAll = showAll;
 	}
 
@@ -78,7 +74,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
 
 
-		if (product.getQuantity()>0) {
+		if (product.getCurrentQuantity()>0) {
 			int quantity = Integer.parseInt(holder.quantityTextView.getText().toString());
 			holder.quantityTextView.setText(String.valueOf(quantity));
 		}
@@ -95,17 +91,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 			holder.addToCartButton.setVisibility(View.GONE);
 			holder.quantityLayout.setVisibility(View.VISIBLE);
 			holder.quantityTextView.setText("1");
-			if (onAddToCartListener != null) {
-				onAddToCartListener.onAddToCart(product);
-				Toast.makeText(context, product.getName() + " added to cart", Toast.LENGTH_SHORT).show();
-			} else {
-				Toast.makeText(context, "Add to cart action not set", Toast.LENGTH_SHORT).show();
-			}
 		});
 
 		holder.incrementButton.setOnClickListener(v -> {
 			int quantity = Integer.parseInt(holder.quantityTextView.getText().toString());
 			holder.quantityTextView.setText(String.valueOf(++quantity));
+			product.setCurrentQuantity(quantity);
 		});
 
 		// Handle decrement button click
@@ -113,11 +104,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 			int quantity = Integer.parseInt(holder.quantityTextView.getText().toString());
 			if (quantity > 1) {
 				holder.quantityTextView.setText(String.valueOf(--quantity));
-			} else {
-				// If quantity is 1, revert to showing the cart icon
+				product.setCurrentQuantity(quantity);
+			} else {// If quantity is 1, revert to showing the cart icon
 				holder.quantityTextView.setText("1");
 				holder.quantityLayout.setVisibility(View.GONE);
 				holder.addToCartButton.setVisibility(View.VISIBLE);
+				product.setCurrentQuantity(1);
 			}
 		});
 
@@ -165,7 +157,5 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 		}
 	}
 
-	public interface OnAddToCartListener {
-		void onAddToCart(Product product);
-	}
+
 }

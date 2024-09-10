@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,16 +22,11 @@ import com.example.cocoapp.Adapter.ProductAdapter;
 import com.example.cocoapp.Adapter.ProductDashboardAdapter;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
-import com.example.cocoapp.Object.CartDto;
-import com.example.cocoapp.Object.CartItem;
-import com.example.cocoapp.Object.CartManager;
+import com.example.cocoapp.Object.CartItemDto;
 import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.R;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,19 +38,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-
-public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener, ProductDashboardAdapter.OnAddToCartListener {
+public class Shop extends Fragment {
 
 	private RecyclerView recyclerViewRecommend;
 	private RecyclerView recyclerViewTopSelling;
 	private ProductAdapter recommendAdapter;
 	private ProductDashboardAdapter topSellingAdapter;
 	private List<Product> productList,topsellingList;
-
-	private List<Product> cartList;
 	private ImageView cartButton;
+	private ApiService apiService;
+	private SharedPreferences prefs;
+	private String token;
 
 	public Shop() {
 	}
@@ -66,6 +58,9 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 	                         Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_shop, container, false);
+		prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		token = prefs.getString("jwt_token", null);
+		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
 		cartButton = view.findViewById(R.id.cart_ic);
 		TextView seeAll = view.findViewById(R.id.see_all);
 		cartButton.setOnClickListener(v -> openCart());
@@ -87,12 +82,11 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 		recyclerViewRecommend.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
 		productList = new ArrayList<>();
-		cartList = new ArrayList<>();
 		topsellingList = new ArrayList<>();
 
 
-		recommendAdapter = new ProductAdapter(getContext(), productList, this,false);
-		topSellingAdapter = new ProductDashboardAdapter(getContext(), topsellingList, true, this);
+		recommendAdapter = new ProductAdapter(getContext(), productList,true);
+		topSellingAdapter = new ProductDashboardAdapter(getContext(), topsellingList, true);
 		recyclerViewRecommend.setAdapter(recommendAdapter);
 		recyclerViewTopSelling.setAdapter(topSellingAdapter);
 
@@ -101,22 +95,7 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 		return view;
 	}
 
-	@Override
-	public void onAddToCart(Product product) {
-		CartItem cartItem = new CartItem(
-				product.getId(),
-				product.getName(),
-				product.getBrand(),
-				product.getSize(),
-				R.drawable.product_img,
-				product.getQuantity()
-		);
-		CartManager.getInstance().addItem(cartItem);
-		updateCartItem(cartItem);
-		Toast.makeText(getContext(), product.getName() + " added to cart", Toast.LENGTH_SHORT).show();
-	}
-
-	private void updateCartItem(CartItem cartItem) {
+	private void updateCartItem(CartItemDto cartItem) {
 		// API call to update the cart
 		ApiService apiService = ApiClient.getClient(requireContext(), false).create(ApiService.class);
 		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
@@ -127,9 +106,9 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 		// Create RequestBody from the JSON string
 		RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), cartItemJson);
 
-		apiService.updateCartItem("Bearer " + token, requestBody).enqueue(new Callback<CartDto>() {
+		apiService.updateCartItem("Bearer " + token, requestBody).enqueue(new Callback<CartItemDto>() {
 			@Override
-			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+			public void onResponse(Call<CartItemDto> call, Response<CartItemDto> response) {
 				if (response.isSuccessful()) {
 					// Handle success scenario
 					Toast.makeText(getContext(), "Cart updated successfully", Toast.LENGTH_SHORT).show();
@@ -140,7 +119,7 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 			}
 
 			@Override
-			public void onFailure(Call<CartDto> call, Throwable t) {
+			public void onFailure(Call<CartItemDto> call, Throwable t) {
 				// Handle failure
 				Toast.makeText(getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 			}
@@ -148,14 +127,48 @@ public class Shop extends Fragment implements ProductAdapter.OnAddToCartListener
 	}
 
 	private void openCart() {
-		ViewCart viewCartFragment = new ViewCart();
-		Bundle bundle = new Bundle();
-		bundle.putSerializable("cartList", new ArrayList<>(cartList));
-		viewCartFragment.setArguments(bundle);
+		for (Product item : productList) {
+			//Log.d("product", item.getName()+" "+item.getCurrentQuantity());
+			//Log.d("Item", item.toString());
+			CartItemDto tmp = new CartItemDto();
+			tmp.setQuantity(item.getCurrentQuantity());
+			//Log.d("Item", tmp.getQuantity().toString());
+			tmp.setItem(item);
+			updateCart(tmp);
+		}
 		requireActivity().getSupportFragmentManager().beginTransaction()
-				.replace(R.id.fragment_container, viewCartFragment)
+				.replace(R.id.fragment_container, new ViewCart())
 				.addToBackStack(null)
 				.commit();
+	}
+
+	private void updateCart(CartItemDto item) {
+		Gson gson = new Gson();
+		String cartItemJson = gson.toJson(item);
+		RequestBody cartItemBody = RequestBody.create(
+				cartItemJson, MediaType.parse("application/json"));
+
+		Call<CartItemDto> call = apiService.updateCartItem("Bearer" + token,cartItemBody);
+		call.enqueue(new Callback<CartItemDto>() {
+			@Override
+			public void onResponse(Call<CartItemDto> call, Response<CartItemDto> response) {
+				if (response.isSuccessful()) {
+					// Handle successful response
+					CartItemDto updatedCart = response.body();
+
+					Log.d("API", "Cart updated successfully: " + updatedCart.toString());
+					// Do something with the updated cart
+				} else {
+					Log.d("API", "Cart updated fail: ");
+					// Handle error case
+				}
+			}
+
+			@Override
+			public void onFailure(Call<CartItemDto> call, Throwable t) {
+				// Handle failure
+			}
+		});
 	}
 
 

@@ -2,15 +2,15 @@
 package com.example.cocoapp.Object;
 
 public class CartItemDto {
-	private ShopItemDto item; // Assuming you have a ShopItemDto or equivalent class
+	private Product item; // Assuming you have a ShopItemDto or equivalent class
 	private Integer quantity;
 
 	// Getters and Setters
-	public ShopItemDto getItem() {
+	public Product getItem() {
 		return item;
 	}
 
-	public void setItem(ShopItemDto item) {
+	public void setItem(Product item) {
 		this.item = item;
 	}
 
