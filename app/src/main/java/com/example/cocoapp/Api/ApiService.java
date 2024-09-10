@@ -126,16 +126,18 @@ public interface ApiService
 			@Header("Authorization") String token
 	);
 
+	@Multipart
+	@POST("/api/v1/cart/updateItem")
+	Call<CartDto> updateCartItem(
+			@Header("Authorization") String token,
+			@Part("cartItemDto") RequestBody cartItemDto
+	);
+
+	@Multipart
 	@POST("/api/v1/cart/addItem")
 	Call<CartDto> addCartItem(
 			@Header("Authorization") String token,
-			@Body RequestBody cartItem
-	);
-
-	@POST("/api/v1/cart/updateItem")
-	Call<CartItemDto> updateCartItem(
-			@Header("Authorization") String token,
-			@Body RequestBody cartItem
+			@Part("cartItemDto") RequestBody cartItemDto
 	);
 
 }

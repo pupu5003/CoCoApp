@@ -22,6 +22,7 @@ import com.example.cocoapp.Adapter.ProductAdapter;
 import com.example.cocoapp.Adapter.ProductDashboardAdapter;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
+import com.example.cocoapp.Object.CartDto;
 import com.example.cocoapp.Object.CartItemDto;
 import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.R;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -45,6 +47,7 @@ public class Shop extends Fragment {
 	private ProductAdapter recommendAdapter;
 	private ProductDashboardAdapter topSellingAdapter;
 	private List<Product> productList,topsellingList;
+	private List<CartItemDto> cartItemsList;
 	private ImageView cartButton;
 	private ApiService apiService;
 	private SharedPreferences prefs;
@@ -61,6 +64,23 @@ public class Shop extends Fragment {
 		prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
 		token = prefs.getString("jwt_token", null);
 		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
+		cartItemsList = new ArrayList<>();
+
+		recyclerViewRecommend = view.findViewById(R.id.productRecommend_recycle_view);
+		recyclerViewTopSelling = view.findViewById(R.id.productTopSelling_recycle_view);
+
+		recyclerViewTopSelling.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+		recyclerViewRecommend.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+		productList = new ArrayList<>();
+		topsellingList = new ArrayList<>();
+
+
+		recommendAdapter = new ProductAdapter(getContext(), productList,false);
+		topSellingAdapter = new ProductDashboardAdapter(getContext(), topsellingList, true);
+		recyclerViewRecommend.setAdapter(recommendAdapter);
+		recyclerViewTopSelling.setAdapter(topSellingAdapter);
+		fetchProducts();
 		cartButton = view.findViewById(R.id.cart_ic);
 		TextView seeAll = view.findViewById(R.id.see_all);
 		cartButton.setOnClickListener(v -> openCart());
@@ -75,71 +95,15 @@ public class Shop extends Fragment {
 		});
 
 
-		recyclerViewRecommend = view.findViewById(R.id.productRecommend_recycle_view);
-		recyclerViewTopSelling = view.findViewById(R.id.productTopSelling_recycle_view);
-
-		recyclerViewTopSelling.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-		recyclerViewRecommend.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
-		productList = new ArrayList<>();
-		topsellingList = new ArrayList<>();
-
-
-		recommendAdapter = new ProductAdapter(getContext(), productList,true);
-		topSellingAdapter = new ProductDashboardAdapter(getContext(), topsellingList, true);
-		recyclerViewRecommend.setAdapter(recommendAdapter);
-		recyclerViewTopSelling.setAdapter(topSellingAdapter);
-
-		fetchProducts();
 
 		return view;
 	}
 
-	private void updateCartItem(CartItemDto cartItem) {
-		// API call to update the cart
-		ApiService apiService = ApiClient.getClient(requireContext(), false).create(ApiService.class);
-		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
-		String token = prefs.getString("jwt_token", null);
 
-		// Convert CartItem to JSON string
-		String cartItemJson = new Gson().toJson(cartItem);
-		// Create RequestBody from the JSON string
-		RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), cartItemJson);
 
-		apiService.updateCartItem("Bearer " + token, requestBody).enqueue(new Callback<CartItemDto>() {
-			@Override
-			public void onResponse(Call<CartItemDto> call, Response<CartItemDto> response) {
-				if (response.isSuccessful()) {
-					// Handle success scenario
-					Toast.makeText(getContext(), "Cart updated successfully", Toast.LENGTH_SHORT).show();
-				} else {
-					// Handle error response
-					Toast.makeText(getContext(), "Failed to update cart: " + response.message(), Toast.LENGTH_SHORT).show();
-				}
-			}
-
-			@Override
-			public void onFailure(Call<CartItemDto> call, Throwable t) {
-				// Handle failure
-				Toast.makeText(getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-			}
-		});
-	}
 
 	private void openCart() {
-		for (Product item : productList) {
-			//Log.d("product", item.getName()+" "+item.getCurrentQuantity());
-			//Log.d("Item", item.toString());
-			CartItemDto tmp = new CartItemDto();
-			tmp.setQuantity(item.getCurrentQuantity());
-			//Log.d("Item", tmp.getQuantity().toString());
-			tmp.setItem(item);
-			updateCart(tmp);
-		}
-		requireActivity().getSupportFragmentManager().beginTransaction()
-				.replace(R.id.fragment_container, new ViewCart())
-				.addToBackStack(null)
-				.commit();
+		fetchCart();
 	}
 
 	private void updateCart(CartItemDto item) {
@@ -148,25 +112,104 @@ public class Shop extends Fragment {
 		RequestBody cartItemBody = RequestBody.create(
 				cartItemJson, MediaType.parse("application/json"));
 
-		Call<CartItemDto> call = apiService.updateCartItem("Bearer" + token,cartItemBody);
-		call.enqueue(new Callback<CartItemDto>() {
+		Call<CartDto> call = apiService.updateCartItem("Bearer " + token,cartItemBody);
+		call.enqueue(new Callback<CartDto>() {
 			@Override
-			public void onResponse(Call<CartItemDto> call, Response<CartItemDto> response) {
+			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
 				if (response.isSuccessful()) {
 					// Handle successful response
-					CartItemDto updatedCart = response.body();
+					CartDto updatedCart = response.body();
 
-					Log.d("API", "Cart updated successfully: " + updatedCart.toString());
+					Log.d("huhuhu", "Cart updated successfully: " + updatedCart.toString());
 					// Do something with the updated cart
 				} else {
-					Log.d("API", "Cart updated fail: ");
+					Log.d("huhuhu", "Cart updated fail: ");
 					// Handle error case
 				}
 			}
 
 			@Override
-			public void onFailure(Call<CartItemDto> call, Throwable t) {
+			public void onFailure(Call<CartDto> call, Throwable t) {
 				// Handle failure
+			}
+		});
+	}
+	private void fetchCart() {
+
+		Call<CartDto> call = apiService.getCart("Bearer " + token);
+		call.enqueue(new Callback<CartDto>() {
+			@Override
+			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+				if (response.isSuccessful()) {
+					// Handle successful response
+					CartDto cart = response.body();
+					cartItemsList.clear();
+					cartItemsList.addAll(cart.getItems());
+					for (Product item : productList) {
+						for (CartItemDto cartItem : cartItemsList) {
+							if (Objects.equals(cartItem.getItem().getId(), item.getId())) {
+								cartItem.setQuantity(item.getCurrentQuantity());
+								cartItem.setItem(item);
+								//Log.d("hihi", String.valueOf(item.getCurrentQuantity()));
+								updateCart(cartItem);
+								break;
+							}
+
+						}
+					}
+					Log.d("hihi", String.valueOf(cartItemsList.size()));
+					requireActivity().getSupportFragmentManager().beginTransaction()
+							.replace(R.id.fragment_container, ViewCart.newInstance(cartItemsList))
+							.addToBackStack(null)
+							.commit();
+
+
+					Log.d("API", "Fetched cart successfully: " + cart.toString());
+				} else {
+					Log.d("API", "Fetched cart unsuccessfully: ");
+				}
+			}
+
+			@Override
+			public void onFailure(Call<CartDto> call, Throwable t) {
+				// Handle failure (e.g., network errors)
+				Log.e("API", "Fetch cart request failed: " + t.getMessage());
+			}
+		});
+	}
+	private void fetchCartInit() {
+
+		Call<CartDto> call = apiService.getCart("Bearer " + token);
+		call.enqueue(new Callback<CartDto>() {
+			@Override
+			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+				if (response.isSuccessful()) {
+					// Handle successful response
+					CartDto cart = response.body();
+					cartItemsList.clear();
+					cartItemsList.addAll(cart.getItems());
+					for (Product item : productList) {
+						Log.d("hihihi", item.getId()+" ");
+						for (CartItemDto cartItem : cartItemsList) {
+							Log.d("hihihi", cartItem.getItem().getId()+" ");
+							if (Objects.equals(cartItem.getItem().getId(), item.getId())) {
+								item.setCurrentQuantity(cartItem.getQuantity());
+								Log.d("hihihi", String.valueOf(item.getCurrentQuantity()));
+								break;
+							}
+						}
+					}
+					recommendAdapter.notifyDataSetChanged();
+					Log.d("API", "Fetched cart successfully: " + cart.toString());
+				} else {
+					Log.d("API", "Fetched cart unsuccessfully: ");
+				}
+			}
+
+			@Override
+			public void onFailure(Call<CartDto> call, Throwable t) {
+				// Handle failure (e.g., network errors)
+				Log.e("API", "Fetch cart request failed: " + t.getMessage());
 			}
 		});
 	}
@@ -185,6 +228,7 @@ public class Shop extends Fragment {
 					tmp.addAll(response.body());
 					productList.clear();
 					productList.addAll(response.body());
+					fetchCartInit();
 					Collections.sort(tmp, new Comparator<Product>() {
 						@Override
 						public int compare(Product p1, Product p2) {

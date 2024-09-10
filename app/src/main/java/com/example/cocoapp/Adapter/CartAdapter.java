@@ -16,16 +16,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.cocoapp.Fragment.ViewCart;
 import com.example.cocoapp.Object.CartDto;
+import com.example.cocoapp.Object.CartItemDto;
 import com.example.cocoapp.R;
 
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
-	private final List<CartDto> cartItemList;
+	private final List<CartItemDto> cartItemList;
 	private final Context context;
 
-	public CartAdapter(List<CartDto> cartItemList, Context context) {
+	public CartAdapter(List<CartItemDto> cartItemList, Context context) {
 		this.cartItemList = cartItemList;
 		this.context = context;
 	}
@@ -39,7 +40,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
 	@Override
 	public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-		CartDto cartItem = cartItemList.get(position);
+		CartItemDto cartItem = cartItemList.get(position);
 		holder.bind(cartItem, position);
 	}
 
@@ -66,32 +67,34 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 			itemContent = itemView.findViewById(R.id.item_content);
 		}
 
-		public void bind(CartDto cartItem, int position) {
-			productName.setText(cartItem.getItems().get(position).getItem().getName());
-			productBrand.setText(cartItem.getItems().get(position).getItem().getBrand());
-			productWeight.setText(cartItem.getItems().get(position).getItem().getSizeObject().getValue() + " " + cartItem.getItems().get(position).getItem().getSizeObject().getUnit());
+		public void bind(CartItemDto cartItem, int position) {
+			productName.setText(cartItem.getItem().getName());
+			productBrand.setText(cartItem.getItem().getBrand());
+			productWeight.setText(cartItem.getItem().getSizeObject().getValue() + " " + cartItem.getItem().getSizeObject().getUnit());
 			String baseUrl = "http://172.28.102.169:8080";
-			String fileName = cartItem.getItems().get(position).getItem().getImageUrl();
+			String fileName = cartItem.getItem().getImageUrl();
 			Glide.with(context)
 					.load(baseUrl+fileName)
 					.error(R.drawable.dog1)
 					.into(productImage);
-			quantityTextView.setText(String.valueOf(cartItem.getItems().get(position).getQuantity()));
+			quantityTextView.setText(String.valueOf(cartItem.getQuantity()));
 
 			incrementButton.setOnClickListener(v -> {
-				cartItem.getItems().get(position).setQuantity(cartItem.getItems().get(position).getQuantity() + 1);
-				quantityTextView.setText(String.valueOf(cartItem.getItems().get(position).getQuantity()));
+				cartItem.setQuantity(cartItem.getItem().getCurrentQuantity() + 1);
+				cartItem.getItem().setCurrentQuantity(cartItem.getItem().getCurrentQuantity() + 1);
+				quantityTextView.setText(String.valueOf(cartItem.getItem().getCurrentQuantity()));
 
 				((ViewCart) ((FragmentActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container))
-						.updateCartItem(cartItem.getItems().get(position), position);
+						.updateCartItem(cartItem, position);
 			});
 
 			decrementButton.setOnClickListener(v -> {
-				if (cartItem.getItems().get(position).getQuantity() > 1) {
-					cartItem.getItems().get(position).setQuantity(cartItem.getItems().get(position).getQuantity() - 1);
-					quantityTextView.setText(String.valueOf(cartItem.getItems().get(position).getQuantity()));
+				if (cartItem.getQuantity() > 1) {
+					cartItem.setQuantity(cartItem.getItem().getCurrentQuantity() - 1);
+					cartItem.getItem().setCurrentQuantity(cartItem.getItem().getCurrentQuantity() - 1);
+					quantityTextView.setText(String.valueOf(cartItem.getItem().getCurrentQuantity()));
 					((ViewCart) ((FragmentActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container))
-							.updateCartItem(cartItem.getItems().get(position), position);
+							.updateCartItem(cartItem, position);
 				}
 			});
 		}

@@ -1,9 +1,18 @@
 // CartItemDto.java
 package com.example.cocoapp.Object;
 
-public class CartItemDto {
+import java.io.Serializable;
+
+public class CartItemDto implements Serializable {
+	private String id;
 	private Product item; // Assuming you have a ShopItemDto or equivalent class
 	private Integer quantity;
+	public String getId(){
+		return id;
+	}
+	public void setId(String id){
+		this.id = id;
+	}
 
 	// Getters and Setters
 	public Product getItem() {

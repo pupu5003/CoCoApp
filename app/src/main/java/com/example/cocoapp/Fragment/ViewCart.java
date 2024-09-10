@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +24,12 @@ import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.CartDto;
 import com.example.cocoapp.Object.CartItemDto;
+import com.example.cocoapp.Object.Pet;
 import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.R;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +40,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ViewCart extends Fragment {
+	private static final String ARG_PARAM1 = "param1";
+	private static final String ARG_PARAM2 = "param2";
 
 	private RecyclerView recyclerView;
 	private CartAdapter cartAdapter;
-	private List<CartDto> cartItemList;
+	private List<CartItemDto> cartItemList;
 	private ImageButton shoppingButton;
 	private Button checkoutButton;
 	private SharedPreferences prefs;
@@ -48,7 +53,25 @@ public class ViewCart extends Fragment {
 	private ApiService apiService;
 
 
+
+
 	public ViewCart() {
+	}
+
+	public static ViewCart newInstance(List<CartItemDto> param1) {
+		ViewCart fragment = new ViewCart();
+		Bundle args = new Bundle();
+		args.putSerializable(ARG_PARAM1, (Serializable) param1);
+		fragment.setArguments(args);
+		return fragment;
+	}
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (getArguments() != null) {
+			cartItemList = new ArrayList<>();
+			cartItemList = (List<CartItemDto>) getArguments().getSerializable(ARG_PARAM1);  // Retrieve the Pet object
+		}
 	}
 
 	@Override
@@ -61,13 +84,9 @@ public class ViewCart extends Fragment {
 		recyclerView = view.findViewById(R.id.recyclerView);
 		shoppingButton = view.findViewById(R.id.shoppping_ic);
 		checkoutButton = view.findViewById(R.id.checkout_button);
-
-
-
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		cartAdapter = new CartAdapter(cartItemList,getContext());
-		cartItemList = new ArrayList<>();
-		fetchCart();
+		//fetchCart();
 		
 
 
@@ -82,7 +101,7 @@ public class ViewCart extends Fragment {
 			@Override
 			public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 				int position = viewHolder.getAdapterPosition();
-				CartDto cartItem = cartItemList.get(position);
+				CartItemDto cartItem = cartItemList.get(position);
 
 				if (direction == ItemTouchHelper.LEFT) {
 					new AlertDialog.Builder(getContext())
@@ -90,8 +109,8 @@ public class ViewCart extends Fragment {
 							.setMessage("Do you want to delete this item?")
 							.setPositiveButton("Yes", (dialog, which) -> {
 								cartItemList.remove(position);
-								cartItem.getItems().get(position).getItem().setCurrentQuantity(0);
-								updateCartItem(cartItem.getItems().get(position), position);
+								cartItem.getItem().setCurrentQuantity(0);
+								updateCartItem(cartItem, position);
 								cartAdapter.notifyItemRemoved(position);
 							})
 							.setNegativeButton("No", (dialog, which) -> {
@@ -123,27 +142,6 @@ public class ViewCart extends Fragment {
 		return view;
 	}
 
-	private void fetchCart() {
-		Call<CartDto> call = apiService.getCart(token);
-		call.enqueue(new Callback<CartDto>() {
-			@Override
-			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
-				if (response.isSuccessful()) {
-					// Handle successful response
-					cartItemList.clear();
-					cartItemList.add(response.body());
-					cartAdapter.notifyDataSetChanged();
-				} else {
-					// Handle error response
-				}
-			}
-
-			@Override
-			public void onFailure(Call<CartDto> call, Throwable t) {
-				// Handle failure (e.g., network errors)
-			}
-		});
-	}
 
 	private void showError(String message) {
 		new AlertDialog.Builder(getContext())
@@ -157,9 +155,9 @@ public class ViewCart extends Fragment {
 		String cartItemJson = new Gson().toJson(cartItem);
 		RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), cartItemJson);
 
-		apiService.updateCartItem("Bearer " + token, requestBody).enqueue(new Callback<CartItemDto>() {
+		apiService.updateCartItem("Bearer " + token, requestBody).enqueue(new Callback<CartDto>() {
 			@Override
-			public void onResponse(Call<CartItemDto> call, Response<CartItemDto> response) {
+			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
 				if (response.isSuccessful() && response.body() != null) {
 					Toast.makeText(getContext(), "Item updated successfully", Toast.LENGTH_SHORT).show();
 					cartAdapter.notifyItemChanged(position);
@@ -170,7 +168,7 @@ public class ViewCart extends Fragment {
 			}
 
 			@Override
-			public void onFailure(Call<CartItemDto> call, Throwable t) {
+			public void onFailure(Call<CartDto> call, Throwable t) {
 				Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 				Toast.makeText(getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 				cartAdapter.notifyItemChanged(position);

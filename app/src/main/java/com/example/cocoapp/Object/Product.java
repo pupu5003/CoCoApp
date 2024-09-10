@@ -62,6 +62,7 @@ public class Product implements Serializable {
 	public String getBrand() { return brand; }
 
 	public int getQuantity() { return quantitySold; }
+	public void setQuantity(int quantity) { this.quantitySold += quantity; }
 
 	public void incrementQuantity() { this.currentQuantity++; }
 
