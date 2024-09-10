@@ -11,7 +11,7 @@ public class ShowcaseDto {
 
 	private String description;
 
-
+	public String getId() { return vet.getVetId();}
 	public String getCategory(){
 		return category;
 	}

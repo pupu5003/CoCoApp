@@ -1,15 +1,28 @@
 package com.example.cocoapp.Object;
 
 public class Allergy {
+	private String id;
 	private String name;
 	private String description;
 	private String veterinarian;
+
+	public Allergy(String id, String name, String description, String veterinarian) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.veterinarian = veterinarian;
+	}
+
 
 	public Allergy(String name, String description, String veterinarian) {
 		this.name = name;
 		this.description = description;
 		this.veterinarian = veterinarian;
 	}
+
+	public String getId() { return id;}
+
+	public void setId(String id) { this.id = id;}
 
 	public String getName() {
 		return name;

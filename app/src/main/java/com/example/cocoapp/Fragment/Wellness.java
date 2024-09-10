@@ -28,6 +28,7 @@ import com.example.cocoapp.Object.Allergy;
 import com.example.cocoapp.Object.Appointment;
 import com.example.cocoapp.Object.ShowcaseDto;
 import com.example.cocoapp.Object.Vaccination;
+import com.example.cocoapp.Object.Veterinarian;
 import com.example.cocoapp.R;
 
 import java.util.ArrayList;
@@ -92,8 +93,6 @@ public class Wellness extends Fragment{
 		fetchAppointments();
 		fetchShowcaseData();
 
-
-
 		seeAllVaccination.setOnClickListener(v -> {
 			requireActivity().getSupportFragmentManager().beginTransaction()
 					.replace(R.id.fragment_container, new VaccinationWellness()).addToBackStack(null).commit();
@@ -113,6 +112,38 @@ public class Wellness extends Fragment{
 		return view;
 	}
 
+	private void fetchVeterinarianDetails(String veterinarianId) {
+		// API service call to fetch veterinarian details
+
+		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		String token = prefs.getString("jwt_token", null);
+
+		apiService.fetchVetById("Bearer " + token, veterinarianId).enqueue(new Callback<Veterinarian>() {
+			@Override
+			public void onResponse(@NonNull Call<Veterinarian> call, @NonNull Response<Veterinarian> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					// Navigate to VeterinarianProfile with the retrieved data
+					Veterinarian veterinarian = response.body();
+					VeterinarianProfile profileFragment = VeterinarianProfile.newInstance(veterinarian);
+					requireActivity().getSupportFragmentManager().beginTransaction()
+							.replace(R.id.fragment_container, profileFragment)
+							.addToBackStack(null)
+							.commit();
+				} else {
+					// Handle the error response
+					Toast.makeText(getContext(), "Failed to load veterinarian details.", Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onFailure(@NonNull Call<Veterinarian> call, @NonNull Throwable t) {
+				// Handle the failure scenario
+				Log.e("API Error", t.getMessage());
+				Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
 	private void fetchShowcaseData() {
 		Call<List<ShowcaseDto>> call = apiService.getAllShowcases(token);
 		call.enqueue(new Callback<List<ShowcaseDto>>() {
@@ -125,10 +156,12 @@ public class Wellness extends Fragment{
 
 					for (ShowcaseDto showcase : showcaseList) {
 						if (showcase.getCategory().equals("Vaccinations")){
-							Vaccination tmp = new Vaccination(showcase.getType(),showcase.getName());
+							Vaccination tmp = new Vaccination(showcase.getId(), showcase.getType(),showcase.getName());
+							tmp.setId(showcase.getId());
 							vaccinationsList.add(tmp);
 						}else{
-							Allergy tmp = new Allergy(showcase.getType(),showcase.getDescription(),showcase.getName());
+							Allergy tmp = new Allergy(showcase.getId(), showcase.getType(),showcase.getDescription(),showcase.getName());
+							tmp.setId(showcase.getId());
 							allergiesList.add(tmp);
 						}
 					}
@@ -170,11 +203,5 @@ public class Wellness extends Fragment{
 			}
 		});
 	}
-
-
-
-
-
-
 
 }

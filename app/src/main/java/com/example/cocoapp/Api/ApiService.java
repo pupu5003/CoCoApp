@@ -113,8 +113,8 @@ public interface ApiService
 	@Multipart
 	@POST("/api/v1/review/add")
 	Call<ReviewItem> addReview(
-			@Header("Authorization") String token,  // Pass the auth token
-			@Part("reviewDto") RequestBody reviewDto  // Send the review DTO as a part
+			@Header("Authorization") String token,
+			@Part("reviewDto") RequestBody reviewDto
 	);
 	@GET("api/v1/user/getInfoId/{userId}")
 	Call<ProfileData> fetchUserInfoId(
