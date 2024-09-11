@@ -20,17 +20,25 @@ import com.example.cocoapp.Object.CartDto;
 import com.example.cocoapp.Object.CartItemDto;
 import com.example.cocoapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
-	private final List<CartItemDto> cartItemList;
-	private final Context context;
+	private List<CartItemDto> cartItemList;
+	private Context context;
+	private OnQuantityChangeListener onQuantityChangeListener;
+	public interface OnQuantityChangeListener {
+		void onQuantityChanged();
+	}
 
-	public CartAdapter(List<CartItemDto> cartItemList, Context context) {
+	public CartAdapter(List<CartItemDto> cartItemList, Context context, OnQuantityChangeListener onQuantityChangeListener) {
 		this.cartItemList = cartItemList;
 		this.context = context;
+		this.onQuantityChangeListener = onQuantityChangeListener;
 	}
+
+
 
 	@NonNull
 	@Override
@@ -51,7 +59,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 	}
 
 	public class CartViewHolder extends RecyclerView.ViewHolder {
-		private final TextView productName, productBrand, productWeight, quantityTextView;
+		private final TextView productName, productBrand, productWeight, quantityTextView, price;
 		private final ImageView productImage;
 		private final Button incrementButton, decrementButton;
 		private final LinearLayout itemContent;
@@ -66,6 +74,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 			incrementButton = itemView.findViewById(R.id.incrementButton);
 			decrementButton = itemView.findViewById(R.id.decrementButton);
 			itemContent = itemView.findViewById(R.id.item_content);
+			price = itemView.findViewById(R.id.product_price);
 		}
 
 		public void bind(CartItemDto cartItem, int position) {
@@ -79,12 +88,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 					.error(R.drawable.dog1)
 					.into(productImage);
 			quantityTextView.setText(String.valueOf(cartItem.getQuantity()));
+			price.setText(String.valueOf(cartItem.getItem().getPrice()));
 
 			incrementButton.setOnClickListener(v -> {
 				cartItem.setQuantity(cartItem.getItem().getCurrentQuantity() + 1);
 				cartItem.getItem().setCurrentQuantity(cartItem.getItem().getCurrentQuantity() + 1);
 				quantityTextView.setText(String.valueOf(cartItem.getItem().getCurrentQuantity()));
-
+				if (onQuantityChangeListener != null) {
+					onQuantityChangeListener.onQuantityChanged();
+				}
 				((ViewCart) ((FragmentActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container))
 						.updateCartItem(cartItem, position);
 			});
@@ -94,6 +106,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 					cartItem.setQuantity(cartItem.getItem().getCurrentQuantity() - 1);
 					cartItem.getItem().setCurrentQuantity(cartItem.getItem().getCurrentQuantity() - 1);
 					quantityTextView.setText(String.valueOf(cartItem.getItem().getCurrentQuantity()));
+					if (onQuantityChangeListener != null) {
+						onQuantityChangeListener.onQuantityChanged();
+					}
 					((ViewCart) ((FragmentActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container))
 							.updateCartItem(cartItem, position);
 				}
@@ -103,12 +118,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 							.setTitle("Delete Item")
 							.setMessage("Do you want to delete this item?")
 							.setPositiveButton("Yes", (dialog, which) -> {
-								cartItemList.remove(position);
 								cartItem.getItem().setCurrentQuantity(0);
 								cartItem.setQuantity(0);
+								cartItemList.remove(position);
 								((ViewCart) ((FragmentActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container))
 										.updateCartItem(cartItem, position);
 								notifyItemRemoved(position);
+								if (onQuantityChangeListener != null) {
+									onQuantityChangeListener.onQuantityChanged();
+								}
+
 							})
 							.setNegativeButton("No", (dialog, which) -> dialog.dismiss())
 							.setCancelable(false)

@@ -40,7 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Shop extends Fragment {
+public class Shop extends Fragment implements ProductAdapter.OnCartUpdateListener{
 
 	private RecyclerView recyclerViewRecommend;
 	private RecyclerView recyclerViewTopSelling;
@@ -76,7 +76,7 @@ public class Shop extends Fragment {
 		topsellingList = new ArrayList<>();
 
 
-		recommendAdapter = new ProductAdapter(getContext(), productList,false);
+		recommendAdapter = new ProductAdapter(getContext(), productList,false,this);
 		topSellingAdapter = new ProductDashboardAdapter(getContext(), topsellingList, true);
 		recyclerViewRecommend.setAdapter(recommendAdapter);
 		recyclerViewTopSelling.setAdapter(topSellingAdapter);
@@ -89,7 +89,7 @@ public class Shop extends Fragment {
 			@Override
 			public void onClick(View v) {
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container,new ProductSeeAll()).addToBackStack(null)
+						.replace(R.id.fragment_container,ProductSeeAll.newInstance(productList)).addToBackStack(null)
 						.commit();
 			}
 		});
@@ -228,6 +228,11 @@ public class Shop extends Fragment {
 					tmp.addAll(response.body());
 					productList.clear();
 					productList.addAll(response.body());
+					for (Product p : productList) {
+						if (p.getSizeObject().getUnit().equals("g"))
+							p.setSize(String.valueOf(p.getSizeObject().getValue() / 1000));
+						else p.setSize(String.valueOf(p.getSizeObject().getValue()));
+					}
 					fetchCartInit();
 					Collections.sort(tmp, new Comparator<Product>() {
 						@Override
@@ -253,5 +258,21 @@ public class Shop extends Fragment {
 			}
 		});
 	}
-
+	@Override
+	public void onCartUpdated(Product product) {
+		Log.d("huhuhuhu", "xoa roi ne");
+		for (CartItemDto item : cartItemsList) {
+			if (Objects.equals(item.getItem().getId(), product.getId())) {
+				item.setQuantity(0);
+				item.getItem().setCurrentQuantity(0);
+				Log.d("huhuhuhu", "xoa roi ne");
+				cartItemsList.remove(item);
+				updateCart(item);
+				recommendAdapter.notifyDataSetChanged();
+				break;
+			}
+		}
+	}
 }
+
+

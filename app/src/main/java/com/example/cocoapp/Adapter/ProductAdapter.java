@@ -43,11 +43,22 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 	private Context context;
 	private List<Product> productList;
 
-
+	private OnCartUpdateListener cartUpdateListener;
 	private boolean showAll;
 	private SharedPreferences prefs;
 	private String token;
 	private ApiService apiService;
+	public interface OnCartUpdateListener {
+		void onCartUpdated(Product product);
+	}
+
+
+	public ProductAdapter(Context context, List<Product> productList, boolean showAll,OnCartUpdateListener listener) {
+		this.context = context;
+		this.productList = productList;
+		this.showAll = showAll;
+		this.cartUpdateListener = listener;
+	}
 
 	public ProductAdapter(Context context, List<Product> productList, boolean showAll) {
 		this.context = context;
@@ -128,6 +139,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 				holder.quantityLayout.setVisibility(View.GONE);
 				holder.addToCartButton.setVisibility(View.VISIBLE);
 				product.setCurrentQuantity(0);
+				// Notify the cart update in the Shop fragment
+				if (cartUpdateListener != null) {
+					Log.d("huhuhu", "huhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuhu");
+					cartUpdateListener.onCartUpdated(product);
+				}
 			}
 		});
 

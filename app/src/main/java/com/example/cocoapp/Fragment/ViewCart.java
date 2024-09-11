@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cocoapp.Adapter.CartAdapter;
@@ -39,7 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ViewCart extends Fragment {
+public class ViewCart extends Fragment implements CartAdapter.OnQuantityChangeListener {
 	private static final String ARG_PARAM1 = "param1";
 	private static final String ARG_PARAM2 = "param2";
 
@@ -51,6 +52,7 @@ public class ViewCart extends Fragment {
 	private SharedPreferences prefs;
 	private String token;
 	private ApiService apiService;
+	TextView subtotalTextView, discountTextView, totalTextView;
 
 
 
@@ -81,16 +83,18 @@ public class ViewCart extends Fragment {
 		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
 		prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
 		token = prefs.getString("jwt_token", null);
+		subtotalTextView = view.findViewById(R.id.subtotal_value);
+		discountTextView = view.findViewById(R.id.Discount_value);
+		totalTextView = view.findViewById(R.id.total_value);
 		recyclerView = view.findViewById(R.id.recyclerView);
 		shoppingButton = view.findViewById(R.id.shoppping_ic);
 		checkoutButton = view.findViewById(R.id.checkout_button);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-		cartAdapter = new CartAdapter(cartItemList,getContext());
-		//fetchCart();
-		
+		cartAdapter = new CartAdapter(cartItemList,getContext(),this);
 
 
 		recyclerView.setAdapter(cartAdapter);
+		calculatePrice();
 
 		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 			@Override
@@ -113,6 +117,8 @@ public class ViewCart extends Fragment {
 								cartItem.setQuantity(0);
 								updateCartItem(cartItem, position);
 								cartAdapter.notifyItemRemoved(position);
+								calculatePrice();
+
 							})
 							.setNegativeButton("No", (dialog, which) -> {
 								cartAdapter.notifyItemChanged(position);
@@ -135,14 +141,37 @@ public class ViewCart extends Fragment {
 		checkoutButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				String totalText = totalTextView.getText().toString();
+				float totalAmount = Float.parseFloat(totalText.replace("$", "").trim());
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container,new Payment()).addToBackStack(null)
+						.replace(R.id.fragment_container, Payment.newInstance(totalAmount)).addToBackStack(null)
 						.commit();
 			}
 		});
 		return view;
 	}
 
+	public void calculatePrice() {
+		double subtotal = 0.0;
+		double discount = 0.0;  // You can calculate discounts if necessary
+		double total = 0.0;
+
+		// Loop through cart items to calculate subtotal
+		for (CartItemDto cartItem : cartItemList) {
+			if (cartItem.getQuantity() > 0) {  // Ensure only items with quantity > 0 are counted
+				float itemPrice = cartItem.getItem().getPrice();  // Assume price is a field in the item object
+				subtotal += itemPrice * cartItem.getQuantity();
+				discount += cartItem.getItem().getDiscount()*0.01*itemPrice;
+			}
+		}
+
+		// Assuming no discount for now, you can modify this if needed
+		total = subtotal - discount;
+
+		subtotalTextView.setText(String.format("$%.2f", subtotal));
+		discountTextView.setText(String.format("$%.2f", discount));
+		totalTextView.setText(String.format("$%.2f", total));
+	}
 
 	private void showError(String message) {
 		new AlertDialog.Builder(getContext())
@@ -175,7 +204,12 @@ public class ViewCart extends Fragment {
 				cartAdapter.notifyItemChanged(position);
 			}
 		});
+
 	}
-	
+	@Override
+	public void onQuantityChanged() {
+		calculatePrice();
+	}
+
 
 }
