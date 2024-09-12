@@ -2,6 +2,7 @@ package com.example.cocoapp.Adapter;
 
 import static java.security.AccessController.getContext;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -86,19 +87,88 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 				}
 			}
 		});
+
 		long timestampInMillis = appointment.getTime();
 		String[] dateTimeStrings = convertMillisecondsToDateTime(timestampInMillis);
+		holder.dateTextView.setText(dateTimeStrings[0]);
+		holder.hourTextView.setText(dateTimeStrings[1]);
 
-		String dateString = dateTimeStrings[0];
-		String timeString = dateTimeStrings[1];
+		long currentTimeMillis = System.currentTimeMillis();
+		long appointmentTimeMillis = appointment.getTime();
+		long oneHourInMillis = 60 * 60 * 1000;
+		long timeDifference = appointmentTimeMillis - currentTimeMillis;
 
-		holder.dateTextView.setText(dateString);
-		holder.hourTextView.setText(timeString);
+		if (currentTimeMillis < appointmentTimeMillis) {
+			holder.doneBtn.setVisibility(View.INVISIBLE);
+			holder.cancelBtn.setVisibility(View.INVISIBLE);
+			holder.itemView.setClickable(true);
 
-		holder.doneBtn.setOnClickListener(v -> {
-			addHistoryAppoiment(appointment, position);
-		});
+			holder.itemView.setOnClickListener(v -> {
+				long daysRemaining = timeDifference / (24 * 60 * 60 * 1000);
+				long hoursRemaining = (timeDifference % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000);
+				long minutesRemaining = (timeDifference % (60 * 60 * 1000)) / (60 * 1000);
 
+				String timeMessage;
+				if (daysRemaining > 0) {
+					timeMessage = "Appointment in " + daysRemaining + " days " + hoursRemaining + " hours.";
+				} else if (hoursRemaining > 0) {
+					timeMessage = "Appointment in " + hoursRemaining + " hours " + minutesRemaining + " minutes.";
+				} else {
+					timeMessage = "Appointment in " + minutesRemaining + " minutes.";
+				}
+
+				new AlertDialog.Builder(context)
+						.setTitle("Appointment Reminder")
+						.setMessage(timeMessage)
+						.setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+						.show();
+			});
+		}
+		else if (currentTimeMillis >= appointmentTimeMillis && currentTimeMillis < appointmentTimeMillis + oneHourInMillis) {
+			holder.doneBtn.setVisibility(View.INVISIBLE);
+			holder.cancelBtn.setVisibility(View.INVISIBLE);
+			holder.itemView.setClickable(true);
+
+			holder.itemView.setOnClickListener(v -> {
+				Toast.makeText(context, "The appointment is currently happening.", Toast.LENGTH_SHORT).show();
+			});
+		}
+		else if (currentTimeMillis >= appointmentTimeMillis + oneHourInMillis) {
+			holder.doneBtn.setVisibility(View.VISIBLE);
+			holder.cancelBtn.setVisibility(View.VISIBLE);
+			holder.itemView.setClickable(false);
+
+			holder.doneBtn.setOnClickListener(doneView -> {
+				new AlertDialog.Builder(context)
+						.setTitle("Appointment Status")
+						.setMessage("Are you sure you attended the appointment?")
+						.setPositiveButton("Yes", (dialog, which) -> {
+							addHistoryAppoiment(appointment, position);
+							// Remove the appointment
+
+						})
+						.setNegativeButton("No", (dialog, which) -> {
+							dialog.dismiss();
+							Toast.makeText(context, "Appointment status unchanged.", Toast.LENGTH_SHORT).show();
+						})
+						.show();
+			});
+
+			holder.cancelBtn.setOnClickListener(cancelView -> {
+				new AlertDialog.Builder(context)
+						.setTitle("Dismiss Appointment")
+						.setMessage("Are you sure you did not attend the appointment?")
+						.setPositiveButton("Yes", (dialog, which) -> {
+							// Remove the appointment
+
+						})
+						.setNegativeButton("No", (dialog, which) -> {
+							dialog.dismiss();
+							Toast.makeText(context, "Appointment status unchanged.", Toast.LENGTH_SHORT).show();
+						})
+						.show();
+			});
+		}
 	}
 
 	@Override
@@ -111,6 +181,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 		TextView dateTextView;
 		TextView hourTextView;
 		ImageButton doneBtn;
+		ImageButton cancelBtn;
 		TextView typeTextView;
 
 		public AppointmentViewHolder(@NonNull View itemView) {
@@ -119,6 +190,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 			dateTextView = itemView.findViewById(R.id.appointment_date);
 			hourTextView = itemView.findViewById(R.id.appointment_hour);
 			doneBtn = itemView.findViewById(R.id.done_btn);
+			cancelBtn = itemView.findViewById(R.id.cancel_btn);
 		}
 	}
 

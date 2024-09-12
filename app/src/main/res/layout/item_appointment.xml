@@ -67,19 +67,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/appointment_veterinarian"
                 android:src="@drawable/baseline_check_24"
-                android:backgroundTint="@android:color/transparent">
-            </ImageButton>
+                android:backgroundTint="@android:color/transparent"
+                android:visibility="invisible"/>
 
             <ImageButton
-                android:id="@+id/cancle_btn"
+                android:id="@+id/cancel_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/appointment_veterinarian"
                 android:src="@drawable/baseline_close_24"
-                android:backgroundTint="@android:color/transparent">
-            </ImageButton>
+                android:backgroundTint="@android:color/transparent"
+                android:visibility="invisible"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
