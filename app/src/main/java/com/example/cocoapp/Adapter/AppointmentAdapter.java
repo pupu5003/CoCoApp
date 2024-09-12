@@ -129,6 +129,23 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 						.setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
 						.show();
 			});
+
+			holder.cancelBtn.setOnClickListener(v -> {
+				new AlertDialog.Builder(context)
+						.setTitle("Cancel Appointment")
+						.setMessage("Are you sure you want to cancel this appointment?")
+						.setPositiveButton("Yes", (dialog, which) -> {
+							deleteAppointment(appointment, position);
+							appointments.remove(position);
+							notifyItemRemoved(position);
+							Toast.makeText(context, "Appointment canceled.", Toast.LENGTH_SHORT).show();
+						})
+						.setNegativeButton("No", (dialog, which) -> {
+							dialog.dismiss();
+							Toast.makeText(context, "Appointment remains scheduled.", Toast.LENGTH_SHORT).show();
+						})
+						.show();
+			});
 		}
 		else if (currentTimeMillis >= appointmentTimeMillis && currentTimeMillis < appointmentTimeMillis + oneHourInMillis) {
 			holder.doneBtn.setVisibility(View.INVISIBLE);
@@ -150,6 +167,8 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 						.setPositiveButton("Yes", (dialog, which) -> {
 							addHistoryAppoiment(appointment, position);
 							deleteAppointment(appointment, position);
+							appointments.remove(position);
+							notifyItemRemoved(position);
 						})
 						.setNegativeButton("No", (dialog, which) -> {
 							dialog.dismiss();
@@ -158,27 +177,26 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 						.show();
 			});
 
+			holder.cancelBtn.setOnClickListener(cancelView -> {
+				new AlertDialog.Builder(context)
+						.setTitle("Dismiss Appointment")
+						.setMessage("Are you sure you did not attend the appointment?")
+						.setPositiveButton("Yes", (dialog, which) -> {
+							deleteAppointment(appointment, position);
+							appointments.remove(position);
+							notifyItemRemoved(position);
+							if (onAppointmentDeletedListener != null) {
+								Log.d("AppointmentAdapter", "Invoking onAppointmentDeleted");
+								onAppointmentDeletedListener.onAppointmentDeleted(); // Notify fragment
+							}
+						})
+						.setNegativeButton("No", (dialog, which) -> {
+							dialog.dismiss();
+							Toast.makeText(context, "Appointment status unchanged.", Toast.LENGTH_SHORT).show();
+						})
+						.show();
+			});
 		}
-
-		holder.cancelBtn.setOnClickListener(cancelView -> {
-			new AlertDialog.Builder(context)
-					.setTitle("Dismiss Appointment")
-					.setMessage("Are you sure you did not attend the appointment?")
-					.setPositiveButton("Yes", (dialog, which) -> {
-						deleteAppointment(appointment, position);
-						appointments.remove(position);
-						notifyItemRemoved(position);
-						if (onAppointmentDeletedListener != null) {
-							Log.d("AppointmentAdapter", "Invoking onAppointmentDeleted");
-							onAppointmentDeletedListener.onAppointmentDeleted(); // Notify fragment
-						}
-					})
-					.setNegativeButton("No", (dialog, which) -> {
-						dialog.dismiss();
-						Toast.makeText(context, "Appointment status unchanged.", Toast.LENGTH_SHORT).show();
-					})
-					.show();
-		});
 	}
 
 	@Override
