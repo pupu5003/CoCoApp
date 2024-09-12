@@ -153,7 +153,7 @@ public class Wellness extends Fragment{
 					vaccinationsList.clear();
 
 					for (ShowcaseDto showcase : showcaseList) {
-						if (showcase.getCategory().equals("Vaccinations")){
+						if ("Vaccinations".equalsIgnoreCase(showcase.getCategory()) || "Vaccination".equalsIgnoreCase(showcase.getCategory())){
 							Vaccination tmp = new Vaccination(showcase.getId(), showcase.getType(),showcase.getName());
 							tmp.setId(showcase.getId());
 							vaccinationsList.add(tmp);

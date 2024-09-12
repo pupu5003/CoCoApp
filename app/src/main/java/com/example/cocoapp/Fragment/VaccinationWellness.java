@@ -1,26 +1,34 @@
 package com.example.cocoapp.Fragment;
 
-
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cocoapp.Adapter.VaccinationAdapter;
+import com.example.cocoapp.Api.ApiClient;
+import com.example.cocoapp.Api.ApiService;
+import com.example.cocoapp.Object.ShowcaseDto;
 import com.example.cocoapp.Object.Vaccination;
-import com.example.cocoapp.Object.VaccinationDetail;
 import com.example.cocoapp.R;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class VaccinationWellness extends Fragment {
 
@@ -28,6 +36,8 @@ public class VaccinationWellness extends Fragment {
 	private VaccinationAdapter vaccinationAdapter;
 	private List<Vaccination> vaccinationList;
 	private ImageButton backButton;
+	private ApiService apiService;
+	private String token;
 
 	@Nullable
 	@Override
@@ -38,33 +48,57 @@ public class VaccinationWellness extends Fragment {
 		// Initialize RecyclerView
 		recyclerView = view.findViewById(R.id.recyclerView);
 
-
-		// Set up the grid layout with 2 columns
-		recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+		// Set up the layout with a single column
+		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 		// Initialize data
 		vaccinationList = new ArrayList<>();
 		vaccinationAdapter = new VaccinationAdapter(getContext(), vaccinationList);
 		recyclerView.setAdapter(vaccinationAdapter);
 
-		// Load example data
-		loadExampleData();
+		// Initialize API service and fetch data
+		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
+		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		token = prefs.getString("jwt_token", null);
 
-		backButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getActivity().getSupportFragmentManager().popBackStack();
-			}
-		});
+		// Fetch data from the server
+		fetchVaccinationData();
+
+		backButton.setOnClickListener(v -> getActivity().getSupportFragmentManager().popBackStack());
 
 		return view;
 	}
 
-	private void loadExampleData() {
-		vaccinationList.add(new Vaccination("Rabies Vaccination", "2024-08-15", "Dr. Smith"));
-		vaccinationList.add(new Vaccination("Parvovirus Vaccination", "2024-05-20", "Dr. Brown"));
-		vaccinationList.add(new Vaccination("Distemper Vaccination", "2024-07-10", "Dr. Grey"));
-		vaccinationList.add(new Vaccination("Hepatitis Vaccination", "2024-04-12", "Dr. White"));
-		vaccinationAdapter.notifyDataSetChanged();
+	private void fetchVaccinationData() {
+		Call<List<ShowcaseDto>> call = apiService.getAllShowcases(token);
+		call.enqueue(new Callback<List<ShowcaseDto>>() {
+			@Override
+			public void onResponse(Call<List<ShowcaseDto>> call, Response<List<ShowcaseDto>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					List<ShowcaseDto> showcaseList = response.body();
+					vaccinationList.clear();
+
+					for (ShowcaseDto showcase : showcaseList) {
+						// Check for both "Vaccination" and "Vaccinations"
+						if ("Vaccinations".equalsIgnoreCase(showcase.getCategory()) || "Vaccination".equalsIgnoreCase(showcase.getCategory())) {
+							Vaccination tmp = new Vaccination(showcase.getId(), showcase.getType(), showcase.getName());
+							tmp.setId(showcase.getId());
+							vaccinationList.add(tmp);
+						}
+					}
+
+					vaccinationAdapter.notifyDataSetChanged();
+
+				} else {
+					Toast.makeText(getContext(), "Failed to retrieve data", Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<ShowcaseDto>> call, Throwable t) {
+				Toast.makeText(getContext(), "API call failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+				Log.e("API Error", t.getMessage(), t);
+			}
+		});
 	}
 }

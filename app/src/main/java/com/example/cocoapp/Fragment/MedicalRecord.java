@@ -115,7 +115,7 @@ public class MedicalRecord extends Fragment {
 
 	private void categorizeAppointments(List<Appointment> appointments) {
 		for (Appointment app : appointments){
-			if (Objects.equals(app.getCatergory(), "Vaccination")){
+			if ("Vaccinations".equalsIgnoreCase(app.getCatergory()) || "Vaccination".equalsIgnoreCase(app.getCatergory())){
 				vaccinationsList.add(app);
 			}
 			else allergiesList.add(app);

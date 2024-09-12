@@ -33,8 +33,7 @@ public class Bottom_Navigation extends AppCompatActivity {
     private final int home = 1;
     private final int discover = 2;
     private final int explore = 3;
-    private final int manage = 4;
-    private final int profile = 5;
+    private final int profile = 4;
     private MeowBottomNavigation bottomNavigation;
 
     @Override
@@ -47,7 +46,6 @@ public class Bottom_Navigation extends AppCompatActivity {
         bottomNavigation.add(new MeowBottomNavigation.Model(home, R.drawable.ic_home));
         bottomNavigation.add(new MeowBottomNavigation.Model(discover, R.drawable.ic_discover));
         bottomNavigation.add(new MeowBottomNavigation.Model(explore, R.drawable.shop_ic));
-        bottomNavigation.add(new MeowBottomNavigation.Model(manage, R.drawable.ic_manage));
         bottomNavigation.add(new MeowBottomNavigation.Model(profile, R.drawable.ic_profile));
 
         bottomNavigation.setOnClickMenuListener(model -> {
@@ -66,9 +64,6 @@ public class Bottom_Navigation extends AppCompatActivity {
                     break;
                 case explore:
                     selectedFragment = new Shop();
-                    break;
-                case manage:
-                    selectedFragment = new Notification();
                     break;
                 case profile:
                     selectedFragment = new Profile();
