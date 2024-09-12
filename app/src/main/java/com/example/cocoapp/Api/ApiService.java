@@ -60,6 +60,7 @@ public interface ApiService
 	@Multipart
 	@POST("/api/v1/user/update")
 	Call<ProfileData> updateUserInfo(
+			@Header("Authorization") String token,
 			@Part MultipartBody.Part image,
 			@Part("user") RequestBody user
 	);

@@ -245,7 +245,7 @@ public class PetProfile extends Fragment {
 			petweight.setText(String.valueOf(pet.getWeight()));
 			petcolor.setText(pet.getColor());
 			petheight.setText(String.valueOf(pet.getHeight()));
-			petLocationEditText.setText(pet.getLocation());
+			petLocation.setText(pet.getLocation());
 			//Glide.with(this).clear(petImageView);
 
 			// Call the method to update the pet in the backend

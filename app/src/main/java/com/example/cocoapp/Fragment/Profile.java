@@ -36,6 +36,7 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -57,6 +58,10 @@ public class Profile extends Fragment {
     private ProgressBar progressBar;
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private ActivityResultLauncher<Intent> pickImageLauncher;
+    private ProfileData profile;
+    private ApiService apiService;
+    private SharedPreferences prefs;
+    private String token;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,9 +72,49 @@ public class Profile extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
+        prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+        token = prefs.getString("jwt_token", null);
         initializeViews(view);
         loadProfileData();
-        setupButtons(view);
+
+        ImageButton editButton = view.findViewById(R.id.edit_btn);
+        ImageButton doneButton = view.findViewById(R.id.done_btn);
+        ImageButton imageButton = view.findViewById(R.id.camera_btn);
+
+        editButton.setOnClickListener(v -> {
+            informationFrame.setVisibility(View.GONE);
+            editFrame.setVisibility(View.VISIBLE);
+            ownerNameEdit.setText(ownerName.getText());
+            ownerEmailEdit.setText(ownerEmail.getText());
+            ownerPhoneEdit.setText(ownerPhone.getText());
+        });
+
+        doneButton.setOnClickListener(v -> {
+            if (!validateInputs()) {
+                Toast.makeText(getActivity(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            ownerName.setText(ownerNameEdit.getText());
+            ownerEmail.setText(ownerEmailEdit.getText());
+            ownerPhone.setText(ownerPhoneEdit.getText());
+            profile.setName(ownerNameEdit.getText().toString());
+            profile.setEmail(ownerEmailEdit.getText().toString());
+            profile.setPhone(ownerPhoneEdit.getText().toString());
+            editFrame.setVisibility(View.GONE);
+            informationFrame.setVisibility(View.VISIBLE);
+            uploadImage();
+        });
+
+        imageButton.setOnClickListener(v -> {
+            String permission = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU ?
+                    "android.permission.READ_MEDIA_IMAGES" : "android.permission.READ_EXTERNAL_STORAGE";
+            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(permission);
+            } else {
+                openGallery();
+            }
+        });
         addPetbtn.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new AddPet()).addToBackStack(null).commit();
@@ -121,50 +166,6 @@ public class Profile extends Fragment {
         informationFrame = view.findViewById(R.id.information_frame);
         addPetbtn = view.findViewById(R.id.add_pet_text);
         progressBar = view.findViewById(R.id.progressBar);
-
-        loadCachedProfileData();
-        loadProfileData();
-    }
-
-    private void loadCachedProfileData() {
-        SharedPreferences prefs = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        ownerName.setText(prefs.getString("name", "Loading..."));
-        ownerEmail.setText(prefs.getString("email", "Loading..."));
-        ownerPhone.setText(prefs.getString("phone", "Loading..."));
-    }
-
-    private void setupButtons(View view) {
-        ImageButton editButton = view.findViewById(R.id.edit_btn);
-        ImageButton doneButton = view.findViewById(R.id.done_btn);
-        ImageButton imageButton = view.findViewById(R.id.camera_btn);
-
-        editButton.setOnClickListener(v -> {
-            informationFrame.setVisibility(View.GONE);
-            editFrame.setVisibility(View.VISIBLE);
-            ownerNameEdit.setText(ownerName.getText());
-            ownerEmailEdit.setText(ownerEmail.getText());
-            ownerPhoneEdit.setText(ownerPhone.getText());
-        });
-
-        doneButton.setOnClickListener(v -> {
-            if (!validateInputs()) {
-                Toast.makeText(getActivity(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            editFrame.setVisibility(View.GONE);
-            informationFrame.setVisibility(View.VISIBLE);
-            uploadImage();
-        });
-
-        imageButton.setOnClickListener(v -> {
-            String permission = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU ?
-                    "android.permission.READ_MEDIA_IMAGES" : "android.permission.READ_EXTERNAL_STORAGE";
-            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissionLauncher.launch(permission);
-            } else {
-                openGallery();
-            }
-        });
     }
 
     private boolean validateInputs() {
@@ -175,7 +176,6 @@ public class Profile extends Fragment {
 
     private void loadProfileData() {
         progressBar.setVisibility(View.VISIBLE);
-
         ApiService apiService = ApiClient.getClient(getActivity(), false).create(ApiService.class);
         String token = "Bearer " + getToken();
         Call<ProfileData> call = apiService.fetchProfile(token);
@@ -186,8 +186,8 @@ public class Profile extends Fragment {
                 progressBar.setVisibility(View.GONE);
 
                 if (response.isSuccessful() && response.body() != null) {
-                    ProfileData profile = response.body();
-
+                    ProfileData profile1 = response.body();
+                    profile = profile1;
                     ownerName.setText(profile.getName());
                     ownerEmail.setText(profile.getEmail());
                     ownerPhone.setText(profile.getPhone());
@@ -213,34 +213,20 @@ public class Profile extends Fragment {
     }
 
 
-
     private void uploadImage() {
-        ProfileData profileData = new ProfileData();
-        profileData.setUserId(getUserId());
-        profileData.setName(ownerNameEdit.getText().toString().trim());
-        profileData.setEmail(ownerEmailEdit.getText().toString().trim());
-        profileData.setPhone(ownerPhoneEdit.getText().toString().trim());
-        ownerName.setText(profileData.getName());
-        ownerEmail.setText(profileData.getEmail());
-        ownerPhone.setText(profileData.getPhone());
-
-        // Convert ImageView to File
         File file = getImageFileFromImageView(ava);
-        // Create MultipartBody.Part from File
         MultipartBody.Part body = createMultipartBodyPartFromFile(file);
-
-        RequestBody profilePart = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(profileData));
+        RequestBody profilePart = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(profile));
 
         ApiService apiService = ApiClient.getClient(getActivity(), false).create(ApiService.class);
         String token = "Bearer " + getToken();
-        Call<ProfileData> call = apiService.updateUserInfo(body, profilePart);
+        Call<ProfileData> call = apiService.updateUserInfo(token, body, profilePart);
 
         call.enqueue(new Callback<ProfileData>() {
             @Override
             public void onResponse(Call<ProfileData> call, Response<ProfileData> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(getActivity(), "Profile image updated successfully", Toast.LENGTH_SHORT).show();
-                    //loadProfileData();
                 } else {
                     Toast.makeText(getActivity(), "Failed to update profile: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
@@ -253,18 +239,12 @@ public class Profile extends Fragment {
         });
     }
 
-    private String getUserId() {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString("user_id", "");
-    }
-
     private String getToken() {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String token = sharedPreferences.getString(KEY_AUTH_TOKEN, "");
         Log.d("Token", "Token retrieved: " + token);
         return token;
     }
-
 
 
     private File getImageFileFromImageView(ImageView imageView) {
