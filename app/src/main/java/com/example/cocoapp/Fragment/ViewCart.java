@@ -142,7 +142,7 @@ public class ViewCart extends Fragment implements CartAdapter.OnQuantityChangeLi
 			@Override
 			public void onClick(View v) {
 				String totalText = totalTextView.getText().toString();
-				float totalAmount = Float.parseFloat(totalText.replace("$", "").trim());
+				Integer totalAmount = Integer.parseInt(totalText.replace("$", "").trim());
 				requireActivity().getSupportFragmentManager().beginTransaction()
 						.replace(R.id.fragment_container, Payment.newInstance(totalAmount)).addToBackStack(null)
 						.commit();
@@ -167,10 +167,11 @@ public class ViewCart extends Fragment implements CartAdapter.OnQuantityChangeLi
 
 		// Assuming no discount for now, you can modify this if needed
 		total = subtotal - discount;
+		int roundedTotal = (int) Math.round(total);
 
 		subtotalTextView.setText(String.format("$%.2f", subtotal));
 		discountTextView.setText(String.format("$%.2f", discount));
-		totalTextView.setText(String.format("$%.2f", total));
+		totalTextView.setText(String.format("$%d", roundedTotal));
 	}
 
 	private void showError(String message) {

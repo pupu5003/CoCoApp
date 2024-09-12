@@ -41,7 +41,7 @@ public class Payment extends Fragment {
 	private static final String ARG_PARAM2 = "param2";
 
 	// TODO: Rename and change types of parameters
-	private Float mParam1;
+	private Integer mParam1;
 	private String mParam2;
 
 	public Payment() {
@@ -57,10 +57,10 @@ public class Payment extends Fragment {
 	 * @return A new instance of fragment Payment.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static Payment newInstance(Float param1) {
+	public static Payment newInstance(Integer param1) {
 		Payment fragment = new Payment();
 		Bundle args = new Bundle();
-		args.putFloat(ARG_PARAM1, param1);
+		args.putInt(ARG_PARAM1, param1);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -69,7 +69,7 @@ public class Payment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mParam1 = getArguments().getFloat(ARG_PARAM1);
+			mParam1 = getArguments().getInt(ARG_PARAM1);
 
 		}
 	}
