@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -267,11 +268,14 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 	public void deleteAppointment(Appointment appointment, int position) {
 		Gson gson = new Gson();
 		String jsonAppointment = gson.toJson(appointment);
+		Log.d("AppointmentAdapter", "JSON Appointment: " + jsonAppointment);
+
 		RequestBody appointmentJson = RequestBody.create(jsonAppointment, MediaType.parse("application/json"));
 
 		apiService.deleteAppointment("Bearer " + token, appointmentJson).enqueue(new Callback<String>() {
 			@Override
 			public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+				Log.d("API Response", "Code: " + response.code() + ", Message: " + response.message());
 				if (response.isSuccessful() && response.body() != null) {
 					Toast.makeText(context, "Appointment deleted successfully", Toast.LENGTH_SHORT).show();
 					appointments.remove(position);
