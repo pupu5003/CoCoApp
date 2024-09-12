@@ -1,24 +1,34 @@
 package com.example.cocoapp.Fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cocoapp.Adapter.AllergyAdapter;
+import com.example.cocoapp.Api.ApiClient;
+import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.Allergy;
+import com.example.cocoapp.Object.ShowcaseDto;
 import com.example.cocoapp.R;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DiseaseWellness extends Fragment {
 
@@ -26,6 +36,8 @@ public class DiseaseWellness extends Fragment {
 	private AllergyAdapter allergyAdapter;
 	private List<Allergy> allergyList;
 	private ImageButton backButton;
+	private ApiService apiService;
+	private String token;
 
 	@Nullable
 	@Override
@@ -41,24 +53,49 @@ public class DiseaseWellness extends Fragment {
 		allergyAdapter = new AllergyAdapter(getContext(), allergyList);
 		recyclerView.setAdapter(allergyAdapter);
 
-		// Load example data
-		loadExampleData();
+		// Initialize API service and token
+		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
+		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		token = prefs.getString("jwt_token", null);
 
-		backButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getActivity().getSupportFragmentManager().popBackStack();
-			}
-		});
+		// Fetch disease data
+		fetchDiseaseData();
+
+		// Set back button click listener
+		backButton.setOnClickListener(v -> getActivity().getSupportFragmentManager().popBackStack());
 
 		return view;
 	}
 
-	private void loadExampleData() {
-		allergyList.add(new Allergy("Pollen", "abc fh jhjsfd iuydkhask awhdjsdnkjsadn wdjdwjdbjwqd hbdjasdjad", "Dr. White"));
-		allergyList.add(new Allergy("Peanuts", "abc fh jhjsfd iuydkhask awhdjsdnkjsadn wdjdwjdbjwqd hbdjasdjad", "Dr. Black"));
-		allergyList.add(new Allergy("Dust Mites", "abc fh jhjsfd iuydkhask awhdjsdnkjsadn wdjdwjdbjwqd hbdjasdjad", "Dr. Green"));
-		allergyList.add(new Allergy("Mold", "abc fh jhjsfd iuydkhask awhdjsdnkjsadn wdjdwjdbjwqd hbdjasdjad", "Dr. Blue"));
-		allergyAdapter.notifyDataSetChanged();
+	private void fetchDiseaseData() {
+		apiService.getAllShowcases("Bearer " + token).enqueue(new Callback<List<ShowcaseDto>>() {
+			@Override
+			public void onResponse(@NonNull Call<List<ShowcaseDto>> call, @NonNull Response<List<ShowcaseDto>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					List<ShowcaseDto> showcaseList = response.body();
+					allergyList.clear();
+
+					// Filter for "Diseases" and "Disease" categories
+					for (ShowcaseDto showcase : showcaseList) {
+						if ("Diseases".equalsIgnoreCase(showcase.getCategory()) || "Disease".equalsIgnoreCase(showcase.getCategory())) {
+							Allergy tmp = new Allergy(showcase.getId(), showcase.getType(), showcase.getDescription(), showcase.getName());
+							tmp.setId(showcase.getId());
+							allergyList.add(tmp);
+						}
+					}
+
+					allergyAdapter.notifyDataSetChanged();
+				} else {
+					Toast.makeText(getContext(), "Failed to retrieve disease data", Toast.LENGTH_SHORT).show();
+					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
+				}
+			}
+
+			@Override
+			public void onFailure(@NonNull Call<List<ShowcaseDto>> call, @NonNull Throwable t) {
+				Toast.makeText(getContext(), "API call failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+				Log.e("API Error", "Error: " + t.getMessage(), t);
+			}
+		});
 	}
 }
