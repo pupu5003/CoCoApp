@@ -17,6 +17,7 @@ import com.example.cocoapp.Fragment.MapsFragment;
 
 
 import com.example.cocoapp.Fragment.Notification;
+import com.example.cocoapp.Fragment.Payment;
 import com.example.cocoapp.Fragment.PetHealth;
 
 import com.example.cocoapp.Fragment.Profile;
@@ -92,17 +93,17 @@ public class Bottom_Navigation extends AppCompatActivity {
     }
 
 
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        super.onNewIntent(intent);
-//        //ZaloPaySDK.getInstance().onResult(intent);
-//        notifyPaymentFragment(intent);
-//    }
-//    private void notifyPaymentFragment(Intent intent) {
-//        // Get the fragment manager and find your Payment fragment by its tag
-//        Payment paymentFragment = (Payment) getSupportFragmentManager().findFragmentByTag("PaymentFragmentTag");
-//        if (paymentFragment != null) {
-//            paymentFragment.handleNewIntent(intent);
-//        }
-//    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        //ZaloPaySDK.getInstance().onResult(intent);
+        notifyPaymentFragment(intent);
+    }
+    private void notifyPaymentFragment(Intent intent) {
+        // Get the fragment manager and find your Payment fragment by its tag
+        Payment paymentFragment = (Payment) getSupportFragmentManager().findFragmentByTag("PaymentFragmentTag");
+        if (paymentFragment != null) {
+            paymentFragment.handleNewIntent(intent);
+        }
+    }
 }

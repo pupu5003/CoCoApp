@@ -16,23 +16,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.cocoapp.Adapter.ProductAdapter;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
-import com.example.cocoapp.Object.CartItem;
-import com.example.cocoapp.Object.CartManager;
+import com.example.cocoapp.Object.CartDto;
+import com.example.cocoapp.Object.CartItemDto;
 import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.R;
+import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,7 +46,7 @@ import retrofit2.Response;
  * Use the {@link ProductSeeAll#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProductSeeAll extends Fragment implements ProductAdapter.OnAddToCartListener{
+public class ProductSeeAll extends Fragment{
 
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,6 +59,12 @@ public class ProductSeeAll extends Fragment implements ProductAdapter.OnAddToCar
 	private ProductAdapter recommendAdapter;
 	private RecyclerView recyclerViewRecommend;
 	private List<Product> productList;
+	private List<CartItemDto> cartItemList;
+	private ApiService apiService;
+	private SharedPreferences prefs;
+	private String token;
+
+
 
 	public ProductSeeAll() {
 		// Required empty public constructor
@@ -65,15 +75,14 @@ public class ProductSeeAll extends Fragment implements ProductAdapter.OnAddToCar
 	 * this fragment using the provided parameters.
 	 *
 	 * @param param1 Parameter 1.
-	 * @param param2 Parameter 2.
+
 	 * @return A new instance of fragment ProductSeeAll.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static ProductSeeAll newInstance(String param1, String param2) {
+	public static ProductSeeAll newInstance(List<Product> param1) {
 		ProductSeeAll fragment = new ProductSeeAll();
 		Bundle args = new Bundle();
-		args.putString(ARG_PARAM1, param1);
-		args.putString(ARG_PARAM2, param2);
+		args.putSerializable(ARG_PARAM1, (Serializable) param1);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -82,8 +91,8 @@ public class ProductSeeAll extends Fragment implements ProductAdapter.OnAddToCar
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
+			productList = new ArrayList<>();
+			productList = (List<Product>) getArguments().getSerializable(ARG_PARAM1);  // Retrieve the Pet object
 		}
 	}
 
@@ -92,27 +101,84 @@ public class ProductSeeAll extends Fragment implements ProductAdapter.OnAddToCar
 	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_product_see_all, container, false);
-		recyclerViewRecommend= view.findViewById(R.id.recyclerView);
+		prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		token = prefs.getString("jwt_token", null);
+		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
+		recyclerViewRecommend = view.findViewById(R.id.recyclerView);
 		recyclerViewRecommend.setLayoutManager(new GridLayoutManager(getContext(), 2));
 		ImageButton backbtn = view.findViewById(R.id.back_button);
 		ImageButton filterButton = view.findViewById(R.id.filter_btn);
+		ImageButton shop_btn = view.findViewById(R.id.cart_btn);
+		cartItemList = new ArrayList<>();
 
+		shop_btn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				fetchCart(2);
+			}
+		});
 		backbtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getActivity().getSupportFragmentManager().popBackStack();
+				fetchCart(1);
 			}
 		});
 
 		filterButton.setOnClickListener(v -> showSortDialog());
-		productList = new ArrayList<>();
 
-		recommendAdapter = new ProductAdapter(getContext(), productList, this,true);
+		recommendAdapter = new ProductAdapter(getContext(), productList, true);
 
 		recyclerViewRecommend.setAdapter(recommendAdapter);
-		fetchProducts();
+		//fetchProducts();
 		return view;
 	}
+
+	private void fetchCart (int i) {
+
+
+			Call<CartDto> call = apiService.getCart("Bearer " + token);
+			call.enqueue(new Callback<CartDto>() {
+				@Override
+				public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+					if (response.isSuccessful()) {
+						// Handle successful response
+						CartDto cart = response.body();
+						cartItemList.clear();
+						cartItemList.addAll(cart.getItems());
+						for (Product item : productList) {
+							for (CartItemDto cartItem : cartItemList) {
+								if (Objects.equals(cartItem.getItem().getId(), item.getId())) {
+									cartItem.setQuantity(item.getCurrentQuantity());
+									cartItem.setItem(item);
+									//Log.d("hihi", String.valueOf(item.getCurrentQuantity()));
+									updateCart(cartItem);
+									break;
+								}
+
+							}
+						}
+						if (i == 1){
+							getActivity().getSupportFragmentManager().popBackStack();
+						}else{
+							requireActivity().getSupportFragmentManager().beginTransaction()
+									.replace(R.id.fragment_container, ViewCart.newInstance(cartItemList))
+									.addToBackStack(null)
+									.commit();
+						}
+						Log.d("API", "Fetched cart successfully: " + cart.toString());
+					} else {
+						Log.d("API", "Fetched cart unsuccessfully: ");
+					}
+				}
+
+				@Override
+				public void onFailure(Call<CartDto> call, Throwable t) {
+					// Handle failure (e.g., network errors)
+					Log.e("API", "Fetch cart request failed: " + t.getMessage());
+				}
+			});
+		}
+
 
 	private void showSortDialog() {
 		Dialog dialog = new Dialog(getContext());
@@ -128,26 +194,42 @@ public class ProductSeeAll extends Fragment implements ProductAdapter.OnAddToCar
 				sortByWeight();
 			} else if (selectedId == R.id.radioSortByPrice) {
 				sortByPrice();
-			}
-			else sortByDefault();
+			} else sortByDefault();
 
 			dialog.dismiss();
 		});
 
 		dialog.show();
 	}
+	private void updateCart(CartItemDto item) {
+		Gson gson = new Gson();
+		String cartItemJson = gson.toJson(item);
+		RequestBody cartItemBody = RequestBody.create(
+				cartItemJson, MediaType.parse("application/json"));
 
-	@Override
-	public void onAddToCart(Product product) {
-		CartItem cartItem = new CartItem(
-				product.getName(),
-				product.getBrand(),
-				product.getSize(),
-				R.drawable.product_img,
-				product.getQuantity()
-		);
-		CartManager.getInstance().addItem(cartItem);
+		Call<CartDto> call = apiService.updateCartItem("Bearer " + token, cartItemBody);
+		call.enqueue(new Callback<CartDto>() {
+			@Override
+			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+				if (response.isSuccessful()) {
+					// Handle successful response
+					CartDto updatedCart = response.body();
+
+					Log.d("huhuhu", "Cart updated successfully: " + updatedCart.toString());
+					// Do something with the updated cart
+				} else {
+					Log.d("huhuhu", "Cart updated fail: ");
+					// Handle error case
+				}
+			}
+
+			@Override
+			public void onFailure(Call<CartDto> call, Throwable t) {
+				// Handle failure
+			}
+		});
 	}
+
 	private void fetchProducts() {
 		ApiService apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
 		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
@@ -192,7 +274,7 @@ public class ProductSeeAll extends Fragment implements ProductAdapter.OnAddToCar
 				return Integer.compare(Integer.parseInt(p2.getSize()), Integer.parseInt(p1.getSize())); // descending order
 			}
 		});
-		recommendAdapter = new ProductAdapter(getContext(), tmp, this,true);
+		recommendAdapter = new ProductAdapter(getContext(), tmp, true);
 
 		recyclerViewRecommend.setAdapter(recommendAdapter);
 
@@ -207,7 +289,7 @@ public class ProductSeeAll extends Fragment implements ProductAdapter.OnAddToCar
 				return Float.compare(p2.getPrice(), p1.getPrice()); // descending order
 			}
 		});
-		recommendAdapter = new ProductAdapter(getContext(), tmp, this,true);
+		recommendAdapter = new ProductAdapter(getContext(), tmp, true);
 
 		recyclerViewRecommend.setAdapter(recommendAdapter);
 	}
@@ -215,6 +297,39 @@ public class ProductSeeAll extends Fragment implements ProductAdapter.OnAddToCar
 	private void sortByDefault() {
 		List<Product> tmp = new ArrayList<>();
 		tmp.addAll(productList);
-		recommendAdapter = new ProductAdapter(getContext(), tmp, this,true);
+		recommendAdapter = new ProductAdapter(getContext(), tmp, true);
 	}
+
+
+//	private void updateCartItem(CartItem cartItem) {
+//		// API call to update the cart
+//		ApiService apiService = ApiClient.getClient(requireContext(), false).create(ApiService.class);
+//		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+//		String token = prefs.getString("jwt_token", null);
+//
+//		// Convert CartItem to JSON string
+//		String cartItemJson = new Gson().toJson(cartItem);
+//		// Create RequestBody from the JSON string
+//		RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), cartItemJson);
+//
+//		apiService.updateCartItem("Bearer " + token, requestBody).enqueue(new Callback<CartDto>() {
+//			@Override
+//			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+//				if (response.isSuccessful()) {
+//					// Handle successful update
+//					Toast.makeText(getContext(), "Cart updated successfully", Toast.LENGTH_SHORT).show();
+//				} else {
+//					// Handle error response
+//					Toast.makeText(getContext(), "Failed to update cart: " + response.message(), Toast.LENGTH_SHORT).show();
+//				}
+//			}
+//
+//			@Override
+//			public void onFailure(Call<CartDto> call, Throwable t) {
+//				// Handle failure
+//				Toast.makeText(getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//			}
+//		});
+//}
+
 }

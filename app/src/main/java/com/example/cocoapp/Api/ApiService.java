@@ -3,8 +3,9 @@ package com.example.cocoapp.Api;
 import com.example.cocoapp.Api.Auth.LoginRequest;
 import com.example.cocoapp.Api.Auth.RegisterRequest;
 import com.example.cocoapp.Api.Auth.AuthResponse;
-import com.example.cocoapp.Fragment.Profile;
 import com.example.cocoapp.Object.Appointment;
+import com.example.cocoapp.Object.CartDto;
+import com.example.cocoapp.Object.CartItemDto;
 import com.example.cocoapp.Object.Grooming;
 import com.example.cocoapp.Object.Pet;
 
@@ -13,8 +14,6 @@ import java.util.List;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import com.example.cocoapp.Object.Product;
-
-import java.util.List;
 
 import com.example.cocoapp.Object.ProfileData;
 import com.example.cocoapp.Object.ReviewItem;
@@ -132,6 +131,24 @@ public interface ApiService
 
 	@GET("/api/v1/user/getAppointmentHistory")
 	Call<List<Appointment>> getAppointmentHistory(@Header("Authorization") String token);
+	@GET("/api/v1/cart/get")
+	Call<CartDto> getCart(
+			@Header("Authorization") String token
+	);
+
+	@Multipart
+	@POST("/api/v1/cart/updateItem")
+	Call<CartDto> updateCartItem(
+			@Header("Authorization") String token,
+			@Part("cartItemDto") RequestBody cartItemDto
+	);
+
+	@Multipart
+	@POST("/api/v1/cart/addItem")
+	Call<CartDto> addCartItem(
+			@Header("Authorization") String token,
+			@Part("cartItemDto") RequestBody cartItemDto
+	);
 
 }
 

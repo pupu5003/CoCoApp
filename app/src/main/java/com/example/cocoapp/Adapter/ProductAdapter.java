@@ -23,11 +23,17 @@ import com.bumptech.glide.Glide;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Fragment.ProductProfile;
+import com.example.cocoapp.Fragment.ViewCart;
+import com.example.cocoapp.Object.CartDto;
+import com.example.cocoapp.Object.CartItemDto;
 import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.R;
+import com.google.gson.Gson;
 
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,17 +42,27 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
 	private Context context;
 	private List<Product> productList;
-	private OnAddToCartListener onAddToCartListener;
-	ApiService apiService;
-	SharedPreferences prefs;
-	String token;
 
+	private OnCartUpdateListener cartUpdateListener;
 	private boolean showAll;
+	private SharedPreferences prefs;
+	private String token;
+	private ApiService apiService;
+	public interface OnCartUpdateListener {
+		void onCartUpdated(Product product);
+	}
 
-	public ProductAdapter(Context context, List<Product> productList, OnAddToCartListener onAddToCartListener, boolean showAll) {
+
+	public ProductAdapter(Context context, List<Product> productList, boolean showAll,OnCartUpdateListener listener) {
 		this.context = context;
 		this.productList = productList;
-		this.onAddToCartListener = onAddToCartListener;
+		this.showAll = showAll;
+		this.cartUpdateListener = listener;
+	}
+
+	public ProductAdapter(Context context, List<Product> productList, boolean showAll) {
+		this.context = context;
+		this.productList = productList;
 		this.showAll = showAll;
 	}
 
@@ -78,11 +94,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
 
 
-		if (product.getQuantity()>0) {
-			int quantity = Integer.parseInt(holder.quantityTextView.getText().toString());
-			holder.quantityTextView.setText(String.valueOf(quantity));
+		if (product.getCurrentQuantity()>0) {
+			holder.quantityTextView.setText(String.valueOf(product.getCurrentQuantity()));
+			holder.addToCartButton.setVisibility(View.GONE);
+			holder.quantityLayout.setVisibility(View.VISIBLE);
 		}
-		else holder.quantityTextView.setText("1");
+		else {
+			holder.addToCartButton.setVisibility(View.VISIBLE);
+			holder.quantityLayout.setVisibility(View.GONE);
+		}
 
 		if (product.getSizeObject() != null) {
 			String weight = String.valueOf(product.getSizeObject().getValue()) + " " + product.getSizeObject().getUnit();
@@ -95,17 +115,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 			holder.addToCartButton.setVisibility(View.GONE);
 			holder.quantityLayout.setVisibility(View.VISIBLE);
 			holder.quantityTextView.setText("1");
-			if (onAddToCartListener != null) {
-				onAddToCartListener.onAddToCart(product);
-				Toast.makeText(context, product.getName() + " added to cart", Toast.LENGTH_SHORT).show();
-			} else {
-				Toast.makeText(context, "Add to cart action not set", Toast.LENGTH_SHORT).show();
-			}
+			product.setCurrentQuantity(1);
+			CartItemDto tmp = new CartItemDto();
+			tmp.setItem(product);
+			tmp.setQuantity(1);
+			addCartItem(tmp);
 		});
 
 		holder.incrementButton.setOnClickListener(v -> {
 			int quantity = Integer.parseInt(holder.quantityTextView.getText().toString());
 			holder.quantityTextView.setText(String.valueOf(++quantity));
+			product.setCurrentQuantity(quantity);
 		});
 
 		// Handle decrement button click
@@ -113,11 +133,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 			int quantity = Integer.parseInt(holder.quantityTextView.getText().toString());
 			if (quantity > 1) {
 				holder.quantityTextView.setText(String.valueOf(--quantity));
-			} else {
-				// If quantity is 1, revert to showing the cart icon
+				product.setCurrentQuantity(quantity);
+			} else {// If quantity is 1, revert to showing the cart icon
 				holder.quantityTextView.setText("1");
 				holder.quantityLayout.setVisibility(View.GONE);
 				holder.addToCartButton.setVisibility(View.VISIBLE);
+				product.setCurrentQuantity(0);
+				// Notify the cart update in the Shop fragment
+				if (cartUpdateListener != null) {
+					Log.d("huhuhu", "huhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuhu");
+					cartUpdateListener.onCartUpdated(product);
+				}
 			}
 		});
 
@@ -139,6 +165,39 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 	@Override
 	public int getItemCount() {
 		return showAll ? productList.size() : Math.min(productList.size(), 4); // Show all if showAll is true
+	}
+	private void addCartItem(CartItemDto cartItemDto) {
+		apiService = ApiClient.getClient(context, false).create(ApiService.class);
+		prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		token = prefs.getString("jwt_token", null);
+		// Convert CartItemDto to JSON and then to RequestBody
+		Gson gson = new Gson();
+		String cartItemJson = gson.toJson(cartItemDto);
+		Log.d("API", "JSON: " + cartItemJson);
+		RequestBody cartItemBody = RequestBody.create(cartItemJson, MediaType.parse("application/json"));
+
+
+		// Make the API call
+		Call<CartDto> call = apiService.addCartItem("Bearer " + token, cartItemBody);
+		call.enqueue(new Callback<CartDto>() {
+			@Override
+			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+				if (response.isSuccessful()) {
+					// Handle successful response
+					CartDto updatedCart = response.body();
+					Log.d("huhuhu", "Cart item added successfully: " + updatedCart.toString());
+				} else {
+					Log.d("huhuhu", "Cart item fail added ");
+
+				}
+			}
+
+			@Override
+			public void onFailure(Call<CartDto> call, Throwable t) {
+				// Handle failure (e.g., network errors)
+				Log.e("API", "Add cart item request failed: " + t.getMessage());
+			}
+		});
 	}
 
 	public static class ProductViewHolder extends RecyclerView.ViewHolder {
@@ -165,7 +224,5 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 		}
 	}
 
-	public interface OnAddToCartListener {
-		void onAddToCart(Product product);
-	}
+
 }

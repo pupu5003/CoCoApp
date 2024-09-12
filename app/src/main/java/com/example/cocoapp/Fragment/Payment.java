@@ -41,7 +41,7 @@ public class Payment extends Fragment {
 	private static final String ARG_PARAM2 = "param2";
 
 	// TODO: Rename and change types of parameters
-	private String mParam1;
+	private Integer mParam1;
 	private String mParam2;
 
 	public Payment() {
@@ -57,11 +57,10 @@ public class Payment extends Fragment {
 	 * @return A new instance of fragment Payment.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static Payment newInstance(String param1, String param2) {
+	public static Payment newInstance(Integer param1) {
 		Payment fragment = new Payment();
 		Bundle args = new Bundle();
-		args.putString(ARG_PARAM1, param1);
-		args.putString(ARG_PARAM2, param2);
+		args.putInt(ARG_PARAM1, param1);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -70,8 +69,8 @@ public class Payment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
+			mParam1 = getArguments().getInt(ARG_PARAM1);
+
 		}
 	}
 
@@ -82,6 +81,7 @@ public class Payment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_payment, container, false);
 		Button btn_pay = view.findViewById(R.id.btn_pay_now);
 		TextView amount = view.findViewById(R.id.tv_amount_value);
+		amount.setText(String.valueOf(mParam1));
 		ImageButton backbtn = view.findViewById(R.id.back_button);
 		RadioButton rb_momo = view.findViewById(R.id.rb_momo);
 		RadioButton rb_zalopay = view.findViewById(R.id.rb_zalopay);

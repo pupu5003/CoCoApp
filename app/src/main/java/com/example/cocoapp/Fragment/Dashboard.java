@@ -1,41 +1,29 @@
 package com.example.cocoapp.Fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.cocoapp.ActivityPage.Bottom_Navigation;
-import com.example.cocoapp.ActivityPage.GettingStarted;
-import com.example.cocoapp.ActivityPage.Loading;
 import com.example.cocoapp.Adapter.PetDashboardAdapter;
 import com.example.cocoapp.Adapter.PetStatusAdapter;
 import com.example.cocoapp.Adapter.ProductDashboardAdapter;
 import com.example.cocoapp.Adapter.VeterinarianDashboardAdapter;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
-import com.example.cocoapp.Object.CartItem;
-import com.example.cocoapp.Object.CartManager;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Pet;
 import com.example.cocoapp.Object.Product;
@@ -43,30 +31,21 @@ import com.example.cocoapp.Object.Veterinarian;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import android.os.CountDownTimer;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
+import com.google.gson.Gson;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDashboardAdapter.OnAddToCartListener {
+public class Dashboard extends Fragment implements OnMapReadyCallback {
 
 	private RecyclerView recyclerViewPetStatus;
 	private RecyclerView recyclerViewProduct;
@@ -126,7 +105,7 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 
 
 		petStatusAdapter = new PetStatusAdapter(getContext(), petList);
-		productDashboardAdapter = new ProductDashboardAdapter(getContext(), productList, false, this);
+		productDashboardAdapter = new ProductDashboardAdapter(getContext(), productList, false);
 		petDashboardAdapter = new PetDashboardAdapter(getContext(), petList);
 		veterinarianDashboardAdapter = new VeterinarianDashboardAdapter(getContext(), veterinarianList, false);
 
@@ -275,16 +254,34 @@ public class Dashboard extends Fragment implements OnMapReadyCallback, ProductDa
 		}
 	}
 
-	@Override
-	public void onAddToCart(Product product) {
-		CartItem cartItem = new CartItem(
-				product.getName(),
-				product.getBrand(),
-				product.getSize(),
-				R.drawable.product_img,
-				product.getQuantity()
-		);
-		CartManager.getInstance().addItem(cartItem);
-		Toast.makeText(getContext(), product.getName() + " added to cart", Toast.LENGTH_SHORT).show();
-	}
+
+
+//	private void updateCartItem(CartItem cartItem) {
+//		// API call to update the cart
+//		ApiService apiService = ApiClient.getClient(requireContext(), false).create(ApiService.class);
+//		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+//		String token = prefs.getString("jwt_token", null);
+//
+//		String cartItemJson = new Gson().toJson(cartItem);
+//		RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), cartItemJson);
+//
+//		apiService.updateCartItem("Bearer " + token, requestBody).enqueue(new Callback<CartDto>() {
+//			@Override
+//			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+//				if (response.isSuccessful()) {
+//					// Handle success scenario
+//					Toast.makeText(getContext(), "Cart updated successfully", Toast.LENGTH_SHORT).show();
+//				} else {
+//					// Handle error response
+//					Toast.makeText(getContext(), "Failed to update cart: " + response.message(), Toast.LENGTH_SHORT).show();
+//				}
+//			}
+//
+//			@Override
+//			public void onFailure(Call<CartDto> call, Throwable t) {
+//				// Handle failure
+//				Toast.makeText(getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//			}
+//		});
+//	}
 }

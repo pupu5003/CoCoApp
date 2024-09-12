@@ -22,9 +22,18 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
+import com.example.cocoapp.Object.CartDto;
+import com.example.cocoapp.Object.CartItemDto;
 import com.example.cocoapp.Object.Product;
 import com.example.cocoapp.R;
+import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,6 +42,10 @@ public class ProductProfile extends Fragment {
 	private String productId;
 	private String token;
 	private ApiService apiService;
+	private SharedPreferences prefs;
+	private List<CartItemDto> cartItemsList = new ArrayList<>();
+	private Product product;
+	private TextView quantityTextView;
 
 	public ProductProfile() {
 		// Required empty public constructor
@@ -46,14 +59,17 @@ public class ProductProfile extends Fragment {
 			productId = getArguments().getString("product_id");
 		}
 		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
-		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
 		token = prefs.getString("jwt_token", null);
+		fetchCartInit();
 		ImageButton backButton = view.findViewById(R.id.back_button);
 		Button decreaseButton = view.findViewById(R.id.decrementButton);
 		Button increaseButton = view.findViewById(R.id.incrementButton);
-		TextView quantityTextView = view.findViewById(R.id.quantityTextView);
+		quantityTextView = view.findViewById(R.id.quantityTextView);
 		Button addToCartButton = view.findViewById(R.id.cart_button);
 		ImageButton shoppingCartButton = view.findViewById(R.id.shopping_cart_plus_button);
+		ImageView shop = view.findViewById(R.id.shopping_cart_plus_button);
+
 
 
 		backButton.setOnClickListener(v ->{
@@ -62,10 +78,18 @@ public class ProductProfile extends Fragment {
 		);
 
 		addToCartButton.setOnClickListener(v -> {
-			int quantity = Integer.parseInt(quantityTextView.getText().toString());
-			quantityTextView.setText(String.valueOf(++quantity));
+			fetchCart();
 			Toast.makeText(requireContext(), "Product added to cart", Toast.LENGTH_SHORT).show();
 		});
+		shop.setOnClickListener(v -> {
+			Log.d("hihi", String.valueOf(cartItemsList.size()));
+			requireActivity().getSupportFragmentManager().beginTransaction()
+					.replace(R.id.fragment_container, ViewCart.newInstance(cartItemsList))
+					.addToBackStack(null)
+					.commit();
+
+		});
+
 
 		increaseButton.setOnClickListener(v -> {
 			int quantity = Integer.parseInt(quantityTextView.getText().toString());
@@ -83,7 +107,7 @@ public class ProductProfile extends Fragment {
 
 		shoppingCartButton.setOnClickListener(v -> {
 			FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-			transaction.replace(R.id.fragment_container, new ViewCart())
+			transaction.replace(R.id.fragment_container, ViewCart.newInstance(cartItemsList))
 					.addToBackStack(null)
 					.commit();
 		});
@@ -91,13 +115,144 @@ public class ProductProfile extends Fragment {
 		fetchProductById(productId);
 		return view;
 	}
+	private void fetchCart() {
+
+		Call<CartDto> call = apiService.getCart("Bearer " + token);
+		call.enqueue(new Callback<CartDto>() {
+			@Override
+			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+				if (response.isSuccessful()) {
+					// Handle successful response
+					CartDto cart = response.body();
+					cartItemsList.clear();
+					cartItemsList.addAll(cart.getItems());
+					Boolean isExist = false;
+					for (CartItemDto cartItem : cartItemsList)
+						if (Objects.equals(cartItem.getItem().getId(), productId)) {
+							int tmp = quantityTextView.getText().toString().equals("") ? 0 : Integer.parseInt(quantityTextView.getText().toString());
+							cartItem.setQuantity(product.getCurrentQuantity() + tmp);
+							product.setCurrentQuantity(product.getCurrentQuantity() + tmp);
+							updateCart(cartItem);
+							isExist = true;
+							break;
+						}
+					if (!isExist) {
+						CartItemDto newCartItem = new CartItemDto();
+						newCartItem.setItem(product);
+						newCartItem.setQuantity(Integer.parseInt(quantityTextView.getText().toString()));
+						cartItemsList.add(newCartItem);
+						addCartItem(newCartItem);
+					}
+				} else {
+					Log.d("API", "Fetched cart unsuccessfully: ");
+				}
+			}
+
+			@Override
+			public void onFailure(Call<CartDto> call, Throwable t) {
+				// Handle failure (e.g., network errors)
+				Log.e("API", "Fetch cart request failed: " + t.getMessage());
+			}
+		});
+	}
+	private void fetchCartInit() {
+
+		Call<CartDto> call = apiService.getCart("Bearer " + token);
+		call.enqueue(new Callback<CartDto>() {
+			@Override
+			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+				if (response.isSuccessful()) {
+					// Handle successful response
+					CartDto cart = response.body();
+					cartItemsList.clear();
+					cartItemsList.addAll(cart.getItems());
+					for (CartItemDto cartItem : cartItemsList){
+						if (Objects.equals(cartItem.getItem().getId(), productId)) {
+							product.setCurrentQuantity(cartItem.getQuantity());
+							break;
+						}
+					}
+				} else {
+					Log.d("API", "Fetched cart unsuccessfully: ");
+				}
+			}
+
+			@Override
+			public void onFailure(Call<CartDto> call, Throwable t) {
+				// Handle failure (e.g., network errors)
+				Log.e("API", "Fetch cart request failed: " + t.getMessage());
+			}
+		});
+	}
+	private void addCartItem(CartItemDto cartItemDto) {
+		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
+		prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+		token = prefs.getString("jwt_token", null);
+		// Convert CartItemDto to JSON and then to RequestBody
+		Gson gson = new Gson();
+		String cartItemJson = gson.toJson(cartItemDto);
+		Log.d("API", "JSON: " + cartItemJson);
+		RequestBody cartItemBody = RequestBody.create(cartItemJson, MediaType.parse("application/json"));
+
+
+		// Make the API call
+		Call<CartDto> call = apiService.addCartItem("Bearer " + token, cartItemBody);
+		call.enqueue(new Callback<CartDto>() {
+			@Override
+			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+				if (response.isSuccessful()) {
+					// Handle successful response
+					CartDto updatedCart = response.body();
+					Log.d("huhuhu", "Cart item added successfully: " + updatedCart.toString());
+				} else {
+					Log.d("huhuhu", "Cart item fail added ");
+
+				}
+			}
+
+			@Override
+			public void onFailure(Call<CartDto> call, Throwable t) {
+				// Handle failure (e.g., network errors)
+				Log.e("API", "Add cart item request failed: " + t.getMessage());
+			}
+		});
+	}
+	private void updateCart(CartItemDto item) {
+		Gson gson = new Gson();
+		String cartItemJson = gson.toJson(item);
+		RequestBody cartItemBody = RequestBody.create(
+				cartItemJson, MediaType.parse("application/json"));
+
+		Call<CartDto> call = apiService.updateCartItem("Bearer " + token,cartItemBody);
+		call.enqueue(new Callback<CartDto>() {
+			@Override
+			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+				if (response.isSuccessful()) {
+					// Handle successful response
+					CartDto updatedCart = response.body();
+
+					Log.d("huhuhu", "Cart updated successfully: " + updatedCart.toString());
+					// Do something with the updated cart
+				} else {
+					Log.d("huhuhu", "Cart updated fail: ");
+					// Handle error case
+				}
+			}
+
+			@Override
+			public void onFailure(Call<CartDto> call, Throwable t) {
+				// Handle failure
+			}
+		});
+	}
+
 
 	private void fetchProductById(String productId) {
 		apiService.fetchProductById("Bearer " + token, productId).enqueue(new Callback<Product>() {
 			@Override
 			public void onResponse(Call<Product> call, Response<Product> response) {
 				if (response.isSuccessful()) {
-					Product product = response.body();
+					product = response.body();
 					if (product != null) {
 						displayProductDetails(product);
 					}

@@ -17,6 +17,7 @@ public class Product implements Serializable {
 	private int stock;
 	private float rating;
 	private String description;
+	private int currentQuantity;
 
 	public Product(int discount, String productImageUrl, float price, String name, String weight, String brand, int stock, int quantitySold) {
 		this.discount = discount;
@@ -32,6 +33,13 @@ public class Product implements Serializable {
 	public Product() {
 
 	}
+	public void setCurrentQuantity(int currentQuantity) {
+		this.currentQuantity = currentQuantity;
+	}
+	public int getCurrentQuantity() {
+		return currentQuantity;
+	}
+
 	public float getRating(){
 		return rating;
 	}
@@ -54,11 +62,12 @@ public class Product implements Serializable {
 	public String getBrand() { return brand; }
 
 	public int getQuantity() { return quantitySold; }
+	public void setQuantity(int quantity) { this.quantitySold += quantity; }
 
-	public void incrementQuantity() { this.quantitySold++; }
+	public void incrementQuantity() { this.currentQuantity++; }
 
 	public void decrementQuantity() {
-		if (this.quantitySold > 1) { this.quantitySold--; }
+		if (this.currentQuantity > 1) { this.currentQuantity--; }
 	}
 
 	public int getStock(){
@@ -94,6 +103,9 @@ public class Product implements Serializable {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+	public String getImageUrl() {
+		return this.imageUrl;
 	}
 
 	public void setWeight(String size) {
