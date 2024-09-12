@@ -24,6 +24,7 @@ import com.example.cocoapp.Adapter.AppointmentAdapter;
 import com.example.cocoapp.Adapter.VaccinationAdapter;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
+import com.example.cocoapp.Interface.OnAppointmentDeletedListener;
 import com.example.cocoapp.Object.Allergy;
 import com.example.cocoapp.Object.Appointment;
 import com.example.cocoapp.Object.ShowcaseDto;
@@ -39,7 +40,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class Wellness extends Fragment{
+public class Wellness extends Fragment implements OnAppointmentDeletedListener{
 
 	private RecyclerView vaccinationRecyclerView;
 	private RecyclerView allergyRecyclerView;
@@ -82,7 +83,8 @@ public class Wellness extends Fragment{
 		allergyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 		allergyRecyclerView.setAdapter(allergyAdapter);
 
-		appointmentAdapter = new AppointmentAdapter(getContext(), appointmentList);
+		appointmentAdapter = new AppointmentAdapter(getContext(), appointmentList, this);
+		Log.d("Wellness", "Adapter initialized with listener: " + (appointmentAdapter != null));
 		appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 		appointmentRecyclerView.setAdapter(appointmentAdapter);
 
@@ -109,6 +111,7 @@ public class Wellness extends Fragment{
 			((Bottom_Navigation) getActivity()).setSelectedTab(2);
 		});
 
+		onAppointmentDeleted();
 		return view;
 	}
 
@@ -164,6 +167,7 @@ public class Wellness extends Fragment{
 					}
 					vaccinationAdapter.notifyDataSetChanged();
 					allergyAdapter.notifyDataSetChanged();
+
 				} else {
 					Toast.makeText(getContext(), "Failed to retrieve data", Toast.LENGTH_SHORT).show();
 				}
@@ -199,6 +203,13 @@ public class Wellness extends Fragment{
 					Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 			}
 		});
+	}
+
+	@Override
+	public void onAppointmentDeleted() {
+		Log.d("Wellness", "onAppointmentDeleted called");
+		appointmentAdapter.notifyDataSetChanged();
+		fetchAppointments();
 	}
 
 }

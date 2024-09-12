@@ -15,10 +15,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
+import com.example.cocoapp.Fragment.PetHealth;
+import com.example.cocoapp.Fragment.ViewCart;
+import com.example.cocoapp.Fragment.Wellness;
+import com.example.cocoapp.Interface.OnAppointmentDeletedListener;
 import com.example.cocoapp.Object.Appointment;
 import com.example.cocoapp.Object.Veterinarian;
 import com.example.cocoapp.R;
@@ -45,10 +50,12 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 	private String token;
 	private ApiService apiService;
 	Veterinarian vet;
+	private OnAppointmentDeletedListener onAppointmentDeletedListener;
 
-	public AppointmentAdapter(Context context, List<Appointment> appointments) {
+	public AppointmentAdapter(Context context, List<Appointment> appointments, OnAppointmentDeletedListener listener) {
 		this.context = context;
 		this.appointments = appointments;
+		this.onAppointmentDeletedListener = listener;
 	}
 
 	@NonNull
@@ -100,7 +107,6 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 
 		if (currentTimeMillis < appointmentTimeMillis) {
 			holder.doneBtn.setVisibility(View.INVISIBLE);
-			holder.cancelBtn.setVisibility(View.INVISIBLE);
 			holder.itemView.setClickable(true);
 
 			holder.itemView.setOnClickListener(v -> {
@@ -126,16 +132,15 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 		}
 		else if (currentTimeMillis >= appointmentTimeMillis && currentTimeMillis < appointmentTimeMillis + oneHourInMillis) {
 			holder.doneBtn.setVisibility(View.INVISIBLE);
-			holder.cancelBtn.setVisibility(View.INVISIBLE);
 			holder.itemView.setClickable(true);
 
 			holder.itemView.setOnClickListener(v -> {
 				Toast.makeText(context, "The appointment is currently happening.", Toast.LENGTH_SHORT).show();
 			});
+
 		}
 		else if (currentTimeMillis >= appointmentTimeMillis + oneHourInMillis) {
 			holder.doneBtn.setVisibility(View.VISIBLE);
-			holder.cancelBtn.setVisibility(View.VISIBLE);
 			holder.itemView.setClickable(false);
 
 			holder.doneBtn.setOnClickListener(doneView -> {
@@ -144,8 +149,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 						.setMessage("Are you sure you attended the appointment?")
 						.setPositiveButton("Yes", (dialog, which) -> {
 							addHistoryAppoiment(appointment, position);
-							// Remove the appointment
-
+							deleteAppointment(appointment, position);
 						})
 						.setNegativeButton("No", (dialog, which) -> {
 							dialog.dismiss();
@@ -154,21 +158,27 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 						.show();
 			});
 
-			holder.cancelBtn.setOnClickListener(cancelView -> {
-				new AlertDialog.Builder(context)
-						.setTitle("Dismiss Appointment")
-						.setMessage("Are you sure you did not attend the appointment?")
-						.setPositiveButton("Yes", (dialog, which) -> {
-							// Remove the appointment
-
-						})
-						.setNegativeButton("No", (dialog, which) -> {
-							dialog.dismiss();
-							Toast.makeText(context, "Appointment status unchanged.", Toast.LENGTH_SHORT).show();
-						})
-						.show();
-			});
 		}
+
+		holder.cancelBtn.setOnClickListener(cancelView -> {
+			new AlertDialog.Builder(context)
+					.setTitle("Dismiss Appointment")
+					.setMessage("Are you sure you did not attend the appointment?")
+					.setPositiveButton("Yes", (dialog, which) -> {
+						deleteAppointment(appointment, position);
+						appointments.remove(position);
+						notifyItemRemoved(position);
+						if (onAppointmentDeletedListener != null) {
+							Log.d("AppointmentAdapter", "Invoking onAppointmentDeleted");
+							onAppointmentDeletedListener.onAppointmentDeleted(); // Notify fragment
+						}
+					})
+					.setNegativeButton("No", (dialog, which) -> {
+						dialog.dismiss();
+						Toast.makeText(context, "Appointment status unchanged.", Toast.LENGTH_SHORT).show();
+					})
+					.show();
+		});
 	}
 
 	@Override
@@ -235,4 +245,41 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 			}
 		});
 	}
+
+	public void deleteAppointment(Appointment appointment, int position) {
+		Gson gson = new Gson();
+		String jsonAppointment = gson.toJson(appointment);
+		RequestBody appointmentJson = RequestBody.create(jsonAppointment, MediaType.parse("application/json"));
+
+		apiService.deleteAppointment("Bearer " + token, appointmentJson).enqueue(new Callback<String>() {
+			@Override
+			public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					Toast.makeText(context, "Appointment deleted successfully", Toast.LENGTH_SHORT).show();
+					appointments.remove(position);
+					notifyItemRemoved(position);
+					notifyItemRangeChanged(position, appointments.size());
+
+					if (onAppointmentDeletedListener != null) {
+						Log.d("AppointmentAdapter", "Listener is set, calling onAppointmentDeleted");
+						onAppointmentDeletedListener.onAppointmentDeleted();
+					} else {
+						Log.d("AppointmentAdapter", "Listener is null");
+					}
+
+
+				} else {
+					Log.e("API Error", "Failed to delete appointment. Code: " + response.code());
+					Toast.makeText(context, "Failed to delete appointment", Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+				Log.e("API Error", "Error: " + t.getMessage());
+			}
+		});
+	}
+
+
 }

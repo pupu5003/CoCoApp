@@ -150,5 +150,13 @@ public interface ApiService
 			@Part("cartItemDto") RequestBody cartItemDto
 	);
 
+	@Multipart
+	@POST("/api/v1/vet/deleteAppointment")
+	Call<String> deleteAppointment(
+			@Header("Authorization") String authToken,
+			@Part("appointment") RequestBody appointment
+	);
+
+
 }
 

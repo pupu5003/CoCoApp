@@ -54,9 +54,6 @@ public class ViewCart extends Fragment implements CartAdapter.OnQuantityChangeLi
 	private ApiService apiService;
 	TextView subtotalTextView, discountTextView, totalTextView;
 
-
-
-
 	public ViewCart() {
 	}
 

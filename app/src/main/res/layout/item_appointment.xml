@@ -78,8 +78,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/appointment_veterinarian"
                 android:src="@drawable/baseline_close_24"
-                android:backgroundTint="@android:color/transparent"
-                android:visibility="invisible"/>
+                android:backgroundTint="@android:color/transparent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -119,7 +119,6 @@ public class BookingAppoinment extends Fragment {
 		Button btnTime430 = view.findViewById(R.id.btn_time_430);
 		Button btnTime530 = view.findViewById(R.id.btn_time_530);
 
-		// Set the CalendarView to start from today's date
 		calendarView.setMinDate(System.currentTimeMillis());
 
 		// Set header text from parameters if needed
@@ -160,13 +159,35 @@ public class BookingAppoinment extends Fragment {
 		btnBookAppointment.setOnClickListener(v -> {
 			String selectedDate = getSelectedDate();
 			String selectedTime = getSelectedTime();
+			String nameText = name.getText().toString().trim();
 
-			if (selectedTime.isEmpty()) {
+			if (nameText.isEmpty()) {
+				Toast.makeText(getActivity(), "Please enter the type name.", Toast.LENGTH_SHORT).show();
+				return;
+			}
+
+			if (selectedTime == null || selectedTime.isEmpty()) {
 				Toast.makeText(getActivity(), "Please select time.", Toast.LENGTH_SHORT).show();
 				return;
 			}
 
+			if (selectedDate == null || selectedDate.isEmpty()) {
+				Toast.makeText(getActivity(), "Please select date.", Toast.LENGTH_SHORT).show();
+				return;
+			}
+
+			if (selectedCategory == null || selectedCategory.isEmpty()) {
+				Toast.makeText(getActivity(), "Please select a category type.", Toast.LENGTH_SHORT).show();
+				return;
+			}
+
 			long timeInMillis = convertToMilliseconds(selectedDate, selectedTime);
+			long currentTimeInMillis = System.currentTimeMillis();
+			if (timeInMillis < currentTimeInMillis) {
+				Toast.makeText(getActivity(), "Cannot book an appointment in the past.", Toast.LENGTH_SHORT).show();
+				return;
+			}
+
 			Appointment appointment = new Appointment(timeInMillis, veterinarian.getVetId(), selectedCategory, String.valueOf(name.getText()));
 
 			addAppointment(appointment);
