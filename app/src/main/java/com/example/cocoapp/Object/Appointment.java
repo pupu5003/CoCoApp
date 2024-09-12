@@ -6,6 +6,7 @@ public class Appointment {
 	private String vetId;
 	private String category;
 	private String id;
+	private String type;
 	
 
 	// Constructor
@@ -41,11 +42,15 @@ public class Appointment {
 		this.vetId = vetId;
 	}
 
-	public String getCatergory() {
+	public String getCategory() {
 		return category;
 	}
 
 	public void setCategory(String category) {
 		this.category = category;
 	}
+
+	public String getType() {return type;}
+
+	public void setType(String type) { this.type = type;}
 }
