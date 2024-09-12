@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,12 +21,18 @@ import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.Appointment;
 import com.example.cocoapp.Object.Veterinarian;
 import com.example.cocoapp.R;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,7 +80,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 
 			@Override
 			public void onFailure(@NonNull Call<Veterinarian> call, @NonNull Throwable t) {
-				Log.e("API Error fetch vet", t.getMessage());
+				Log.e("API Error", t.getMessage());
 				if (getContext() != null) {
 					Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 				}
@@ -86,6 +94,11 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 
 		holder.dateTextView.setText(dateString);
 		holder.hourTextView.setText(timeString);
+
+		holder.doneBtn.setOnClickListener(v -> {
+			addHistoryAppoiment(appointment, position);
+		});
+
 	}
 
 	@Override
@@ -97,12 +110,15 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 		TextView veterinarianTextView;
 		TextView dateTextView;
 		TextView hourTextView;
+		ImageButton doneBtn;
+		TextView typeTextView;
 
 		public AppointmentViewHolder(@NonNull View itemView) {
 			super(itemView);
 			veterinarianTextView = itemView.findViewById(R.id.appointment_veterinarian);
 			dateTextView = itemView.findViewById(R.id.appointment_date);
 			hourTextView = itemView.findViewById(R.id.appointment_hour);
+			doneBtn = itemView.findViewById(R.id.done_btn);
 		}
 	}
 
@@ -125,4 +141,26 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 		return new String[] { dateString, timeString };
 	}
 
+	public void addHistoryAppoiment(Appointment appointment, int position) {
+		Gson gson = new Gson();
+		String jsonAppointment = gson.toJson(appointment);
+		RequestBody appointmentJson = RequestBody.create(jsonAppointment, MediaType.parse("application/json"));
+		Log.e("Json", "error: " +jsonAppointment);
+		apiService.addAppointmentHistory("Bearer " + token, appointmentJson).enqueue(new Callback<String>() {
+			@Override
+			public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					Toast.makeText(context, "Appointment added to history", Toast.LENGTH_SHORT).show();
+					notifyItemRemoved(position);
+				} else {
+					Log.e("API Error", "Failed to add appointment to history. Code: " + response.code());
+				}
+			}
+
+			@Override
+			public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+				Log.e("API Error", "Error: " + t.getMessage());
+			}
+		});
+	}
 }

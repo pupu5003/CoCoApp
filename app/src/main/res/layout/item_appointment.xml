@@ -20,8 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp">
+            android:layout_marginTop="20dp">
 
             <TextView
                 android:id="@+id/appointment_hour"
@@ -32,6 +31,7 @@
                 android:textSize="14sp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="20dp"
                 />
 
             <TextView
@@ -67,6 +67,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/appointment_veterinarian"
                 android:src="@drawable/baseline_check_24"
+                android:backgroundTint="@android:color/transparent">
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/cancle_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/appointment_veterinarian"
+                android:src="@drawable/baseline_close_24"
                 android:backgroundTint="@android:color/transparent">
             </ImageButton>
 

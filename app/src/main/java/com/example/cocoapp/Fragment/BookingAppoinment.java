@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -102,6 +103,7 @@ public class BookingAppoinment extends Fragment {
 		TextView tvPickTime = view.findViewById(R.id.tvPickTime);
 		Button btnBookAppointment = view.findViewById(R.id.btn_book_appointment);
 		RadioGroup radioGroupSort = view.findViewById(R.id.radioGroupSort);
+		EditText name = view.findViewById(R.id.etEnterName);
 
 		calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
 			month+=1;
@@ -165,7 +167,7 @@ public class BookingAppoinment extends Fragment {
 			}
 
 			long timeInMillis = convertToMilliseconds(selectedDate, selectedTime);
-			Appointment appointment = new Appointment(timeInMillis, veterinarian.getVetId(), selectedCategory);
+			Appointment appointment = new Appointment(timeInMillis, veterinarian.getVetId(), selectedCategory, String.valueOf(name.getText()));
 
 			addAppointment(appointment);
 

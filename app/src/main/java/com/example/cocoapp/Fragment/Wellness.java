@@ -113,11 +113,8 @@ public class Wellness extends Fragment{
 	}
 
 	private void fetchVeterinarianDetails(String veterinarianId) {
-		// API service call to fetch veterinarian details
-
 		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
 		String token = prefs.getString("jwt_token", null);
-
 		apiService.fetchVetById("Bearer " + token, veterinarianId).enqueue(new Callback<Veterinarian>() {
 			@Override
 			public void onResponse(@NonNull Call<Veterinarian> call, @NonNull Response<Veterinarian> response) {

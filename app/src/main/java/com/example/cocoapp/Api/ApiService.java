@@ -116,11 +116,22 @@ public interface ApiService
 			@Header("Authorization") String token,
 			@Part("reviewDto") RequestBody reviewDto
 	);
+
 	@GET("api/v1/user/getInfoId/{userId}")
 	Call<ProfileData> fetchUserInfoId(
 			@Path("userId") String userId,
 			@Header("Authorization") String authToken
 	);
+
+	@Multipart
+	@POST("/api/v1/user/addAppointmentHistory")
+	Call<String> addAppointmentHistory(
+			@Header("Authorization") String token,
+			@Part("appointment") RequestBody appointment
+	);
+
+	@GET("/api/v1/user/getAppointmentHistory")
+	Call<List<Appointment>> getAppointmentHistory(@Header("Authorization") String token);
 
 }
 

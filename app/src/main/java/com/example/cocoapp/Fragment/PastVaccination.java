@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.cocoapp.Adapter.VaccinationDetailAdapter;
+import com.example.cocoapp.Object.Appointment;
 import com.example.cocoapp.Object.VaccinationDetail;
 import com.example.cocoapp.R;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class PastVaccination extends Fragment {
 
 	private RecyclerView recyclerView;
 	private VaccinationDetailAdapter vaccinationAdapter;
-	private List<VaccinationDetail> vaccinationList;
+	private List<Appointment> vaccinationList;
 	private ImageButton backButton;
 
 	@Nullable
@@ -56,10 +57,6 @@ public class PastVaccination extends Fragment {
 	}
 
 	private void loadExampleData() {
-		vaccinationList.add(new VaccinationDetail("Rabies Vaccination", "2024-08-15", "Dr. Smith", ""));
-		vaccinationList.add(new VaccinationDetail("Parvovirus Vaccination", "2024-05-20", "Dr. Brown", ""));
-		vaccinationList.add(new VaccinationDetail("Distemper Vaccination", "2024-07-10", "Dr. Grey", ""));
-		vaccinationList.add(new VaccinationDetail("Hepatitis Vaccination", "2024-04-12", "Dr. White", ""));
 		vaccinationAdapter.notifyDataSetChanged();
 	}
 }

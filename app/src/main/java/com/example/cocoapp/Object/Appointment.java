@@ -1,18 +1,20 @@
 package com.example.cocoapp.Object;
 
 public class Appointment {
-
+	private String id;
 	private long time;
 	private String vetId;
+	private String userId;
 	private String category;
-	private String id;
+	private String type;
 	
 
 	// Constructor
-	public Appointment(long time, String vetId, String catergory) {
+	public Appointment(long time, String vetId, String catergory, String type) {
 		this.time = time;
 		this.vetId = vetId;
 		this.category = catergory;
+		this.type = type;
 	}
 	
 
@@ -47,5 +49,13 @@ public class Appointment {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }
