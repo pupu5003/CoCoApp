@@ -131,6 +131,7 @@ public interface ApiService
 
 	@GET("/api/v1/user/getAppointmentHistory")
 	Call<List<Appointment>> getAppointmentHistory(@Header("Authorization") String token);
+
 	@GET("/api/v1/cart/get")
 	Call<CartDto> getCart(
 			@Header("Authorization") String token
