@@ -1,7 +1,6 @@
 package com.example.cocoapp.Object;
 
 public class Appointment {
-	private String id;
 	private long time;
 	private String vetId;
 	private String userId;
@@ -15,16 +14,6 @@ public class Appointment {
 		this.vetId = vetId;
 		this.category = catergory;
 		this.type = type;
-	}
-	
-
-	// Getter and Setter for id
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public long getTime() {

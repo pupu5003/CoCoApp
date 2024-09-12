@@ -40,7 +40,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class Wellness extends Fragment implements OnAppointmentDeletedListener{
+public class Wellness extends Fragment{
 
 	private RecyclerView vaccinationRecyclerView;
 	private RecyclerView allergyRecyclerView;
@@ -83,7 +83,7 @@ public class Wellness extends Fragment implements OnAppointmentDeletedListener{
 		allergyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 		allergyRecyclerView.setAdapter(allergyAdapter);
 
-		appointmentAdapter = new AppointmentAdapter(getContext(), appointmentList, this);
+		appointmentAdapter = new AppointmentAdapter(getContext(), appointmentList);
 		Log.d("Wellness", "Adapter initialized with listener: " + (appointmentAdapter != null));
 		appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 		appointmentRecyclerView.setAdapter(appointmentAdapter);
@@ -110,8 +110,6 @@ public class Wellness extends Fragment implements OnAppointmentDeletedListener{
 					.replace(R.id.fragment_container, new VetVeterinarian()).addToBackStack(null).commit();
 			((Bottom_Navigation) getActivity()).setSelectedTab(2);
 		});
-
-		onAppointmentDeleted();
 		return view;
 	}
 
@@ -204,12 +202,4 @@ public class Wellness extends Fragment implements OnAppointmentDeletedListener{
 			}
 		});
 	}
-
-	@Override
-	public void onAppointmentDeleted() {
-		Log.d("Wellness", "onAppointmentDeleted called");
-		appointmentAdapter.notifyDataSetChanged();
-		fetchAppointments();
-	}
-
 }

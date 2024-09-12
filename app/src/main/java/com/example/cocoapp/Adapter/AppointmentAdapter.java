@@ -51,12 +51,10 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 	private String token;
 	private ApiService apiService;
 	Veterinarian vet;
-	private OnAppointmentDeletedListener onAppointmentDeletedListener;
 
-	public AppointmentAdapter(Context context, List<Appointment> appointments, OnAppointmentDeletedListener listener) {
+	public AppointmentAdapter(Context context, List<Appointment> appointments) {
 		this.context = context;
 		this.appointments = appointments;
-		this.onAppointmentDeletedListener = listener;
 	}
 
 	@NonNull
@@ -73,6 +71,10 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 
 	@Override
 	public void onBindViewHolder(@NonNull AppointmentViewHolder holder, int position) {
+		if (position >= appointments.size()) {
+			Log.e("AppointmentAdapter", "Invalid position: " + position);
+			return;
+		}
 		Appointment appointment = appointments.get(position);
 		apiService.fetchVetById("Bearer " + token, appointment.getVetId()).enqueue(new Callback<Veterinarian>() {
 			@Override
@@ -132,21 +134,28 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 			});
 
 			holder.cancelBtn.setOnClickListener(v -> {
-				new AlertDialog.Builder(context)
-						.setTitle("Cancel Appointment")
-						.setMessage("Are you sure you want to cancel this appointment?")
-						.setPositiveButton("Yes", (dialog, which) -> {
-							deleteAppointment(appointment, position);
-							appointments.remove(position);
-							notifyItemRemoved(position);
-							Toast.makeText(context, "Appointment canceled.", Toast.LENGTH_SHORT).show();
-						})
-						.setNegativeButton("No", (dialog, which) -> {
-							dialog.dismiss();
-							Toast.makeText(context, "Appointment remains scheduled.", Toast.LENGTH_SHORT).show();
-						})
-						.show();
+				int adapterPosition = holder.getAdapterPosition();
+				if (adapterPosition >= 0 && adapterPosition < appointments.size()) {
+					new AlertDialog.Builder(context)
+							.setTitle("Cancel Appointment")
+							.setMessage("Are you sure you want to cancel this appointment?")
+							.setPositiveButton("Yes", (dialog, which) -> {
+								deleteAppointment(appointments.get(adapterPosition));
+								appointments.remove(adapterPosition);
+								notifyItemRemoved(adapterPosition);
+								Toast.makeText(context, "Appointment canceled.", Toast.LENGTH_SHORT).show();
+							})
+							.setNegativeButton("No", (dialog, which) -> {
+								dialog.dismiss();
+								Toast.makeText(context, "Appointment remains scheduled.", Toast.LENGTH_SHORT).show();
+							})
+							.show();
+				} else {
+					Log.e("Position", String.valueOf(adapterPosition));
+					Log.e("AppointmentAdapter", "Position out of bounds when canceling appointment");
+				}
 			});
+
 		}
 		else if (currentTimeMillis >= appointmentTimeMillis && currentTimeMillis < appointmentTimeMillis + oneHourInMillis) {
 			holder.doneBtn.setVisibility(View.INVISIBLE);
@@ -156,46 +165,79 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 				Toast.makeText(context, "The appointment is currently happening.", Toast.LENGTH_SHORT).show();
 			});
 
+			holder.cancelBtn.setOnClickListener(v -> {
+				int adapterPosition = holder.getAdapterPosition();
+				if (adapterPosition >= 0 && adapterPosition < appointments.size()) {
+					new AlertDialog.Builder(context)
+							.setTitle("Cancel Appointment")
+							.setMessage("Are you sure you want to cancel this appointment?")
+							.setPositiveButton("Yes", (dialog, which) -> {
+								deleteAppointment(appointments.get(adapterPosition));
+								appointments.remove(adapterPosition);
+								notifyItemRemoved(adapterPosition);
+								Toast.makeText(context, "Appointment canceled.", Toast.LENGTH_SHORT).show();
+							})
+							.setNegativeButton("No", (dialog, which) -> {
+								dialog.dismiss();
+								Toast.makeText(context, "Appointment remains scheduled.", Toast.LENGTH_SHORT).show();
+							})
+							.show();
+				} else {
+					Log.e("Position", String.valueOf(adapterPosition));
+					Log.e("AppointmentAdapter", "Position out of bounds when canceling appointment");
+				}
+			});
+
 		}
 		else if (currentTimeMillis >= appointmentTimeMillis + oneHourInMillis) {
 			holder.doneBtn.setVisibility(View.VISIBLE);
 			holder.itemView.setClickable(false);
 
 			holder.doneBtn.setOnClickListener(doneView -> {
-				new AlertDialog.Builder(context)
-						.setTitle("Appointment Status")
-						.setMessage("Are you sure you attended the appointment?")
-						.setPositiveButton("Yes", (dialog, which) -> {
-							addHistoryAppoiment(appointment, position);
-							deleteAppointment(appointment, position);
-							appointments.remove(position);
-							notifyItemRemoved(position);
-						})
-						.setNegativeButton("No", (dialog, which) -> {
-							dialog.dismiss();
-							Toast.makeText(context, "Appointment status unchanged.", Toast.LENGTH_SHORT).show();
-						})
-						.show();
+				int adapterPosition = holder.getAdapterPosition();
+				if (adapterPosition >= 0 && adapterPosition < appointments.size()) {
+					new AlertDialog.Builder(context)
+							.setTitle("Appointment Status")
+							.setMessage("Are you sure you attended the appointment?")
+							.setPositiveButton("Yes", (dialog, which) -> {
+								addHistoryAppoiment(appointments.get(adapterPosition), adapterPosition);
+								deleteAppointment(appointments.get(adapterPosition));
+								appointments.remove(adapterPosition);
+								notifyItemRemoved(adapterPosition);
+								Toast.makeText(context, "Appointment marked as done.", Toast.LENGTH_SHORT).show();
+							})
+							.setNegativeButton("No", (dialog, which) -> {
+								dialog.dismiss();
+								Toast.makeText(context, "Appointment status unchanged.", Toast.LENGTH_SHORT).show();
+							})
+							.show();
+				} else {
+					Log.e("Position", String.valueOf(adapterPosition));
+					Log.e("AppointmentAdapter", "Position out of bounds when marking appointment as done");
+				}
 			});
 
-			holder.cancelBtn.setOnClickListener(cancelView -> {
-				new AlertDialog.Builder(context)
-						.setTitle("Dismiss Appointment")
-						.setMessage("Are you sure you did not attend the appointment?")
-						.setPositiveButton("Yes", (dialog, which) -> {
-							deleteAppointment(appointment, position);
-							appointments.remove(position);
-							notifyItemRemoved(position);
-							if (onAppointmentDeletedListener != null) {
-								Log.d("AppointmentAdapter", "Invoking onAppointmentDeleted");
-								onAppointmentDeletedListener.onAppointmentDeleted(); // Notify fragment
-							}
-						})
-						.setNegativeButton("No", (dialog, which) -> {
-							dialog.dismiss();
-							Toast.makeText(context, "Appointment status unchanged.", Toast.LENGTH_SHORT).show();
-						})
-						.show();
+			holder.cancelBtn.setOnClickListener(v -> {
+				int adapterPosition = holder.getAdapterPosition();
+				if (adapterPosition >= 0 && adapterPosition < appointments.size()) {
+					new AlertDialog.Builder(context)
+							.setTitle("Cancel Appointment")
+							.setMessage("Are you sure you want to cancel this appointment?")
+							.setPositiveButton("Yes", (dialog, which) -> {
+								deleteAppointment(appointments.get(adapterPosition));
+								appointments.remove(adapterPosition);
+								notifyItemRemoved(adapterPosition);
+								Toast.makeText(context, "Appointment canceled.", Toast.LENGTH_SHORT).show();
+							})
+							.setNegativeButton("No", (dialog, which) -> {
+								dialog.dismiss();
+								Toast.makeText(context, "Appointment remains scheduled.", Toast.LENGTH_SHORT).show();
+							})
+							.show();
+				} else {
+					Log.e("Position", String.valueOf(adapterPosition));
+					Log.e("AppointmentAdapter", "Position out of bounds when canceling appointment");
+				}
 			});
 		}
 	}
@@ -265,31 +307,18 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 		});
 	}
 
-	public void deleteAppointment(Appointment appointment, int position) {
+	public void deleteAppointment(Appointment appointment) {
 		Gson gson = new Gson();
 		String jsonAppointment = gson.toJson(appointment);
 		Log.d("AppointmentAdapter", "JSON Appointment: " + jsonAppointment);
 
 		RequestBody appointmentJson = RequestBody.create(jsonAppointment, MediaType.parse("application/json"));
-
 		apiService.deleteAppointment("Bearer " + token, appointmentJson).enqueue(new Callback<String>() {
 			@Override
 			public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
 				Log.d("API Response", "Code: " + response.code() + ", Message: " + response.message());
 				if (response.isSuccessful() && response.body() != null) {
 					Toast.makeText(context, "Appointment deleted successfully", Toast.LENGTH_SHORT).show();
-					appointments.remove(position);
-					notifyItemRemoved(position);
-					notifyItemRangeChanged(position, appointments.size());
-
-					if (onAppointmentDeletedListener != null) {
-						Log.d("AppointmentAdapter", "Listener is set, calling onAppointmentDeleted");
-						onAppointmentDeletedListener.onAppointmentDeleted();
-					} else {
-						Log.d("AppointmentAdapter", "Listener is null");
-					}
-
-
 				} else {
 					Log.e("API Error", "Failed to delete appointment. Code: " + response.code());
 					Toast.makeText(context, "Failed to delete appointment", Toast.LENGTH_SHORT).show();
