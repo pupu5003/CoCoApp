@@ -18,12 +18,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cocoapp.ActivityPage.Bottom_Navigation;
+import com.example.cocoapp.Adapter.CartAdapter;
 import com.example.cocoapp.Adapter.PetDashboardAdapter;
 import com.example.cocoapp.Adapter.PetStatusAdapter;
 import com.example.cocoapp.Adapter.ProductDashboardAdapter;
 import com.example.cocoapp.Adapter.VeterinarianDashboardAdapter;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
+import com.example.cocoapp.Object.CartDto;
+import com.example.cocoapp.Object.CartItemDto;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Pet;
 import com.example.cocoapp.Object.Product;
@@ -36,6 +39,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.gson.Gson;
 
@@ -48,16 +52,17 @@ import retrofit2.Response;
 public class Dashboard extends Fragment implements OnMapReadyCallback {
 
 	private RecyclerView recyclerViewPetStatus;
-	private RecyclerView recyclerViewProduct;
 	private RecyclerView recyclerViewPet;
 	private RecyclerView recyclerViewVeterinarian;
+	private RecyclerView recyclerViewCart;
 	private PetStatusAdapter petStatusAdapter;
 	private ProductDashboardAdapter productDashboardAdapter;
 	private PetDashboardAdapter petDashboardAdapter;
 	private VeterinarianDashboardAdapter veterinarianDashboardAdapter;
 	private List<Pet> petList;
-	private List<Product> productList;
 	private List<Veterinarian> veterinarianList;
+	private List<CartItemDto> cartItemsList;
+	private CartAdapter cartAdapter;
 	private TextView seeAllFood;
 	private TextView seeAllVet;
 	private ImageView tracksPet;
@@ -76,12 +81,9 @@ public class Dashboard extends Fragment implements OnMapReadyCallback {
 		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
 		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
 		token = prefs.getString("jwt_token", null);
-
 		recyclerViewPetStatus = view.findViewById(R.id.petStatus_recycle_view);
-		recyclerViewProduct = view.findViewById(R.id.product_recycle_view);
+		recyclerViewCart = view.findViewById(R.id.product_recycle_view);
 		recyclerViewPet = view.findViewById(R.id.pet_recycle_view);
-		recyclerViewVeterinarian = view.findViewById(R.id.veterinarian_recylce_view);
-		seeAllVet = view.findViewById(R.id.see_all_veterinarian);
 		seeAllFood = view.findViewById(R.id.see_all_petfood);
 		tracksPet = view.findViewById(R.id.trackspet);
 		checksPet = view.findViewById(R.id.checkspet);
@@ -95,36 +97,21 @@ public class Dashboard extends Fragment implements OnMapReadyCallback {
 		}
 
 		recyclerViewPetStatus.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-		recyclerViewProduct.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 		recyclerViewPet.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-		recyclerViewVeterinarian.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+		recyclerViewCart.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
 		petList = new ArrayList<>();
-		productList = new ArrayList<>();
-		veterinarianList = new ArrayList<>();
-
+		cartItemsList = new ArrayList<>();
 
 		petStatusAdapter = new PetStatusAdapter(getContext(), petList);
-		productDashboardAdapter = new ProductDashboardAdapter(getContext(), productList, false);
 		petDashboardAdapter = new PetDashboardAdapter(getContext(), petList);
-		veterinarianDashboardAdapter = new VeterinarianDashboardAdapter(getContext(), veterinarianList, false);
+		cartAdapter = new CartAdapter(cartItemsList, getContext(), false);
 
 		recyclerViewPetStatus.setAdapter(petStatusAdapter);
-		recyclerViewProduct.setAdapter(productDashboardAdapter);
 		recyclerViewPet.setAdapter(petDashboardAdapter);
-		recyclerViewVeterinarian.setAdapter(veterinarianDashboardAdapter);
+		recyclerViewCart.setAdapter(cartAdapter);
 		fetchPets(token);
-		fetchProducts();
-
-		seeAllVet.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container, new VisitVeterinarian()).commit();
-
-				((Bottom_Navigation) getActivity()).setSelectedTab(2);
-			}
-		});
+		fetchCart();
 
 		seeAllFood.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -187,32 +174,6 @@ public class Dashboard extends Fragment implements OnMapReadyCallback {
 		});
 	}
 
-
-	private void fetchProducts() {
-		apiService.fetchAllShopItems("Bearer " + token).enqueue(new Callback<List<Product>>() {
-			@Override
-			public void onResponse(@NonNull Call<List<Product>> call, Response<List<Product>> response) {
-				if (response.isSuccessful() && response.body() != null) {
-					productList.clear();
-					productList.addAll(response.body());
-					productDashboardAdapter.notifyDataSetChanged();
-				} else {
-					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
-					Toast.makeText(getContext(), "Failed to fetch products", Toast.LENGTH_SHORT).show();
-				}
-			}
-
-			@Override
-			public void onFailure(@NonNull Call<List<Product>> call, @NonNull Throwable t) {
-				Log.e("API Error fetch product", t.getMessage());
-				if (getContext() != null) {
-					Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-				}
-			}
-		});
-	}
-
-
 	@Override
 	public void onMapReady(@NonNull GoogleMap googleMap) {
 		this.googleMap = googleMap;
@@ -254,34 +215,26 @@ public class Dashboard extends Fragment implements OnMapReadyCallback {
 		}
 	}
 
+	private void fetchCart() {
+		Call<CartDto> call = apiService.getCart("Bearer " + token);
+		call.enqueue(new Callback<CartDto>() {
+			@Override
+			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
+				if (response.isSuccessful()) {
+					CartDto cart = response.body();
+					cartItemsList.clear();
+					cartItemsList.addAll(cart.getItems());
+					cartAdapter.notifyDataSetChanged();
+				} else {
+					Log.d("API", "Fetched cart unsuccessfully: ");
+				}
+			}
 
-
-//	private void updateCartItem(CartItem cartItem) {
-//		// API call to update the cart
-//		ApiService apiService = ApiClient.getClient(requireContext(), false).create(ApiService.class);
-//		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
-//		String token = prefs.getString("jwt_token", null);
-//
-//		String cartItemJson = new Gson().toJson(cartItem);
-//		RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), cartItemJson);
-//
-//		apiService.updateCartItem("Bearer " + token, requestBody).enqueue(new Callback<CartDto>() {
-//			@Override
-//			public void onResponse(Call<CartDto> call, Response<CartDto> response) {
-//				if (response.isSuccessful()) {
-//					// Handle success scenario
-//					Toast.makeText(getContext(), "Cart updated successfully", Toast.LENGTH_SHORT).show();
-//				} else {
-//					// Handle error response
-//					Toast.makeText(getContext(), "Failed to update cart: " + response.message(), Toast.LENGTH_SHORT).show();
-//				}
-//			}
-//
-//			@Override
-//			public void onFailure(Call<CartDto> call, Throwable t) {
-//				// Handle failure
-//				Toast.makeText(getContext(), "Error updating cart: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-//			}
-//		});
-//	}
+			@Override
+			public void onFailure(Call<CartDto> call, Throwable t) {
+				// Handle failure (e.g., network errors)
+				Log.e("API", "Fetch cart request failed: " + t.getMessage());
+			}
+		});
+	}
 }

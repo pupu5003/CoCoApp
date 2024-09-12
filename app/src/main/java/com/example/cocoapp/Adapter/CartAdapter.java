@@ -28,6 +28,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 	private List<CartItemDto> cartItemList;
 	private Context context;
 	private OnQuantityChangeListener onQuantityChangeListener;
+	private boolean display;
 	public interface OnQuantityChangeListener {
 		void onQuantityChanged();
 	}
@@ -36,9 +37,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 		this.cartItemList = cartItemList;
 		this.context = context;
 		this.onQuantityChangeListener = onQuantityChangeListener;
+		this.display = true;
 	}
 
-
+	public CartAdapter(List<CartItemDto> cartItemList, Context context, boolean display) {
+		this.cartItemList = cartItemList;
+		this.context = context;
+		this.display = display;
+	}
 
 	@NonNull
 	@Override
@@ -90,6 +96,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 			quantityTextView.setText(String.valueOf(cartItem.getQuantity()));
 			price.setText(String.valueOf(cartItem.getItem().getPrice()));
 
+			if (!display){
+				incrementButton.setVisibility(View.GONE);
+				decrementButton.setVisibility(View.GONE);
+				quantityTextView.setVisibility(View.GONE);
+			}
+			else{
+				incrementButton.setVisibility(View.VISIBLE);
+				decrementButton.setVisibility(View.VISIBLE);
+				quantityTextView.setVisibility(View.VISIBLE);
+			}
 			incrementButton.setOnClickListener(v -> {
 				cartItem.setQuantity(cartItem.getItem().getCurrentQuantity() + 1);
 				cartItem.getItem().setCurrentQuantity(cartItem.getItem().getCurrentQuantity() + 1);

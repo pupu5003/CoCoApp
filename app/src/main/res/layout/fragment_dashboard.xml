@@ -17,6 +17,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:fontFamily="@font/fredoka_semibold"
+            android:gravity="center"
+            android:text="My CocoApp"
+            android:textSize="40dp"
+            android:textColor="@color/black"/>
     </RelativeLayout>
 
     <ScrollView
@@ -34,9 +46,9 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_myPet"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="170dp"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="45dp"
+                android:layout_marginTop="20dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +58,8 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp">
+                    android:layout_marginTop="10dp"
+                    android:layout_marginHorizontal="10dp">
 
                     <ImageView
                         android:id="@+id/pet_logo"
@@ -206,7 +219,9 @@
                 app:cardElevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/card_petLocation">
+                app:layout_constraintTop_toBottomOf="@id/card_petLocation"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="15dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -245,7 +260,9 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/food_logo"
                         tools:itemCount="1"
-                        tools:listitem="@layout/item_product_dashboard"></androidx.recyclerview.widget.RecyclerView>
+                        tools:listitem="@layout/item_cart"
+                        android:layout_marginBottom="5dp">
+                    </androidx.recyclerview.widget.RecyclerView>
 
                     <TextView
                         android:id="@+id/see_all_petfood"
@@ -265,82 +282,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_Vet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="15dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardElevation="4dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/card_Food">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="10dp">
-
-                    <ImageView
-                        android:id="@+id/vet_ic"
-                        android:layout_width="27dp"
-                        android:layout_height="27dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:src="@drawable/vet_ic"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"></ImageView>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:fontFamily="@font/fredokaone_regular"
-                        android:text="Vets"
-                        android:textSize="20sp"
-                        app:layout_constraintBottom_toBottomOf="@id/vet_ic"
-                        app:layout_constraintStart_toEndOf="@id/vet_ic"
-                        app:layout_constraintTop_toTopOf="@id/vet_ic"></TextView>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/veterinarian_recylce_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
-                        android:layout_marginBottom="5dp"
-                        android:orientation="horizontal"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/vet_ic"
-                        app:layout_constraintVertical_bias="0.0"
-                        tools:itemCount="1"
-                        tools:listitem="@layout/item_veterinarian_dashboard" />
-
-                    <TextView
-                        android:id="@+id/see_all_veterinarian"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
-                        android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
-                        android:drawablePadding="10dp"
-                        android:drawableTint="@color/black"
-                        android:fontFamily="@font/fredoka_medium"
-                        android:text="See all"
-                        android:textColor="#3B738F"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="@id/vet_ic"
-                        app:layout_constraintEnd_toEndOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

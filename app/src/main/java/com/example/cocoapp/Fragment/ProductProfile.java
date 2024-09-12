@@ -116,7 +116,6 @@ public class ProductProfile extends Fragment {
 		return view;
 	}
 	private void fetchCart() {
-
 		Call<CartDto> call = apiService.getCart("Bearer " + token);
 		call.enqueue(new Callback<CartDto>() {
 			@Override
