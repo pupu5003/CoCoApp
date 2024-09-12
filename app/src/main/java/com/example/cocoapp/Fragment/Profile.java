@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.cocoapp.ActivityPage.LoginScreen;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.ProfileData;
@@ -51,7 +52,7 @@ public class Profile extends Fragment {
     private static final String KEY_AUTH_TOKEN = "auth_token";
 
     private ImageView ava;
-    private TextView ownerName, ownerEmail, ownerPhone, addPetbtn;
+    private TextView ownerName, ownerEmail, ownerPhone, addPetbtn, logoutText;
     private EditText ownerNameEdit, ownerEmailEdit, ownerPhoneEdit;
     private View editFrame, informationFrame;
     private Uri selectedImageUri;
@@ -81,6 +82,7 @@ public class Profile extends Fragment {
         ImageButton editButton = view.findViewById(R.id.edit_btn);
         ImageButton doneButton = view.findViewById(R.id.done_btn);
         ImageButton imageButton = view.findViewById(R.id.camera_btn);
+        logoutText = view.findViewById(R.id.log_out_text);
 
         editButton.setOnClickListener(v -> {
             informationFrame.setVisibility(View.GONE);
@@ -119,6 +121,8 @@ public class Profile extends Fragment {
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new AddPet()).addToBackStack(null).commit();
         });
+        // Set up the logout click listener
+        logoutText.setOnClickListener(v -> logout());
         return view;
     }
 
@@ -246,6 +250,17 @@ public class Profile extends Fragment {
         return token;
     }
 
+    private void logout() {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(KEY_AUTH_TOKEN);
+        editor.apply();
+
+        Intent intent = new Intent(getActivity(), LoginScreen.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+
+        Toast.makeText(getActivity(), "Logged out successfully", Toast.LENGTH_SHORT).show();
+    }
 
     private File getImageFileFromImageView(ImageView imageView) {
         imageView.setDrawingCacheEnabled(true);
