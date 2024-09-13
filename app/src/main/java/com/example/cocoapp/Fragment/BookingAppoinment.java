@@ -156,6 +156,8 @@ public class BookingAppoinment extends Fragment {
 			Appointment appointment = new Appointment(timeInMillis, veterinarian.getVetId(), selectedCategory, String.valueOf(name.getText()));
 			addAppointment(appointment);
 
+			Toast.makeText(getActivity(), "Booking successfully!", Toast.LENGTH_SHORT).show();
+			getParentFragmentManager().popBackStack();
 		});
 
 		return view;
@@ -381,16 +383,16 @@ public class BookingAppoinment extends Fragment {
 					Toast.makeText(getActivity(), "Appointment added successfully!", Toast.LENGTH_SHORT).show();
 				} else {
 					Log.e("API Error", "Response code: " + response.code() + " Message: " + response.message());
-					if (getContext()!=null)
-						Toast.makeText(getContext(), "Failed to add appointment", Toast.LENGTH_SHORT).show();
+//					if (getContext()!=null)
+//						Toast.makeText(getContext(), "Failed to add appointment", Toast.LENGTH_SHORT).show();
 				}
 			}
 
 			@Override
 			public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
 				Log.e("API Error", t.getMessage());
-				if (getContext()!=null)
-					Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//				if (getContext()!=null)
+//					Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 			}
 		});
 	}

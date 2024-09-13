@@ -30,6 +30,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+
 public class VaccinationWellness extends Fragment {
 
 	private RecyclerView recyclerView;
@@ -48,8 +50,8 @@ public class VaccinationWellness extends Fragment {
 		// Initialize RecyclerView
 		recyclerView = view.findViewById(R.id.recyclerView);
 
-		// Set up the layout with a single column
-		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+		// Set up the layout with a grid of 2 columns
+		recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
 		// Initialize data
 		vaccinationList = new ArrayList<>();

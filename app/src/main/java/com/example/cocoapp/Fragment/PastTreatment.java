@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,7 +53,7 @@ public class PastTreatment extends Fragment {
 		backButton = view.findViewById(R.id.back_button);
 
 		recyclerView = view.findViewById(R.id.recyclerView);
-		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+		recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
 		allergyList = new ArrayList<>();
 		allergyAdapter = new AllergyDetailAdapter(getContext(), allergyList);

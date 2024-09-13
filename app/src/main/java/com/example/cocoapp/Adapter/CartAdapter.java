@@ -94,7 +94,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 					.error(R.drawable.dog1)
 					.into(productImage);
 			quantityTextView.setText(String.valueOf(cartItem.getQuantity()));
-			price.setText(String.valueOf(cartItem.getItem().getPrice()));
+			price.setText(String.valueOf(cartItem.getItem().getPrice()) + " VND");
 
 			if (!display){
 				incrementButton.setVisibility(View.GONE);
