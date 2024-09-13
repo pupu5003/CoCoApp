@@ -1,4 +1,3 @@
-// LoginScreen.java
 package com.example.cocoapp.ActivityPage;
 
 import android.animation.AnimatorSet;
@@ -8,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -33,7 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.util.Random;  // Add this line at the top of your file
+import java.util.Random;
 
 
 public class LoginScreen extends AppCompatActivity {
@@ -77,7 +77,6 @@ public class LoginScreen extends AppCompatActivity {
 				String email = username_res.getText().toString().trim();
 				String password = password_res.getText().toString().trim();
 				RegisterRequest registerRequest = new RegisterRequest(email, password, name);
-				// Make the API call
 				Call<AuthResponse> call = apiService.registerUser(registerRequest);
 				call.enqueue(new Callback<AuthResponse>() {
 					@Override
@@ -87,13 +86,13 @@ public class LoginScreen extends AppCompatActivity {
 							Toast.makeText(getApplicationContext(), "Registration successful!", Toast.LENGTH_SHORT).show();
 							setActiveTab(true);
 						} else {
-							// Handle error response
+
 						}
 					}
 
 					@Override
 					public void onFailure(Call<AuthResponse> call, Throwable t) {
-						// Handle failure
+
 					}
 				});
 
@@ -211,11 +210,9 @@ public class LoginScreen extends AppCompatActivity {
 				if (response.isSuccessful() && response.body() != null) {
 					AuthResponse authResponse = response.body();
 
-					// Save JWT token
 					String accessToken = authResponse.getAccessToken();
 					saveToken(accessToken);
 
-					// Next activity
 					Intent intent = new Intent(LoginScreen.this, Bottom_Navigation.class);
 					startActivity(intent);
 					finish();
@@ -231,7 +228,6 @@ public class LoginScreen extends AppCompatActivity {
 		});
 	}
 
-	// Save JWT token using SharedPreferences
 	private void saveToken(String token) {
 		getSharedPreferences("app_prefs", MODE_PRIVATE)
 				.edit()
@@ -253,7 +249,6 @@ public class LoginScreen extends AppCompatActivity {
 			if (email.isEmpty()) {
 				Toast.makeText(this, "Please enter your email.", Toast.LENGTH_SHORT).show();
 			} else {
-				// For generate verification codes and send emails
 				String generatedCode = generateVerificationCode();
 				sendVerificationEmail(email, generatedCode);
 				showCodeInputDialog();
@@ -267,17 +262,24 @@ public class LoginScreen extends AppCompatActivity {
 	private String generateVerificationCode() {
 		Random random = new Random();
 		int code = 100000 + random.nextInt(900000);
-		return String.valueOf(code);
+		String generated = String.valueOf(code);
+		Log.d("generateVerificationCode", "Generated code: " + generated);
+		return generated;
 	}
 
 	private void sendVerificationEmail(String email, String code) {
-		SendEmail.sendEmail(
-				this,
-				email,
-				"Your Authentication Code",
-				"Here is your authentication code: " + code
-		);
-		Toast.makeText(this, "Verification code sent to " + email, Toast.LENGTH_LONG).show();
+		if (code != null) {
+			generatedCode = code;
+			SendEmail.sendEmail(
+					this,
+					email,
+					"Your Authentication Code",
+					"Here is your authentication code: " + code
+			);
+			Toast.makeText(this, "Verification code sent to " + email, Toast.LENGTH_LONG).show();
+		} else {
+			Log.d("sendVerificationEmail", "Code was null, not sending email.");
+		}
 	}
 
 	private void showCodeInputDialog() {
@@ -291,6 +293,9 @@ public class LoginScreen extends AppCompatActivity {
 		builder.setPositiveButton("Verify", (dialog, which) -> {
 			hideKeyboard();
 			String code = codeInput.getText().toString().trim();
+			Log.d("Verify Code Input", code);
+			Log.d("Current Generated Code", generatedCode != null ? generatedCode : "null");
+
 			if (verifyCode(code)) {
 				Toast.makeText(this, "Verification successful!", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(LoginScreen.this, Bottom_Navigation.class);
@@ -306,6 +311,12 @@ public class LoginScreen extends AppCompatActivity {
 	}
 
 	private boolean verifyCode(String inputCode) {
+		Log.d("input: ", inputCode);
+		if (generatedCode != null) {
+			Log.d("generatedCode", generatedCode);
+		} else {
+			Log.d("generatedCode", "null");
+		}
 		return generatedCode != null && generatedCode.equals(inputCode);
 	}
 
@@ -316,4 +327,33 @@ public class LoginScreen extends AppCompatActivity {
 			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 		}
 	}
+
+	private void performLoginAfterVerification(String email) {
+		ApiService apiService = ApiClient.getClient(this, true).create(ApiService.class);
+		LoginRequest loginRequest = new LoginRequest(email, "");
+
+		Call<AuthResponse> call = apiService.loginUser(loginRequest);
+		call.enqueue(new Callback<AuthResponse>() {
+			@Override
+			public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					AuthResponse authResponse = response.body();
+
+					saveToken(authResponse.getAccessToken());
+
+					Intent intent = new Intent(LoginScreen.this, Bottom_Navigation.class);
+					startActivity(intent);
+					finish();
+				} else {
+					Toast.makeText(LoginScreen.this, "Login failed. Please check your credentials.", Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<AuthResponse> call, Throwable t) {
+				Toast.makeText(LoginScreen.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
 }
