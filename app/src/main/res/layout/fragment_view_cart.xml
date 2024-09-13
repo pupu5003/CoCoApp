@@ -81,7 +81,18 @@
 			android:id="@+id/subtotal_value"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Rs 53,340.00"
+			android:text="53,340.00"
+			android:textSize="16sp"
+			android:textColor="@android:color/black"
+			android:fontFamily="@font/fredoka_regular"
+			app:layout_constraintEnd_toStartOf="@id/vnd"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<TextView
+			android:id="@+id/vnd"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text=" VND"
 			android:textSize="16sp"
 			android:textColor="@android:color/black"
 			android:fontFamily="@font/fredoka_regular"
@@ -104,7 +115,19 @@
 			android:id="@+id/Discount_value"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Rs 520.00"
+			android:text="520.00"
+			android:textSize="16sp"
+			android:textColor="@android:color/black"
+			android:fontFamily="@font/fredoka_regular"
+			app:layout_constraintEnd_toStartOf="@id/vnd2"
+			app:layout_constraintTop_toBottomOf="@id/subtotal_value"
+			android:layout_marginTop="8dp" />
+
+		<TextView
+			android:id="@+id/vnd2"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text=" VND"
 			android:textSize="16sp"
 			android:textColor="@android:color/black"
 			android:fontFamily="@font/fredoka_regular"
@@ -129,7 +152,20 @@
 			android:id="@+id/total_value"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Rs 53,860"
+			android:text="53,860"
+			android:textSize="18sp"
+			android:textColor="@android:color/black"
+			android:textStyle="bold"
+			android:fontFamily="@font/fredoka_semibold"
+			app:layout_constraintEnd_toStartOf="@id/vnd3"
+			app:layout_constraintTop_toBottomOf="@id/Discount_value"
+			android:layout_marginTop="8dp" />
+
+		<TextView
+			android:id="@+id/vnd3"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text=" VND"
 			android:textSize="18sp"
 			android:textColor="@android:color/black"
 			android:textStyle="bold"

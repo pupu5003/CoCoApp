@@ -43,7 +43,7 @@
 
     <ImageView
         android:id="@+id/imageDog"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="300dp"
         android:scaleType="fitXY"
         android:src="@drawable/dog_ava"
@@ -380,7 +380,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/color_title" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 

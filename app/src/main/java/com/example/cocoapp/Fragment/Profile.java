@@ -1,5 +1,6 @@
 package com.example.cocoapp.Fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,6 +34,7 @@ import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.ProfileData;
 import com.example.cocoapp.R;
 import com.google.gson.Gson;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -111,6 +113,7 @@ public class Profile extends Fragment {
         imageButton.setOnClickListener(v -> {
             String permission = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU ?
                     "android.permission.READ_MEDIA_IMAGES" : "android.permission.READ_EXTERNAL_STORAGE";
+
             if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissionLauncher.launch(permission);
             } else {
@@ -136,13 +139,20 @@ public class Profile extends Fragment {
         });
 
         pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
+            Log.d("ProfileFragment", "Result Code: " + result.getResultCode());
+            Log.d("ProfileFragment", "Result Data: " + result.getData());
+
+            if (getActivity() != null && result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                 selectedImageUri = result.getData().getData();
+
                 if (selectedImageUri != null) {
+                    Log.d("ProfileFragment", "Selected Image Uri: " + selectedImageUri.toString());
                     try {
+                        // Display the selected image
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
                         ava.setImageBitmap(bitmap);
 
+                        // Proceed with image upload
                         uploadImage();
 
                     } catch (IOException e) {
@@ -150,12 +160,14 @@ public class Profile extends Fragment {
                         Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();
                     }
                 } else {
+                    Log.e("ProfileFragment", "No image selected or URI is null");
                     Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
     private void initializeViews(View view) {
@@ -283,6 +295,20 @@ public class Profile extends Fragment {
 
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickImageLauncher.launch(intent);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            pickImageLauncher.launch(intent);
+        } else {
+            Log.w("ProfileFragment", "ACTION_PICK failed. Falling back to ACTION_GET_CONTENT.");
+
+            // Fallback to ACTION_GET_CONTENT
+            Intent fallbackIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            fallbackIntent.setType("image/*");
+            if (fallbackIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                pickImageLauncher.launch(fallbackIntent);
+            } else {
+                Log.e("ProfileFragment", "No activity available to handle either ACTION_PICK or ACTION_GET_CONTENT.");
+                Toast.makeText(getActivity(), "No app available to pick images", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

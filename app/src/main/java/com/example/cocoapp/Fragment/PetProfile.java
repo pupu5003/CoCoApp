@@ -166,9 +166,8 @@ public class PetProfile extends Fragment {
 					.load(baseUrl+pet.getImage())
 					.error(R.drawable.dog1)
 					.into(petImageView);
-			//fetchPNG(pet.getImage());
 			petLocation.setText(pet.getLocation());
-			if (pet.getGender().equals("M")) {
+			if (pet.getGender().equals('M')) {
 				petgenderImageView.setImageResource(R.drawable.male);
 			} else {
 				petgenderImageView.setImageResource(R.drawable.female);
@@ -182,6 +181,23 @@ public class PetProfile extends Fragment {
 			informationFrame.setVisibility(View.GONE);
 			editFrame.setVisibility(View.VISIBLE);
 			editButton.setVisibility(View.GONE);
+			EditText petNameEditText = view.findViewById(R.id.pet_name_edit);
+			EditText petBreedEditText = view.findViewById(R.id.pet_breed_name);
+			EditText petAgeEditText = view.findViewById(R.id.pet_age);
+			EditText petWeightEditText = view.findViewById(R.id.pet_weight);
+			EditText petColorEditText = view.findViewById(R.id.pet_colour);
+			EditText petHeightEditText = view.findViewById(R.id.pet_height);
+			EditText petLocationEditText = view.findViewById(R.id.pet_location);
+			EditText genderEditText = view.findViewById(R.id.pet_gender);
+
+			petNameEditText.setText(pet.getPetName());
+			petBreedEditText.setText(pet.getBreedName());
+			petAgeEditText.setText(String.valueOf(pet.getAge()));
+			petHeightEditText.setText((String.valueOf(pet.getHeight())));
+			petColorEditText.setText(pet.getColor());
+			petWeightEditText.setText((String.valueOf(pet.getWeight())));
+			petLocationEditText.setText(pet.getLocation());
+			genderEditText.setText(String.valueOf(pet.getGender()));
 		});
 
 		doneButton.setOnClickListener(v -> {
@@ -266,9 +282,24 @@ public class PetProfile extends Fragment {
 
 
 	}
+
 	private void openGallery() {
 		Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		pickImageLauncher.launch(intent);
+		if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+			pickImageLauncher.launch(intent);
+		} else {
+			Log.w("ProfileFragment", "ACTION_PICK failed. Falling back to ACTION_GET_CONTENT.");
+
+			// Fallback to ACTION_GET_CONTENT
+			Intent fallbackIntent = new Intent(Intent.ACTION_GET_CONTENT);
+			fallbackIntent.setType("image/*");
+			if (fallbackIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+				pickImageLauncher.launch(fallbackIntent);
+			} else {
+				Log.e("ProfileFragment", "No activity available to handle either ACTION_PICK or ACTION_GET_CONTENT.");
+				Toast.makeText(getActivity(), "No app available to pick images", Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 
 
@@ -357,15 +388,15 @@ public class PetProfile extends Fragment {
 				if (response.isSuccessful()) {
 					Toast.makeText(getActivity(), "Pet updated successfully", Toast.LENGTH_SHORT).show();
 				} else {
-					// Handle failure
-					Toast.makeText(getActivity(), "Failed to update pet", Toast.LENGTH_SHORT).show();
+					if (getActivity() != null)
+						Toast.makeText(getActivity(), "Failed to update pet", Toast.LENGTH_SHORT).show();
 				}
 			}
 
 			@Override
 			public void onFailure(Call<Pet> call, Throwable t) {
-				// Handle error
-				Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+				if (getActivity() != null)
+					Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 			}
 		});
 

@@ -199,6 +199,15 @@ public class AddPet extends Fragment{
 								"Pet added successfully",
 								Toast.LENGTH_SHORT).show();
 						fetchPets(token);
+						name.setText("");
+						breed.setText("");
+						age.setText("");
+						gender.setText("");
+						color.setText("");
+						weight.setText("");
+						height.setText("");
+						locationEditText.setText("");
+						imageView.setImageResource(R.drawable.ava);
 					} else {
 						Toast.makeText(getContext(), "Failed to add pet", Toast.LENGTH_SHORT).show();
 					}
@@ -262,10 +271,22 @@ public class AddPet extends Fragment{
 
 	private void openGallery() {
 		Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		resultLauncher.launch(intent);
+		if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+			resultLauncher.launch(intent);
+		} else {
+			Log.w("ProfileFragment", "ACTION_PICK failed. Falling back to ACTION_GET_CONTENT.");
+
+			// Fallback to ACTION_GET_CONTENT
+			Intent fallbackIntent = new Intent(Intent.ACTION_GET_CONTENT);
+			fallbackIntent.setType("image/*");
+			if (fallbackIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+				resultLauncher.launch(fallbackIntent);
+			} else {
+				Log.e("ProfileFragment", "No activity available to handle either ACTION_PICK or ACTION_GET_CONTENT.");
+				Toast.makeText(getActivity(), "No app available to pick images", Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
-
-
 
 	private void convertLocationToCoordinates(String location) {
 		Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());

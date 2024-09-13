@@ -48,10 +48,10 @@ public class Bottom_Navigation extends AppCompatActivity {
         bottomNavigation.add(new MeowBottomNavigation.Model(explore, R.drawable.shop_ic));
         bottomNavigation.add(new MeowBottomNavigation.Model(profile, R.drawable.ic_profile));
 
-        bottomNavigation.setOnClickMenuListener(model -> {
-            Toast.makeText(Bottom_Navigation.this, "Item click: " + model.getId(), Toast.LENGTH_SHORT).show();
-            return null;
-        });
+//        bottomNavigation.setOnClickMenuListener(model -> {
+//            Toast.makeText(Bottom_Navigation.this, "Item click: " + model.getId(), Toast.LENGTH_SHORT).show();
+//            return null;
+//        });
 
         bottomNavigation.setOnShowListener(model -> {
             Fragment selectedFragment = null;

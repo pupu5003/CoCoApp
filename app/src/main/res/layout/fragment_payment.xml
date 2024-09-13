@@ -89,6 +89,21 @@
 				android:layout_marginTop="5dp"
 				android:layout_marginStart="10dp"/>
 
+			<TextView
+				android:id="@+id/vnd"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="5dp"
+				android:layout_marginEnd="30dp"
+				android:fontFamily="@font/fredoka_semibold"
+				android:text="VND"
+				android:textColor="@android:color/black"
+				android:textSize="20sp"
+				android:layout_marginStart="10dp"
+				android:layout_marginBottom="5dp"
+				app:layout_constraintBottom_toBottomOf="@id/tv_amount_value"
+				app:layout_constraintStart_toEndOf="@+id/tv_amount_value"/>
+
 			<!-- Transaction Reference No -->
 			<TextView
 				android:id="@+id/tv_transaction_reference"
