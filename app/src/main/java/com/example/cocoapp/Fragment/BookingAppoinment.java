@@ -1,7 +1,9 @@
 package com.example.cocoapp.Fragment;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,12 +29,19 @@ import com.example.cocoapp.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,6 +56,8 @@ public class BookingAppoinment extends Fragment {
 	private ApiService apiService;
 	String selectedDate;
 	String selectedTime ;
+
+	private Button btnTime930, btnTime1030, btnTime1130, btnTime330, btnTime430, btnTime530;
 
 
 	public static BookingAppoinment newInstance(Veterinarian veterinarian) {
@@ -65,37 +76,17 @@ public class BookingAppoinment extends Fragment {
 		};
 	}
 
-
-	private static final String ARG_PARAM1 = "param1";
-	private static final String ARG_PARAM2 = "param2";
-
-	private String mParam1;
-	private String mParam2;
-
 	public BookingAppoinment() {
 		// Required empty public constructor
 	}
 
-	public static BookingAppoinment newInstance(String param1, String param2) {
-		BookingAppoinment fragment = new BookingAppoinment();
-		Bundle args = new Bundle();
-		args.putString(ARG_PARAM1, param1);
-		args.putString(ARG_PARAM2, param2);
-		fragment.setArguments(args);
-		return fragment;
-	}
-
-
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	                         Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_booking_appoinment, container, false);
 		apiService = ApiClient.getClient(requireActivity(), false).create(ApiService.class);
 		SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
 		token = prefs.getString("jwt_token", null);
 
-		// Initialize UI elements
 		ImageButton backButton = view.findViewById(R.id.back_button);
 		TextView tvHeader = view.findViewById(R.id.tvHeader);
 		TextView tvChooseDate = view.findViewById(R.id.tvChooseDate);
@@ -105,54 +96,28 @@ public class BookingAppoinment extends Fragment {
 		RadioGroup radioGroupSort = view.findViewById(R.id.radioGroupSort);
 		EditText name = view.findViewById(R.id.etEnterName);
 
+		// Time buttons
+		btnTime930 = view.findViewById(R.id.btn_time_930);
+		btnTime1030 = view.findViewById(R.id.btn_time_1030);
+		btnTime1130 = view.findViewById(R.id.btn_time_1130);
+		btnTime330 = view.findViewById(R.id.btn_time_330);
+		btnTime430 = view.findViewById(R.id.btn_time_430);
+		btnTime530 = view.findViewById(R.id.btn_time_530);
+
+		calendarView.setMinDate(System.currentTimeMillis());
 		calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
 			month+=1;
 			selectedDate = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", dayOfMonth);
+			validateTimeSlots(selectedDate);
 		});
 
+		setUpTimeButtons(new Button[]{btnTime930, btnTime1030, btnTime1130, btnTime330, btnTime430, btnTime530});
 
-		// Time buttons
-		Button btnTime930 = view.findViewById(R.id.btn_time_930);
-		Button btnTime1030 = view.findViewById(R.id.btn_time_1030);
-		Button btnTime1130 = view.findViewById(R.id.btn_time_1130);
-		Button btnTime330 = view.findViewById(R.id.btn_time_330);
-		Button btnTime430 = view.findViewById(R.id.btn_time_430);
-		Button btnTime530 = view.findViewById(R.id.btn_time_530);
+		backButton.setOnClickListener(v -> { getParentFragmentManager().popBackStack(); });
 
-		calendarView.setMinDate(System.currentTimeMillis());
+		if (veterinarian.getVetName() != null) { tvHeader.setText("Booking with " + veterinarian.getVetName()); }
 
-		// Set header text from parameters if needed
-		if (mParam1 != null) {
-			tvHeader.setText(mParam1);
-		}
-
-		setUpButton(btnTime930, "09:30");
-		setUpButton(btnTime1030, "10:30");
-		setUpButton(btnTime1130, "11:30");
-		setUpButton(btnTime330, "15:30");
-		setUpButton(btnTime430, "16:30");
-		setUpButton(btnTime530, "17:30");
-
-
-		backButton.setOnClickListener(v -> {
-			getParentFragmentManager().popBackStack();
-		});
-
-		if (veterinarian.getVetName() != null) {
-			tvHeader.setText("Booking with " + veterinarian.getVetName());
-		}
-
-		backButton.setOnClickListener(v -> {
-			getParentFragmentManager().popBackStack();
-		});
-
-		radioGroupSort.setOnCheckedChangeListener((group, checkedId) -> {
-			if (checkedId == R.id.radioDefault) {
-				selectedCategory = "Vaccination";
-			} else if (checkedId == R.id.radioSortByWeight) {
-				selectedCategory = "Disease";
-			}
-		});
+		radioGroupSort.setOnCheckedChangeListener((group, checkedId) -> { selectedCategory = checkedId == R.id.radioDefault ? "Vaccination" : "Disease"; });
 
 		selectedCategory = "Vaccination";
 
@@ -189,28 +154,49 @@ public class BookingAppoinment extends Fragment {
 			}
 
 			Appointment appointment = new Appointment(timeInMillis, veterinarian.getVetId(), selectedCategory, String.valueOf(name.getText()));
-
 			addAppointment(appointment);
 
-			Toast.makeText(getActivity(), "Booking successfully!", Toast.LENGTH_SHORT).show();
-			getParentFragmentManager().popBackStack();
 		});
-
-
 
 		return view;
 	}
 
-	private long convertToMilliseconds(String selectedDate, String selectedTime) {
-		selectedDate = selectedDate.trim();
-		selectedTime = selectedTime.trim();
+	private void validateTimeSlots(String selectedDate) {
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		List<Button> timeButtons = Arrays.asList(
+				btnTime930, btnTime1030, btnTime1130, btnTime330, btnTime430, btnTime530
+		);
 
-		if (selectedDate.isEmpty() || selectedTime.isEmpty()) {
-			throw new IllegalArgumentException("Date or time cannot be empty");
+		resetButtonsToDefault(timeButtons);
+
+		Set<DayOfWeek> workDays = parseWorkDays(veterinarian.getWorkTime());
+		DayOfWeek selectedDay = LocalDate.parse(selectedDate).getDayOfWeek();
+
+		Log.d("BookingAppoinment", "Selected Date: " + selectedDate);
+		Log.d("BookingAppoinment", "Veterinarian Work Days: " + workDays.toString());
+		Log.d("BookingAppoinment", "Selected Day: " + selectedDay);
+
+		if (!workDays.contains(selectedDay)) {
+			for (Button button : timeButtons) {
+				disableButton(button);
+			}
+		} else {
+			setUpTimeButtons(timeButtons.toArray(new Button[0]));
 		}
+	}
 
+	private void resetButtonsToDefault(List<Button> buttons) {
+		for (Button button : buttons) {
+			button.setEnabled(true);
+			button.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+			button.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+			button.setOnClickListener(null);
+		}
+	}
+
+
+	private long convertToMilliseconds(String selectedDate, String selectedTime) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		String dateTimeString = selectedDate + " " + selectedTime;
 
 		try {
@@ -224,18 +210,153 @@ public class BookingAppoinment extends Fragment {
 		}
 	}
 
-	private void setUpButton(Button button, String time) {
-		button.setOnClickListener(v -> {
-			if (lastSelectedButton != null) {
-				lastSelectedButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.white)));
-				lastSelectedButton.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
-			}
-			button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.Primary_color)));
-			button.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+	private Set<LocalTime> getWorkingHours(String workTime) {
+		Set<LocalTime> validTimes = new HashSet<>();
 
-			selectedTime = time;
-			lastSelectedButton = button;
-		});
+		try {
+			String[] parts = workTime.split(" at ");
+			if (parts.length != 2) {
+				throw new IllegalArgumentException("Invalid format for workTime: " + workTime);
+			}
+
+			String daysPart = parts[0].trim();
+			String timesPart = parts[1].trim();
+
+			String[] timeRange = timesPart.split(" - ");
+			if (timeRange.length != 2) {
+				throw new IllegalArgumentException("Invalid time range in workTime: " + workTime);
+			}
+
+			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("H:mm");
+			LocalTime startTime = LocalTime.parse(timeRange[0].trim(), timeFormatter);
+			LocalTime endTime = LocalTime.parse(timeRange[1].trim(), timeFormatter);
+
+			LocalTime timeSlot = startTime;
+			while (!timeSlot.isAfter(endTime)) {
+				validTimes.add(timeSlot);
+				timeSlot = timeSlot.plusMinutes(30);
+			}
+
+		} catch (DateTimeParseException | IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+		return validTimes;
+	}
+
+	private void setUpTimeButtons(Button[] buttons) {
+		Set<LocalTime> workingHours = getWorkingHours(veterinarian.getWorkTime());
+		DateTimeFormatter flexibleFormatter = DateTimeFormatter.ofPattern("[H:mm][HH:mm]");
+
+		for (Button button : buttons) {
+			String buttonTime = button.getText().toString();
+
+			try {
+				LocalTime time = LocalTime.parse(buttonTime, flexibleFormatter);
+
+				if (!workingHours.contains(time)) {
+					disableButton(button);
+				} else {
+					enableButton(button, time);
+				}
+			} catch (DateTimeParseException e) {
+				Log.e("Time Parsing", "Failed to parse time: " + buttonTime, e);
+				disableButton(button);
+			}
+		}
+	}
+	private void disableButton(Button button) {
+		button.setEnabled(false);
+		button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D3D3D3")));
+		button.setOnClickListener(v -> showInvalidTimeDialog());
+	}
+
+	private void enableButton(Button button, LocalTime time) {
+		button.setEnabled(true);
+		button.setOnClickListener(v -> selectTime(button, time.toString()));
+	}
+
+	private void selectTime(Button button, String time) {
+		if (lastSelectedButton != null) {
+			lastSelectedButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.white)));
+			lastSelectedButton.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+		}
+		button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.Primary_color)));
+		button.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+		selectedTime = time;
+		lastSelectedButton = button;
+	}
+
+	private void showInvalidTimeDialog() {
+		new AlertDialog.Builder(getContext())
+				.setTitle("Invalid Time")
+				.setMessage("This time slot is outside the veterinarian's working hours.")
+				.setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+				.show();
+	}
+
+	private boolean isWithinWorkingHours(String selectedDate, String selectedTime, String workTime) {
+		try {
+			// Parse work days and hours, e.g., "Monday - Friday at 8.00 - 14.00"
+			String[] parts = workTime.split("at");
+			String daysPart = parts[0].trim(); // "Monday - Friday"
+			String timePart = parts[1].trim(); // "8.00 - 14.00"
+
+			// Parse the days of the week
+			Set<DayOfWeek> workDays = parseWorkDays(daysPart);
+			DayOfWeek selectedDay = LocalDate.parse(selectedDate).getDayOfWeek();
+
+			if (!workDays.contains(selectedDay)) {
+				return false;
+			}
+
+			// Parse start and end work hours
+			String[] times = timePart.split("-");
+			LocalTime startWorkTime = LocalTime.parse(times[0].replace('.', ':'), DateTimeFormatter.ofPattern("H:mm"));
+			LocalTime endWorkTime = LocalTime.parse(times[1].replace('.', ':'), DateTimeFormatter.ofPattern("H:mm"));
+			LocalTime selectedLocalTime = LocalTime.parse(selectedTime, DateTimeFormatter.ofPattern("H:mm"));
+
+			return !selectedLocalTime.isBefore(startWorkTime) && !selectedLocalTime.isAfter(endWorkTime);
+		} catch (Exception e) {
+			Log.e("WorkTimeParsing", "Error parsing work time: " + workTime, e);
+			return false;
+		}
+	}
+
+	private Set<DayOfWeek> parseWorkDays(String daysPart) {
+		Set<DayOfWeek> days = new HashSet<>();
+		daysPart = daysPart.toLowerCase().trim();
+
+		// Define all possible days of the week in order
+		List<DayOfWeek> allDays = Arrays.asList(
+				DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
+				DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY
+		);
+
+		// Check if the string contains two specific days, indicating a range
+		for (int i = 0; i < allDays.size(); i++) {
+			for (int j = i + 1; j < allDays.size(); j++) {
+				String range = allDays.get(i).name().toLowerCase() + " - " + allDays.get(j).name().toLowerCase();
+				if (daysPart.contains(range)) {
+					// Add all days in the range between the two days (inclusive)
+					for (int k = i; k <= j; k++) {
+						days.add(allDays.get(k));
+					}
+					return days;
+				}
+			}
+		}
+
+		// If no ranges found, check for individual days
+		for (DayOfWeek day : allDays) {
+			if (daysPart.contains(day.name().toLowerCase())) {
+				days.add(day);
+			}
+		}
+
+		// Log the parsed days for debugging
+		Log.d("BookingAppoinment", "Parsed Work Days: " + days);
+
+		return days;
 	}
 
 
