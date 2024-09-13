@@ -22,6 +22,7 @@ import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
 import com.example.cocoapp.Object.AllergyDetail;
 import com.example.cocoapp.Object.Appointment;
+import com.example.cocoapp.Object.Veterinarian;
 import com.example.cocoapp.R;
 
 import java.text.SimpleDateFormat;
@@ -80,13 +81,7 @@ public class PastTreatment extends Fragment {
 					for (Appointment appointment : response.body()) {
 						if ("Diseases".equalsIgnoreCase(appointment.getCatergory()) || "Disease".equalsIgnoreCase(appointment.getCatergory())) {
 							String formattedDate = convertMillisecondsToDate(appointment.getTime());
-							AllergyDetail allergyDetail = new AllergyDetail(
-									appointment.getType(),
-									"Description placeholder",
-									"Fetching Name...",
-									formattedDate
-							);
-							allergyList.add(allergyDetail);
+							fetchVeterinarianName(appointment, formattedDate);
 						}
 					}
 
@@ -108,6 +103,32 @@ public class PastTreatment extends Fragment {
 			public void onFailure(@NonNull Call<List<Appointment>> call, @NonNull Throwable t) {
 				Toast.makeText(getContext(), "API call failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 				Log.e("API Error", "Error: " + t.getMessage(), t);
+			}
+		});
+	}
+
+	private void fetchVeterinarianName(Appointment appointment, String formattedDate) {
+		apiService.fetchVetById("Bearer " + token, appointment.getVetId()).enqueue(new Callback<Veterinarian>() {
+			@Override
+			public void onResponse(@NonNull Call<Veterinarian> call, @NonNull Response<Veterinarian> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					// Create AllergyDetail with the fetched name
+					AllergyDetail allergyDetail = new AllergyDetail(
+							appointment.getType(),
+							"Description placeholder",  // Replace with actual description if available
+							response.body().getVetName(),  // Fetch veterinarian's name from the response
+							formattedDate
+					);
+					allergyList.add(allergyDetail);
+					allergyAdapter.notifyDataSetChanged();
+				} else {
+					Log.e("API Error", "Failed to fetch veterinarian details for vetId: " + appointment.getVetId());
+				}
+			}
+
+			@Override
+			public void onFailure(@NonNull Call<Veterinarian> call, @NonNull Throwable t) {
+				Log.e("API Error", "Error fetching veterinarian details: " + t.getMessage());
 			}
 		});
 	}

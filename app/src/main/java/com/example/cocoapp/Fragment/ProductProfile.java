@@ -79,7 +79,7 @@ public class ProductProfile extends Fragment {
 
 		addToCartButton.setOnClickListener(v -> {
 			fetchCart();
-			Toast.makeText(requireContext(), "Product added to cart", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(requireContext(), "Product added to cart", Toast.LENGTH_SHORT).show();
 		});
 		shop.setOnClickListener(v -> {
 			Log.d("hihi", String.valueOf(cartItemsList.size()));
@@ -126,16 +126,16 @@ public class ProductProfile extends Fragment {
 					cartItemsList.clear();
 					cartItemsList.addAll(cart.getItems());
 					Boolean isExist = false;
+					int tmp = quantityTextView.getText().toString().equals("0") ? 0 : Integer.parseInt(quantityTextView.getText().toString());
 					for (CartItemDto cartItem : cartItemsList)
 						if (Objects.equals(cartItem.getItem().getId(), productId)) {
-							int tmp = quantityTextView.getText().toString().equals("") ? 0 : Integer.parseInt(quantityTextView.getText().toString());
 							cartItem.setQuantity(product.getCurrentQuantity() + tmp);
 							product.setCurrentQuantity(product.getCurrentQuantity() + tmp);
-							updateCart(cartItem);
+							if (tmp != 0) updateCart(cartItem);
 							isExist = true;
 							break;
 						}
-					if (!isExist) {
+					if (!isExist && tmp != 0) {
 						CartItemDto newCartItem = new CartItemDto();
 						newCartItem.setItem(product);
 						newCartItem.setQuantity(Integer.parseInt(quantityTextView.getText().toString()));

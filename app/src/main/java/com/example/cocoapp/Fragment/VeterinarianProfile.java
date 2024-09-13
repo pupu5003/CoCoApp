@@ -1,7 +1,10 @@
 package com.example.cocoapp.Fragment;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +12,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.cocoapp.Object.Veterinarian;
 import com.example.cocoapp.R;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class VeterinarianProfile extends Fragment {
 
@@ -54,6 +66,20 @@ public class VeterinarianProfile extends Fragment {
 		TextView price = view.findViewById(R.id.price);
 		Button bookingAppointment = view.findViewById(R.id.bookAppointment_btn);
 		RatingBar ratingBar = view.findViewById(R.id.rating_layout);
+
+		Pair<Float, Float> coordinates = convertLocationToCoordinates(veterinarian.getAddress());
+
+		distance.setOnClickListener(v -> {
+			ArrayList<LatLng> coordinate;
+			coordinate = new ArrayList<>();
+			coordinate.add(new LatLng(coordinates.first,coordinates.second));
+			requireActivity().getSupportFragmentManager().beginTransaction()
+					.replace(R.id.fragment_container, MapsFragment.newInstance(coordinate,1))
+					.addToBackStack(null).commit();
+
+		});
+
+
 
 		// Bind the veterinarian data to the UI elements
 		if (veterinarian != null) {
@@ -101,5 +127,27 @@ public class VeterinarianProfile extends Fragment {
 
 
 		return view;
+	}
+	private Pair<Float, Float> convertLocationToCoordinates(String location) {
+		Geocoder geocoder = new Geocoder(requireActivity(), Locale.getDefault());
+		Float latitude = null;
+		Float longitude = null;
+
+		try {
+			List<Address> addresses = geocoder.getFromLocationName(location, 1);
+			if (addresses != null && !addresses.isEmpty()) {
+				Address address = addresses.get(0);
+				latitude = (float) address.getLatitude();
+				longitude = (float) address.getLongitude();
+			} else {
+				Log.d("Location", location);
+				Toast.makeText(requireActivity(), "Location not found", Toast.LENGTH_SHORT).show();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			Toast.makeText(requireActivity(), "Unable to get location", Toast.LENGTH_SHORT).show();
+		}
+
+		return new Pair<>(latitude, longitude);
 	}
 }

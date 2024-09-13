@@ -77,7 +77,6 @@ public class BookingAppoinment extends Fragment {
 	}
 
 	public BookingAppoinment() {
-		// Required empty public constructor
 	}
 
 	@Override
@@ -96,7 +95,6 @@ public class BookingAppoinment extends Fragment {
 		RadioGroup radioGroupSort = view.findViewById(R.id.radioGroupSort);
 		EditText name = view.findViewById(R.id.etEnterName);
 
-		// Time buttons
 		btnTime930 = view.findViewById(R.id.btn_time_930);
 		btnTime1030 = view.findViewById(R.id.btn_time_1030);
 		btnTime1130 = view.findViewById(R.id.btn_time_1130);
@@ -298,12 +296,10 @@ public class BookingAppoinment extends Fragment {
 
 	private boolean isWithinWorkingHours(String selectedDate, String selectedTime, String workTime) {
 		try {
-			// Parse work days and hours, e.g., "Monday - Friday at 8.00 - 14.00"
 			String[] parts = workTime.split("at");
-			String daysPart = parts[0].trim(); // "Monday - Friday"
-			String timePart = parts[1].trim(); // "8.00 - 14.00"
+			String daysPart = parts[0].trim();
+			String timePart = parts[1].trim();
 
-			// Parse the days of the week
 			Set<DayOfWeek> workDays = parseWorkDays(daysPart);
 			DayOfWeek selectedDay = LocalDate.parse(selectedDate).getDayOfWeek();
 
@@ -311,7 +307,6 @@ public class BookingAppoinment extends Fragment {
 				return false;
 			}
 
-			// Parse start and end work hours
 			String[] times = timePart.split("-");
 			LocalTime startWorkTime = LocalTime.parse(times[0].replace('.', ':'), DateTimeFormatter.ofPattern("H:mm"));
 			LocalTime endWorkTime = LocalTime.parse(times[1].replace('.', ':'), DateTimeFormatter.ofPattern("H:mm"));
@@ -328,18 +323,15 @@ public class BookingAppoinment extends Fragment {
 		Set<DayOfWeek> days = new HashSet<>();
 		daysPart = daysPart.toLowerCase().trim();
 
-		// Define all possible days of the week in order
 		List<DayOfWeek> allDays = Arrays.asList(
 				DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
 				DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY
 		);
 
-		// Check if the string contains two specific days, indicating a range
 		for (int i = 0; i < allDays.size(); i++) {
 			for (int j = i + 1; j < allDays.size(); j++) {
 				String range = allDays.get(i).name().toLowerCase() + " - " + allDays.get(j).name().toLowerCase();
 				if (daysPart.contains(range)) {
-					// Add all days in the range between the two days (inclusive)
 					for (int k = i; k <= j; k++) {
 						days.add(allDays.get(k));
 					}
@@ -348,14 +340,12 @@ public class BookingAppoinment extends Fragment {
 			}
 		}
 
-		// If no ranges found, check for individual days
 		for (DayOfWeek day : allDays) {
 			if (daysPart.contains(day.name().toLowerCase())) {
 				days.add(day);
 			}
 		}
 
-		// Log the parsed days for debugging
 		Log.d("BookingAppoinment", "Parsed Work Days: " + days);
 
 		return days;

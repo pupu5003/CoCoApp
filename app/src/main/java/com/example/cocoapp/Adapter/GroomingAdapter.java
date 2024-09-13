@@ -23,12 +23,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.cocoapp.Api.ApiClient;
 import com.example.cocoapp.Api.ApiService;
+import com.example.cocoapp.Fragment.MapsFragment;
 import com.example.cocoapp.Fragment.Review;
 import com.example.cocoapp.Fragment.VeterinarianProfile;
 import com.example.cocoapp.R;
 import com.example.cocoapp.Object.Grooming;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -71,7 +74,7 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
         holder.bind(grooming);
         holder.bind(grooming);
 
-        holder.itemView.setOnClickListener(view -> {
+        holder.reviewText.setOnClickListener(view -> {
             if (isGrooming) {
                 FragmentActivity activity = (FragmentActivity) context;
                 activity.getSupportFragmentManager().beginTransaction()
@@ -83,6 +86,16 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
                         .replace(R.id.fragment_container, Review.newInstance(grooming.getId(),"location"))
                         .addToBackStack(null).commit();
             }
+        });
+        holder.itemView.setOnClickListener(view ->{
+            ArrayList<LatLng> coordinate;
+            coordinate = new ArrayList<>();
+            coordinate.add(new LatLng(coordinates.first,coordinates.second));
+
+            FragmentActivity activity = (FragmentActivity) context;
+            activity.getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, MapsFragment.newInstance(coordinate,1))
+                    .addToBackStack(null).commit();
         });
     }
 
