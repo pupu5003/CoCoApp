@@ -162,23 +162,26 @@ public class Review extends Fragment {
 						rating += review.getRating();
 					}
 				}
+
 				Collections.sort(filteredReviews, new Comparator<ReviewItem>() {
 					@Override
 					public int compare(ReviewItem r1, ReviewItem r2) {
+						// First, compare by rating (descending)
+						int ratingComparison = Float.compare(r2.getRating(), r1.getRating());
+						if (ratingComparison != 0) {
+							return ratingComparison;
+						}
+
 						String name1 = r1.getName();
 						String name2 = r2.getName();
+						if (name1 == null) name1 = "";
+						if (name2 == null) name2 = "";
 
-						// Handle null names and "No name" cases
-						if (name1 != null && name2 == null) {
-							return 1; // r2 comes before r1
-						} else if (name1 == null && name2 != null) {
-							return -1; // r1 comes before r2
-						} else {
-							// If both have valid names or both have "No name", sort by rating (descending)
-							return Float.compare(r2.getRating(), r1.getRating());
-						}
+						// Compare names in descending order (Z to A or higher number first)
+						return name1.compareTo(name2); // Descending order comparison for names
 					}
 				});
+
 
 				if(cnt != 0) {
 					avrate.setText(String.format("%.2f",rating/cnt));

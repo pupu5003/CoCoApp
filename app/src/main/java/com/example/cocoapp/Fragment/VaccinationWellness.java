@@ -44,7 +44,7 @@ public class VaccinationWellness extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_medical_record_vaccination, container, false);
+		View view = inflater.inflate(R.layout.fragment_wellness_vaccination, container, false);
 		backButton = view.findViewById(R.id.back_button);
 
 		// Initialize RecyclerView

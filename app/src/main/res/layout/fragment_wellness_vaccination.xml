@@ -15,20 +15,30 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		android:background="@color/Primary_color">
 
+		<ImageButton
+			android:id="@+id/back_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			android:src="@drawable/baseline_chevron_left_24"
+			android:backgroundTint="@android:color/transparent"
+			/>
+
 		<TextView
 			android:id="@+id/tvHeader"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:fontFamily="@font/fredoka_semibold"
 			android:padding="10dp"
 			android:text="Vaccination"
 			android:textColor="@android:color/white"
 			android:textSize="25sp"
 			android:textStyle="bold"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintHorizontal_bias="0.497"
+			android:fontFamily="@font/fredoka_semibold"
+			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
+			app:layout_constraintEnd_toEndOf="parent" />
 	</androidx.constraintlayout.widget.ConstraintLayout>
 
 	<androidx.recyclerview.widget.RecyclerView

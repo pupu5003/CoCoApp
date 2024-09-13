@@ -124,7 +124,7 @@ public class VetBoarding extends Fragment {
                 ViewAll viewAllFragment = ViewAll.newInstance("3", "2");
                 RecommendAdapter.setShowAll(true);
                 RecommendAdapter.notifyDataSetChanged();
-                viewAllFragment.setGroomingAdapter(NearByAdapter);
+                viewAllFragment.setGroomingAdapter(RecommendAdapter);
 
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, viewAllFragment)

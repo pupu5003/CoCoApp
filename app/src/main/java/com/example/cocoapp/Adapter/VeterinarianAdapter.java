@@ -169,7 +169,7 @@ public class VeterinarianAdapter extends RecyclerView.Adapter<VeterinarianAdapte
             reviewText.setText(String.format("%.2f", veterinarian.getRating())
                     + " {" + veterinarian.getReviews().size() + " reviews}");
             experienceText.setText(veterinarian.getExperience());
-            distanceText.setText(String.valueOf(veterinarian.getDistance())+" km");
+            distanceText.setText(String.format("%.2f", veterinarian.getDistance())+" km");
             priceText.setText(String.valueOf(veterinarian.getPrice()) + " VND");
             availabilityText.setText(veterinarian.getWorkTime());
 

@@ -177,7 +177,7 @@ public class GroomingAdapter extends RecyclerView.Adapter<GroomingAdapter.Groomi
                     + " {" + grooming.getReviews().size() + " reviews}");
             boolean isOpen = grooming.isOpen();
             isOpenText.setText(isOpen ? "Open" : "Closed");
-            distanceText.setText(String.valueOf(grooming.getDistance()) + " km");
+            distanceText.setText(String.format("%.2f", grooming.getDistance()) + " km");
             priceText.setText(String.valueOf(grooming.getPrice()) + " VND");
             availabilityText.setText(grooming.getWorkTime());
 
