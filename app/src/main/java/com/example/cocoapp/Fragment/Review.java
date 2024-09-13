@@ -13,6 +13,8 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.Collections;
+import java.util.Comparator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,13 +30,13 @@ import com.example.cocoapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Review extends Fragment {
-
 	private static final String ARG_NAME = "name";
 	private static final String ARG_TARGET_ID = "targetId";
 
@@ -133,13 +135,15 @@ public class Review extends Fragment {
 			}
 			private void filterReviewsByTargetId(List<ReviewItem> allReviews, String targetId) {
 				List<ReviewItem> filteredReviews = new ArrayList<>();
-				Float rating = 0f;
+				Float rating = 2f;
 				int cnt = 0;
 				int cnt_1=0,cnt_2=0,cnt_3=0,cnt_4=0,cnt_5=0;
 				for (ReviewItem review : allReviews) {
-					if (targetId.equals(review.getTargetId())) {
+					if (targetId.equals(review.getTargetId()) && Objects.equals(review.getType(), "location")) {
 						filteredReviews.add(review);
 						cnt++;
+						Log.d("review", String.valueOf(cnt) + targetId);
+						Log.d("target review", String.valueOf(cnt) + review.getTargetId());
 						if (review.getRating() == 1){
 							cnt_1++;
 						}
@@ -158,8 +162,26 @@ public class Review extends Fragment {
 						rating += review.getRating();
 					}
 				}
+				Collections.sort(filteredReviews, new Comparator<ReviewItem>() {
+					@Override
+					public int compare(ReviewItem r1, ReviewItem r2) {
+						String name1 = r1.getName();
+						String name2 = r2.getName();
+
+						// Handle null names and "No name" cases
+						if (name1 != null && name2 == null) {
+							return 1; // r2 comes before r1
+						} else if (name1 == null && name2 != null) {
+							return -1; // r1 comes before r2
+						} else {
+							// If both have valid names or both have "No name", sort by rating (descending)
+							return Float.compare(r2.getRating(), r1.getRating());
+						}
+					}
+				});
+
 				if(cnt != 0) {
-					avrate.setText(String.format("%.1f",rating/cnt));
+					avrate.setText(String.format("%.2f",rating/cnt));
 					ratingBar.setRating(rating/cnt);
 					p1.setProgress(cnt_1*100/cnt);
 					p2.setProgress(cnt_2*100/cnt);
