@@ -134,7 +134,7 @@ public class Dashboard extends Fragment implements OnMapReadyCallback {
 
 
 				requireActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_container,MapsFragment.newInstance(coordinate)).addToBackStack(null).commit();
+						.replace(R.id.fragment_container,MapsFragment.newInstance(coordinate,0)).addToBackStack(null).commit();
 			}
 		});
 

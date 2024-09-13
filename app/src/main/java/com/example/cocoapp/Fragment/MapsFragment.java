@@ -45,11 +45,13 @@ public class MapsFragment extends Fragment {
 	private FusedLocationProviderClient mFusedLocationClient;
 	private LatLng currentLocationLatLng;
 	private final static int LOCATION_PERMISSION_REQUEST_CODE = 100;
+	private int position;
 
-	public static MapsFragment newInstance(ArrayList<LatLng> coordinates) {
+	public static MapsFragment newInstance(ArrayList<LatLng> coordinates, int position) {
 		MapsFragment fragment = new MapsFragment();
 		Bundle args = new Bundle();
 		args.putParcelableArrayList("coordinates", coordinates);  // Store the vector in the bundle
+		args.putInt("position", position);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -76,7 +78,8 @@ public class MapsFragment extends Fragment {
 				num++;
 				Log.d("Coordinate", coordinate.toString());
 				// Add a marker at the current location and move the camera
-				mMap.addMarker(new MarkerOptions().position(coordinate).title("Dog " + num));
+				if (position == 1) mMap.addMarker(new MarkerOptions().position(coordinate).title("Here is the location"));
+				else mMap.addMarker(new MarkerOptions().position(coordinate).title("Here is your "+ num +" Dog"));
 				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 15));
 			}
 		}
@@ -97,6 +100,7 @@ public class MapsFragment extends Fragment {
 		super.onViewCreated(view, savedInstanceState);
 		if (getArguments() != null) {
 			coordinates = getArguments().getParcelableArrayList("coordinates"); // Retrieve the ArrayList of LatLng
+			position = getArguments().getInt("position");
 		}
 		SupportMapFragment mapFragment =
 				(SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
